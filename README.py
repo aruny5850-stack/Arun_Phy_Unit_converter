@@ -1,6 +1,16 @@
 import streamlit as st
+import math
 
-st.title("⚛️Unit Converter")
+st.set_page_config(
+    page_title="Physics Toolkit",
+    page_icon="⚛️"
+)
+
+st.title("⚛️ Physics Toolkit")
+
+# =========================
+# UNIT CONVERTER DATA
+# =========================
 
 categories = {
     "Length": {
@@ -36,74 +46,161 @@ categories = {
     }
 }
 
-category = st.selectbox(
-    "Select Category",
-    list(categories.keys()) + ["Temperature"]
-)
 
-value = st.number_input("Enter Value", value=1.0)
+# =========================
+# TABS
+# =========================
 
-# Temperature
-if category == "Temperature":
+tab1, tab2 = st.tabs([
+    "⚛️ Unit Converter",
+    "🧮 Calculator"
+])
 
-    temperature_units = ["Celsius (°C)", "Kelvin (K)", "Fahrenheit (°F)"]
 
-    col1, col2 = st.columns(2)
+# =========================
+# TAB 1: UNIT CONVERTER
+# =========================
 
-    with col1:
-        from_unit = st.selectbox("From", temperature_units)
+with tab1:
 
-    with col2:
-        to_unit = st.selectbox("To", temperature_units)
+    st.header("Unit Converter")
 
-    if st.button("Convert"):
+    category = st.selectbox(
+        "Select Category",
+        list(categories.keys()) + ["Temperature"]
+    )
 
-        # Convert input to Celsius first
-        if from_unit == "Celsius (°C)":
-            celsius = value
+    value = st.number_input(
+        "Enter Value",
+        value=1.0
+    )
 
-        elif from_unit == "Kelvin (K)":
-            celsius = value - 273.15
+    # Temperature
+    if category == "Temperature":
 
-        else:
-            celsius = (value - 32) * 5 / 9
+        temperature_units = [
+            "Celsius (°C)",
+            "Kelvin (K)",
+            "Fahrenheit (°F)"
+        ]
 
-        # Celsius to target unit
-        if to_unit == "Celsius (°C)":
-            result = celsius
+        col1, col2 = st.columns(2)
 
-        elif to_unit == "Kelvin (K)":
-            result = celsius + 273.15
+        with col1:
+            from_unit = st.selectbox(
+                "From",
+                temperature_units
+            )
 
-        else:
-            result = (celsius * 9 / 5) + 32
+        with col2:
+            to_unit = st.selectbox(
+                "To",
+                temperature_units
+            )
 
-        st.success(f"{value} {from_unit} = {result} {to_unit}")
+        if st.button("Convert Temperature"):
 
-# Other categories
-else:
+            # Convert to Celsius first
+            if from_unit == "Celsius (°C)":
+                celsius = value
 
-    units = categories[category]
+            elif from_unit == "Kelvin (K)":
+                celsius = value - 273.15
 
-    col1, col2 = st.columns(2)
+            else:
+                celsius = (value - 32) * 5 / 9
 
-    with col1:
-        from_unit = st.selectbox("From", units.keys())
+            # Celsius to target
+            if to_unit == "Celsius (°C)":
+                result = celsius
 
-    with col2:
-        to_unit = st.selectbox("To", units.keys())
+            elif to_unit == "Kelvin (K)":
+                result = celsius + 273.15
 
-    if st.button("Convert"):
+            else:
+                result = (celsius * 9 / 5) + 32
 
-        value_in_joule_or_base = value * units[from_unit]
-        result = value_in_joule_or_base / units[to_unit]
+            st.success(
+                f"{value} {from_unit} = {result} {to_unit}"
+            )
 
-        st.success(
-            f"{value} {from_unit} = {result} {to_unit}"
-        )
-category = st.selectbox(
-    "Select Category",
-    list(categories.keys()) + ["Normal calculation"]
-)
+    # Other categories
+    else:
 
-value = st.number_input("Enter Value", value=1.0)
+        units = categories[category]
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            from_unit = st.selectbox(
+                "From",
+                list(units.keys())
+            )
+
+        with col2:
+            to_unit = st.selectbox(
+                "To",
+                list(units.keys())
+            )
+
+        if st.button("Convert"):
+
+            value_in_base = value * units[from_unit]
+
+            result = value_in_base / units[to_unit]
+
+            st.success(
+                f"{value} {from_unit} = {result} {to_unit}"
+            )
+
+
+# =========================
+# TAB 2: CALCULATOR
+# =========================
+
+with tab2:
+
+    st.header("🧮 Scientific Calculator")
+
+    expression = st.text_input(
+        "Enter calculation",
+        placeholder="Example: (10 + 5) * 2"
+    )
+
+    st.write(
+        "Available: +  -  *  /  **  %  √  sin  cos  tan  log  ln  π"
+    )
+
+    if st.button("Calculate"):
+
+        try:
+
+            # Replace common mathematical symbols
+            expression = expression.replace("√", "sqrt")
+            expression = expression.replace("π", "pi")
+
+            # Allowed mathematical functions
+            allowed = {
+                "sqrt": math.sqrt,
+                "sin": math.sin,
+                "cos": math.cos,
+                "tan": math.tan,
+                "log": math.log10,
+                "ln": math.log,
+                "pi": math.pi,
+                "e": math.e,
+                "abs": abs
+            }
+
+            result = eval(
+                expression,
+                {"__builtins__": {}},
+                allowed
+            )
+
+            st.success(f"Result = {result}")
+
+        except Exception:
+            st.error(
+                "Invalid calculation. Please check your expression."
+            )
