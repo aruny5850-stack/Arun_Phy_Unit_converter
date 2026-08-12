@@ -182,10 +182,24 @@ def convert_value(x, category, u1, u2):
     return x * UNITS[category][u1] / UNITS[category][u2]
 
 def fmt(x):
-    if x == 0: return "0"
+    if x == 0:
+        return "0"
+
     if abs(x) >= 1e6 or abs(x) < 1e-4:
-        return f"{x:.3*10}"
-    return f"{x:.10g}"
+        s = f"{x:.3e}"
+        mantissa, exponent = s.split("e")
+        exponent = int(exponent)
+
+        superscript = str(exponent).translate(
+            str.maketrans(
+                "0123456789-+",
+                "⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺"
+            )
+        )
+
+        return f"{mantissa} × 10{superscript}"
+
+    return f"{x:.3f}"
 
 # ============================================================
 # SAFE SCIENTIFIC CALCULATOR
