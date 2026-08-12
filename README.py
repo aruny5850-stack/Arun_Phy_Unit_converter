@@ -2,7 +2,6 @@ import streamlit as st
 
 st.title("⚛️ Physics Unit Converter")
 
-# Unit categories
 categories = {
     "Length": {
         "Meter (m)": 1,
@@ -27,43 +26,78 @@ categories = {
         "Nanosecond (ns)": 1e-9,
         "Minute (min)": 60,
         "Hour (h)": 3600
+    },
+
+    "Energy": {
+        "Joule (J)": 1,
+        "Electron Volt (eV)": 1.602176634e-19,
+        "kilo Electron Volt (keV)": 1.602176634e-16,
+        "Mega Electron Volt (MeV)": 1.602176634e-13
     }
 }
 
-# Category selection
 category = st.selectbox(
     "Select Category",
-    categories.keys()
+    list(categories.keys()) + ["Temperature"]
 )
 
-# Get units for selected category
-units = categories[category]
+value = st.number_input("Enter Value", value=1.0)
 
-# Input
-value = st.number_input(
-    "Enter Value",
-    value=1.0
-)
+# Temperature
+if category == "Temperature":
 
-col1, col2 = st.columns(2)
+    temperature_units = ["Celsius (°C)", "Kelvin (K)", "Fahrenheit (°F)"]
 
-with col1:
-    from_unit = st.selectbox(
-        "From",
-        units.keys()
-    )
+    col1, col2 = st.columns(2)
 
-with col2:
-    to_unit = st.selectbox(
-        "To",
-        units.keys()
-    )
+    with col1:
+        from_unit = st.selectbox("From", temperature_units)
 
-# Conversion
-if st.button("Convert"):
-    value_in_base = value * units[from_unit]
-    result = value_in_base / units[to_unit]
+    with col2:
+        to_unit = st.selectbox("To", temperature_units)
 
-    st.success(
-        f"{value} {from_unit} = {result} {to_unit}"
-    )
+    if st.button("Convert"):
+
+        # Convert input to Celsius first
+        if from_unit == "Celsius (°C)":
+            celsius = value
+
+        elif from_unit == "Kelvin (K)":
+            celsius = value - 273.15
+
+        else:
+            celsius = (value - 32) * 5 / 9
+
+        # Celsius to target unit
+        if to_unit == "Celsius (°C)":
+            result = celsius
+
+        elif to_unit == "Kelvin (K)":
+            result = celsius + 273.15
+
+        else:
+            result = (celsius * 9 / 5) + 32
+
+        st.success(f"{value} {from_unit} = {result} {to_unit}")
+
+# Other categories
+else:
+
+    units = categories[category]
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        from_unit = st.selectbox("From", units.keys())
+
+    with col2:
+        to_unit = st.selectbox("To", units.keys())
+
+    if st.button("Convert"):
+
+        value_in_joule_or_base = value * units[from_unit]
+        result = value_in_joule_or_base / units[to_unit]
+
+        st.success(
+            f"{value} {from_unit} = {result} {to_unit}"
+        )
