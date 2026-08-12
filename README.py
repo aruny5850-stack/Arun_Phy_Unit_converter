@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.title("⚛️ Physics Unit Converter")
+st.title("⚛️Unit Converter")
 
 categories = {
     "Length": {
@@ -101,3 +101,9 @@ else:
         st.success(
             f"{value} {from_unit} = {result} {to_unit}"
         )
+category = st.selectbox(
+    "Select Category",
+    list(categories.keys()) + ["Normal calculation"]
+)
+
+value = st.number_input("Enter Value", value=1.0)
