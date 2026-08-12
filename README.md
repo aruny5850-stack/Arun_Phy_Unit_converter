@@ -1,2 +1,10 @@
-# Arun_Phy_Unit_converter
-this project is based on calculating or converting si unit in cgs
+import streamlit as st
+
+st.title("My First Streamlit App")
+
+st.write("Hello! My Python app is working.")
+
+name = st.text_input("Enter your name")
+
+if st.button("Submit"):
+    st.success(f"Hello {name}!")
