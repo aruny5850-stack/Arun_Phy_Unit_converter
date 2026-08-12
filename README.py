@@ -150,9 +150,8 @@ with tab1:
 
             result = value_in_base / units[to_unit]
 
-            st.success(
-                f"{value} {from_unit} = {result} {to_unit}"
-            )
+            st.success(f"Result = {result:.6e}")
+            
 
 
 # =========================
