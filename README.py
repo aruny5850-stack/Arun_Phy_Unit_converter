@@ -1,1138 +1,367 @@
 import streamlit as st
 import math
+import ast
+import operator as op
 
-# =========================================================
-# PAGE CONFIG
-# =========================================================
-
+# ============================================================
+# PAGE
+# ============================================================
 st.set_page_config(
     page_title="Physics Toolkit",
     page_icon="⚛️",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="collapsed",
 )
 
-# =========================================================
-# CUSTOM CSS
-# =========================================================
-
+# ============================================================
+# STYLE
+# ============================================================
 st.markdown("""
 <style>
-
-/* ========================================================
-   GLOBAL
-======================================================== */
-
 .stApp {
     background:
-        radial-gradient(
-            circle at 8% 8%,
-            rgba(14, 165, 233, 0.13),
-            transparent 30%
-        ),
-        radial-gradient(
-            circle at 92% 12%,
-            rgba(124, 58, 237, 0.13),
-            transparent 30%
-        ),
-        linear-gradient(
-            135deg,
-            #020617 0%,
-            #0b1224 50%,
-            #111827 100%
-        );
-
-    color: #f8fafc;
+        radial-gradient(circle at 5% 5%, rgba(14,165,233,.12), transparent 28%),
+        radial-gradient(circle at 95% 5%, rgba(124,58,237,.12), transparent 28%),
+        linear-gradient(135deg,#020617,#0b1224 55%,#111827);
+    color:#f8fafc;
 }
-
-.block-container {
-    max-width: 1200px;
-    padding-top: 2rem;
-    padding-bottom: 4rem;
+.block-container {max-width:1150px;padding-top:1.6rem;padding-bottom:3rem;}
+.hero,.panel,.field-card,.result-card,.constant-card {
+    border:1px solid rgba(255,255,255,.10);
+    background:linear-gradient(145deg,rgba(255,255,255,.065),rgba(255,255,255,.025));
+    box-shadow:0 12px 35px rgba(0,0,0,.22);
+    backdrop-filter:blur(16px);
 }
-
-
-/* ========================================================
-   HERO
-======================================================== */
-
-.hero {
-    position: relative;
-    overflow: hidden;
-
-    padding: 42px;
-    margin-bottom: 30px;
-
-    border-radius: 28px;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(14, 165, 233, 0.18),
-            rgba(37, 99, 235, 0.16),
-            rgba(124, 58, 237, 0.18)
-        );
-
-    border: 1px solid rgba(255,255,255,0.12);
-
-    box-shadow:
-        0 20px 60px rgba(0,0,0,0.35),
-        inset 0 1px 0 rgba(255,255,255,0.05);
-
-    backdrop-filter: blur(18px);
-}
-
-.hero h1 {
-    margin: 0;
-
-    font-size: 48px;
-    font-weight: 800;
-
-    background:
-        linear-gradient(
-            90deg,
-            #ffffff,
-            #7dd3fc,
-            #a78bfa
-        );
-
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.hero p {
-    margin-top: 10px;
-
-    color: #b8c4d6;
-
-    font-size: 17px;
-}
-
-
-/* ========================================================
-   MAIN CARD
-======================================================== */
-
-.main-card {
-    padding: 28px;
-
-    margin-bottom: 22px;
-
-    border-radius: 24px;
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(255,255,255,0.065),
-            rgba(255,255,255,0.025)
-        );
-
-    border: 1px solid rgba(255,255,255,0.10);
-
-    box-shadow:
-        0 15px 40px rgba(0,0,0,0.25);
-
-    backdrop-filter: blur(18px);
-}
-
-.main-card h2 {
-    margin-top: 0;
-
-    color: #ffffff;
-
-    font-size: 25px;
-}
-
-.main-card p {
-    color: #9caec4;
-}
-
-
-/* ========================================================
-   FIELD BOX
-======================================================== */
-
-.field-box {
-    padding: 18px;
-
-    margin-bottom: 18px;
-
-    border-radius: 18px;
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(255,255,255,0.065),
-            rgba(255,255,255,0.025)
-        );
-
-    border: 1px solid rgba(255,255,255,0.09);
-
-    box-shadow:
-        0 8px 25px rgba(0,0,0,0.16);
-
-    transition: all 0.25s ease;
-}
-
-.field-box:hover {
-    border-color: rgba(56,189,248,0.35);
-
-    box-shadow:
-        0 10px 30px rgba(14,165,233,0.10);
-}
-
-.field-title {
-    color: #cbd5e1;
-
-    font-size: 13px;
-
-    font-weight: 700;
-
-    margin-bottom: 8px;
-
-    letter-spacing: 0.4px;
-}
-
-
-/* ========================================================
-   STREAMLIT INPUTS
-======================================================== */
-
-div[data-baseweb="input"] {
-    background: rgba(255,255,255,0.055) !important;
-
-    border: 1px solid rgba(255,255,255,0.10) !important;
-
-    border-radius: 13px !important;
-
-    min-height: 46px;
-
-    transition: 0.25s ease;
-}
-
-div[data-baseweb="input"]:focus-within {
-    border-color: #38bdf8 !important;
-
-    box-shadow:
-        0 0 0 2px rgba(56,189,248,0.10);
-}
-
-input {
-    color: #ffffff !important;
-}
-
-
-/* ========================================================
-   SELECT BOX
-======================================================== */
-
-div[data-baseweb="select"] > div {
-    background: rgba(255,255,255,0.055) !important;
-
-    border: 1px solid rgba(255,255,255,0.10) !important;
-
-    border-radius: 13px !important;
-
-    min-height: 46px;
-
-    transition: 0.25s ease;
-}
-
-div[data-baseweb="select"] > div:hover {
-    border-color: #38bdf8 !important;
-}
-
-div[data-baseweb="select"] span {
-    color: #f8fafc !important;
-}
-
-
-/* ========================================================
-   LABEL
-======================================================== */
-
-label {
-    color: #cbd5e1 !important;
-
-    font-weight: 600 !important;
-}
-
-
-/* ========================================================
-   CONVERT BUTTON
-======================================================== */
-
+.hero {padding:34px;border-radius:26px;margin-bottom:22px;}
+.hero h1 {margin:0;font-size:46px;font-weight:800;background:linear-gradient(90deg,#fff,#7dd3fc,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero p {color:#aebbd0;margin:.4rem 0;font-size:16px;}
+.panel {padding:25px;border-radius:22px;margin-bottom:18px;}
+.field-card {padding:16px;border-radius:18px;margin-bottom:14px;}
+.field-title {font-size:12px;font-weight:800;letter-spacing:.8px;color:#93c5fd;margin-bottom:8px;}
+.result-card {padding:30px;border-radius:24px;text-align:center;margin-top:22px;background:linear-gradient(135deg,rgba(6,182,212,.13),rgba(37,99,235,.16),rgba(124,58,237,.16));}
+.result-label {font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#93c5fd;font-weight:800;}
+.result-number {font-size:38px;font-weight:850;margin:9px 0;color:#fff;}
+.result-unit {font-size:16px;color:#cbd5e1;}
+.constant-card {padding:18px;border-radius:17px;margin-bottom:12px;}
+.constant-name {font-weight:750;color:#e2e8f0;}
+.constant-value {color:#7dd3fc;margin-top:6px;}
 .stButton > button {
-    width: 100%;
-
-    min-height: 52px;
-
-    border: none !important;
-
-    border-radius: 15px !important;
-
-    color: white !important;
-
-    font-size: 16px !important;
-
-    font-weight: 700 !important;
-
-    letter-spacing: 0.5px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #06b6d4,
-            #2563eb,
-            #7c3aed
-        ) !important;
-
-    box-shadow:
-        0 10px 30px rgba(37,99,235,0.28);
-
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
+    width:100%;height:50px;border:0!important;border-radius:14px!important;
+    color:#fff!important;font-weight:800!important;
+    background:linear-gradient(135deg,#06b6d4,#2563eb,#7c3aed)!important;
+    box-shadow:0 9px 26px rgba(37,99,235,.28);
 }
-
-.stButton > button:hover {
-    transform: translateY(-2px);
-
-    box-shadow:
-        0 15px 38px rgba(37,99,235,0.42);
+.stButton > button:hover {transform:translateY(-2px);}
+div[data-baseweb="input"] > div, div[data-baseweb="select"] > div {
+    background:rgba(255,255,255,.045)!important;
+    border-radius:12px!important;
+    border-color:rgba(255,255,255,.10)!important;
 }
-
-.stButton > button:active {
-    transform: scale(0.98);
+input {color:#fff!important;}
+button[data-baseweb="tab"] {font-weight:750!important;}
+@media(max-width:700px){
+    .hero h1{font-size:32px}.hero{padding:25px}.panel{padding:18px}.result-number{font-size:29px}
 }
-
-
-/* ========================================================
-   RESULT
-======================================================== */
-
-.result-box {
-    position: relative;
-
-    overflow: hidden;
-
-    padding: 35px;
-
-    margin-top: 28px;
-
-    border-radius: 25px;
-
-    text-align: center;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(6,182,212,0.16),
-            rgba(37,99,235,0.18),
-            rgba(124,58,237,0.20)
-        );
-
-    border: 1px solid rgba(96,165,250,0.28);
-
-    box-shadow:
-        0 15px 45px rgba(0,0,0,0.30),
-        inset 0 1px 0 rgba(255,255,255,0.06);
-}
-
-.result-label {
-    color: #93c5fd;
-
-    font-size: 13px;
-
-    font-weight: 700;
-
-    letter-spacing: 2px;
-
-    text-transform: uppercase;
-}
-
-.result-number {
-    color: #ffffff;
-
-    font-size: 42px;
-
-    font-weight: 800;
-
-    margin: 10px 0;
-
-    text-shadow:
-        0 0 25px rgba(96,165,250,0.35);
-}
-
-.result-unit {
-    color: #cbd5e1;
-
-    font-size: 16px;
-}
-
-
-/* ========================================================
-   INFO BOX
-======================================================== */
-
-.info-box {
-    padding: 18px;
-
-    margin-top: 18px;
-
-    border-radius: 16px;
-
-    background: rgba(59,130,246,0.07);
-
-    border: 1px solid rgba(59,130,246,0.15);
-
-    color: #a9b9cc;
-
-    font-size: 14px;
-}
-
-
-/* ========================================================
-   CONSTANT CARD
-======================================================== */
-
-.constant-card {
-    padding: 20px;
-
-    margin-bottom: 14px;
-
-    border-radius: 18px;
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(255,255,255,0.055),
-            rgba(255,255,255,0.02)
-        );
-
-    border: 1px solid rgba(255,255,255,0.08);
-
-    transition: 0.25s ease;
-}
-
-.constant-card:hover {
-    transform: translateY(-2px);
-
-    border-color: rgba(96,165,250,0.25);
-}
-
-.constant-name {
-    color: #e2e8f0;
-
-    font-weight: 700;
-
-    font-size: 16px;
-}
-
-.constant-value {
-    color: #93c5fd;
-
-    margin-top: 8px;
-
-    font-size: 15px;
-}
-
-
-/* ========================================================
-   TABS
-======================================================== */
-
-button[data-baseweb="tab"] {
-    color: #94a3b8 !important;
-
-    font-size: 16px !important;
-
-    font-weight: 700 !important;
-}
-
-button[data-baseweb="tab"][aria-selected="true"] {
-    color: #38bdf8 !important;
-}
-
-
-/* ========================================================
-   SIDEBAR
-======================================================== */
-
-section[data-testid="stSidebar"] {
-    background:
-        linear-gradient(
-            180deg,
-            #050816,
-            #0b1224
-        );
-
-    border-right: 1px solid rgba(255,255,255,0.08);
-}
-
-
-/* ========================================================
-   MOBILE
-======================================================== */
-
-@media (max-width: 768px) {
-
-    .block-container {
-        padding-left: 1rem;
-        padding-right: 1rem;
-    }
-
-    .hero {
-        padding: 28px;
-    }
-
-    .hero h1 {
-        font-size: 34px;
-    }
-
-    .main-card {
-        padding: 20px;
-    }
-
-    .result-number {
-        font-size: 30px;
-    }
-}
-
 </style>
 """, unsafe_allow_html=True)
 
-
-# =========================================================
+# ============================================================
 # UNIT DATABASE
-# =========================================================
-
+# Factor converts unit -> SI base unit.
+# ============================================================
 UNITS = {
-
     "Length": {
-        "meter (m)": 1,
-        "kilometer (km)": 1000,
-        "centimeter (cm)": 1e-2,
-        "millimeter (mm)": 1e-3,
-        "micrometer (μm)": 1e-6,
-        "nanometer (nm)": 1e-9,
-        "angstrom (Å)": 1e-10,
-        "inch (in)": 0.0254,
-        "foot (ft)": 0.3048,
-        "mile (mi)": 1609.344
+        "meter (m)": 1, "kilometer (km)": 1e3, "centimeter (cm)": 1e-2,
+        "millimeter (mm)": 1e-3, "micrometer (μm)": 1e-6,
+        "nanometer (nm)": 1e-9, "angstrom (Å)": 1e-10,
+        "inch (in)": 0.0254, "foot (ft)": 0.3048, "mile (mi)": 1609.344
     },
-
     "Mass": {
-        "kilogram (kg)": 1,
-        "gram (g)": 1e-3,
-        "milligram (mg)": 1e-6,
-        "microgram (μg)": 1e-9,
-        "tonne (t)": 1000
+        "kilogram (kg)": 1, "gram (g)": 1e-3, "milligram (mg)": 1e-6,
+        "microgram (μg)": 1e-9, "tonne (t)": 1e3
     },
-
     "Time": {
-        "second (s)": 1,
-        "millisecond (ms)": 1e-3,
-        "microsecond (μs)": 1e-6,
-        "nanosecond (ns)": 1e-9,
-        "minute (min)": 60,
-        "hour (h)": 3600,
+        "second (s)": 1, "millisecond (ms)": 1e-3, "microsecond (μs)": 1e-6,
+        "nanosecond (ns)": 1e-9, "minute (min)": 60, "hour (h)": 3600,
         "day": 86400
     },
-
     "Area": {
-        "square meter (m²)": 1,
-        "square centimeter (cm²)": 1e-4,
-        "square millimeter (mm²)": 1e-6,
-        "square kilometer (km²)": 1e6,
-        "square inch (in²)": 0.00064516,
-        "square foot (ft²)": 0.09290304
+        "square meter (m²)": 1, "square kilometer (km²)": 1e6,
+        "square centimeter (cm²)": 1e-4, "square millimeter (mm²)": 1e-6,
+        "square inch (in²)": 0.00064516, "square foot (ft²)": 0.09290304
     },
-
     "Volume": {
-        "cubic meter (m³)": 1,
-        "liter (L)": 1e-3,
-        "milliliter (mL)": 1e-6,
-        "cubic centimeter (cm³)": 1e-6,
-        "cubic millimeter (mm³)": 1e-9
+        "cubic meter (m³)": 1, "liter (L)": 1e-3, "milliliter (mL)": 1e-6,
+        "cubic centimeter (cm³)": 1e-6, "cubic millimeter (mm³)": 1e-9
     },
-
     "Velocity": {
-        "meter/second (m/s)": 1,
-        "centimeter/second (cm/s)": 1e-2,
-        "kilometer/hour (km/h)": 1000 / 3600,
-        "mile/hour (mph)": 1609.344 / 3600
+        "meter/second (m/s)": 1, "centimeter/second (cm/s)": 1e-2,
+        "kilometer/hour (km/h)": 1000/3600, "mile/hour (mph)": 1609.344/3600
     },
-
     "Acceleration": {
-        "meter/second² (m/s²)": 1,
-        "centimeter/second² (cm/s²)": 1e-2,
+        "meter/second² (m/s²)": 1, "centimeter/second² (cm/s²)": 1e-2,
         "standard gravity (g)": 9.80665
     },
-
     "Force": {
-        "newton (N)": 1,
-        "dyne (dyn)": 1e-5,
-        "kilonewton (kN)": 1000
+        "newton (N)": 1, "dyne (dyn)": 1e-5, "kilonewton (kN)": 1e3
     },
-
     "Energy": {
-        "joule (J)": 1,
-        "erg": 1e-7,
-        "kilojoule (kJ)": 1000,
+        "joule (J)": 1, "erg": 1e-7, "kilojoule (kJ)": 1e3,
         "electronvolt (eV)": 1.602176634e-19
     },
-
     "Power": {
-        "watt (W)": 1,
-        "kilowatt (kW)": 1000,
-        "erg/second (erg/s)": 1e-7,
-        "horsepower (hp)": 745.699872
+        "watt (W)": 1, "kilowatt (kW)": 1e3,
+        "erg/second (erg/s)": 1e-7, "horsepower (hp)": 745.699872
     },
-
     "Pressure": {
-        "pascal (Pa)": 1,
-        "dyne/cm²": 0.1,
-        "bar": 1e5,
-        "atmosphere (atm)": 101325,
-        "torr": 133.322368
+        "pascal (Pa)": 1, "kilopascal (kPa)": 1e3, "bar": 1e5,
+        "atmosphere (atm)": 101325, "torr": 133.322368, "dyne/cm²": 0.1
     },
-
     "Frequency": {
-        "hertz (Hz)": 1,
-        "kilohertz (kHz)": 1e3,
-        "megahertz (MHz)": 1e6,
-        "gigahertz (GHz)": 1e9
+        "hertz (Hz)": 1, "kilohertz (kHz)": 1e3,
+        "megahertz (MHz)": 1e6, "gigahertz (GHz)": 1e9
     },
-
     "Electric Charge": {
-        "coulomb (C)": 1,
-        "abcoulomb (abC)": 10,
-        "statcoulomb (statC)": 3.33564e-10
+        "coulomb (C)": 1, "millicoulomb (mC)": 1e-3,
+        "microcoulomb (μC)": 1e-6, "nanocoulomb (nC)": 1e-9
     },
-
-    "Magnetic Flux": {
-        "weber (Wb)": 1,
-        "maxwell (Mx)": 1e-8
+    "Electric Potential": {
+        "volt (V)": 1, "millivolt (mV)": 1e-3, "kilovolt (kV)": 1e3
     },
-
+    "Electric Current": {
+        "ampere (A)": 1, "milliampere (mA)": 1e-3, "microampere (μA)": 1e-6
+    },
+    "Resistance": {
+        "ohm (Ω)": 1, "milliohm (mΩ)": 1e-3, "kilohm (kΩ)": 1e3,
+        "megohm (MΩ)": 1e6
+    },
+    "Capacitance": {
+        "farad (F)": 1, "microfarad (μF)": 1e-6,
+        "nanofarad (nF)": 1e-9, "picofarad (pF)": 1e-12
+    },
     "Magnetic Field": {
-        "tesla (T)": 1,
-        "gauss (G)": 1e-4
-    }
+        "tesla (T)": 1, "gauss (G)": 1e-4
+    },
+    "Magnetic Flux": {
+        "weber (Wb)": 1, "maxwell (Mx)": 1e-8
+    },
+    "Density": {
+        "kilogram/m³ (kg/m³)": 1,
+        "gram/cm³ (g/cm³)": 1000,
+        "gram/mL (g/mL)": 1000
+    },
+    "Dynamic Viscosity": {
+        "pascal-second (Pa·s)": 1,
+        "poise (P)": 0.1,
+        "centipoise (cP)": 0.001
+    },
+    "Molar Amount": {
+        "mole (mol)": 1,
+        "millimole (mmol)": 1e-3,
+        "micromole (μmol)": 1e-6,
+        "nanomole (nmol)": 1e-9
+    },
 }
 
+# ============================================================
+# CONVERSIONS
+# ============================================================
+def temp_to_k(x, unit):
+    if unit == "Kelvin (K)": return x
+    if unit == "Celsius (°C)": return x + 273.15
+    return (x - 32) * 5/9 + 273.15
 
-# =========================================================
-# TEMPERATURE
-# =========================================================
+def k_to_temp(x, unit):
+    if unit == "Kelvin (K)": return x
+    if unit == "Celsius (°C)": return x - 273.15
+    return (x - 273.15) * 9/5 + 32
 
-def to_kelvin(value, unit):
-
-    if unit == "Kelvin (K)":
-        return value
-
-    if unit == "Celsius (°C)":
-        return value + 273.15
-
-    if unit == "Fahrenheit (°F)":
-        return (value - 32) * 5 / 9 + 273.15
-
-    return value
-
-
-def from_kelvin(value, unit):
-
-    if unit == "Kelvin (K)":
-        return value
-
-    if unit == "Celsius (°C)":
-        return value - 273.15
-
-    if unit == "Fahrenheit (°F)":
-        return (value - 273.15) * 9 / 5 + 32
-
-    return value
-
-
-# =========================================================
-# CONVERSION FUNCTION
-# =========================================================
-
-def convert(value, category, from_unit, to_unit):
-
+def convert_value(x, category, u1, u2):
     if category == "Temperature":
+        return k_to_temp(temp_to_k(x, u1), u2)
+    return x * UNITS[category][u1] / UNITS[category][u2]
 
-        kelvin = to_kelvin(value, from_unit)
+def fmt(x):
+    if x == 0: return "0"
+    if abs(x) >= 1e6 or abs(x) < 1e-4:
+        return f"{x:.6e}"
+    return f"{x:.10g}"
 
-        return from_kelvin(kelvin, to_unit)
+# ============================================================
+# SAFE SCIENTIFIC CALCULATOR
+# ============================================================
+BIN_OPS = {
+    ast.Add: op.add, ast.Sub: op.sub, ast.Mult: op.mul,
+    ast.Div: op.truediv, ast.Pow: op.pow, ast.Mod: op.mod,
+}
+UNARY_OPS = {ast.UAdd: op.pos, ast.USub: op.neg}
+FUNCS = {
+    "sin": math.sin, "cos": math.cos, "tan": math.tan,
+    "sqrt": math.sqrt, "log": math.log10, "ln": math.log,
+    "exp": math.exp, "abs": abs, "asin": math.asin,
+    "acos": math.acos, "atan": math.atan
+}
+NAMES = {"pi": math.pi, "e": math.e}
 
-    value_in_si = value * UNITS[category][from_unit]
+def safe_eval(expr):
+    tree = ast.parse(expr, mode="eval")
 
-    return value_in_si / UNITS[category][to_unit]
+    def walk(node):
+        if isinstance(node, ast.Expression):
+            return walk(node.body)
+        if isinstance(node, ast.Constant) and isinstance(node.value, (int, float)):
+            return node.value
+        if isinstance(node, ast.Num):
+            return node.n
+        if isinstance(node, ast.BinOp) and type(node.op) in BIN_OPS:
+            return BIN_OPS[type(node.op)](walk(node.left), walk(node.right))
+        if isinstance(node, ast.UnaryOp) and type(node.op) in UNARY_OPS:
+            return UNARY_OPS[type(node.op)](walk(node.operand))
+        if isinstance(node, ast.Name) and node.id in NAMES:
+            return NAMES[node.id]
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id in FUNCS:
+            if len(node.args) != 1:
+                raise ValueError("Use one argument in a function.")
+            return FUNCS[node.func.id](walk(node.args[0]))
+        raise ValueError("Unsupported expression.")
 
+    return walk(tree)
 
-# =========================================================
-# NUMBER FORMAT
-# =========================================================
-
-def format_number(value):
-
-    if value == 0:
-        return "0"
-
-    if abs(value) >= 1e6 or abs(value) < 1e-4:
-        return f"{value:.6e}"
-
-    return f"{value:.10g}"
-
-
-# =========================================================
-# HERO
-# =========================================================
-
+# ============================================================
+# HEADER
+# ============================================================
 st.markdown("""
 <div class="hero">
-
-<h1>⚛️ Physics Toolkit</h1>
-
-<p>
-Calculate • Convert • Explore
-</p>
-
-<p>
-A modern scientific toolkit for Physics students
-</p>
-
+    <h1>⚛️ Physics Toolkit</h1>
+    <p>Calculate • Convert • Explore</p>
+    <p>Physics utility app for students — SI, CGS and scientific calculations.</p>
 </div>
 """, unsafe_allow_html=True)
 
-
-# =========================================================
-# TABS
-# =========================================================
-
-converter_tab, calculator_tab, constants_tab = st.tabs([
-    "🔄 Unit Converter",
-    "🧮 Calculator",
-    "📐 Constants"
+converter, calculator, constants = st.tabs([
+    "🔄 Unit Converter", "🧮 Calculator", "📐 Constants"
 ])
 
-
-# =========================================================
-# UNIT CONVERTER
-# =========================================================
-
-with converter_tab:
-
+# ============================================================
+# CONVERTER
+# ============================================================
+with converter:
     st.markdown("""
-    <div class="main-card">
-
+    <div class="panel">
         <h2>🔄 Universal Unit Converter</h2>
-
-        <p>
-        Convert physical quantities between MKS, CGS
-        and commonly used scientific units.
-        </p>
-
-    </div>
-    """, unsafe_allow_html=True)
-
-
-    # -----------------------------------------------------
-    # PHYSICAL QUANTITY
-    # -----------------------------------------------------
-
-    st.markdown("""
-    <div class="field-box">
-
-        <div class="field-title">
-        📚 PHYSICAL QUANTITY
-        </div>
-
+        <p>Convert common physical quantities between SI/MKS, CGS and practical units.</p>
     </div>
     """, unsafe_allow_html=True)
 
     categories = list(UNITS.keys()) + ["Temperature"]
 
-    category = st.selectbox(
-        "Select Physical Quantity",
-        categories,
-        label_visibility="collapsed"
-    )
+    st.markdown('<div class="field-card"><div class="field-title">📚 PHYSICAL QUANTITY</div>', unsafe_allow_html=True)
+    category = st.selectbox("Physical quantity", categories, label_visibility="collapsed")
+    st.markdown("</div>", unsafe_allow_html=True)
 
+    units = ["Kelvin (K)", "Celsius (°C)", "Fahrenheit (°F)"] if category == "Temperature" else list(UNITS[category].keys())
 
-    # -----------------------------------------------------
-    # UNITS
-    # -----------------------------------------------------
+    c1, c2 = st.columns(2)
 
-    if category == "Temperature":
+    with c1:
+        st.markdown('<div class="field-card"><div class="field-title">🔢 VALUE</div>', unsafe_allow_html=True)
+        value = st.number_input("Value", value=1.0, format="%.10g", label_visibility="collapsed")
+        st.markdown("</div>", unsafe_allow_html=True)
 
-        units = [
-            "Kelvin (K)",
-            "Celsius (°C)",
-            "Fahrenheit (°F)"
-        ]
+    with c2:
+        st.markdown('<div class="field-card"><div class="field-title">📤 FROM UNIT</div>', unsafe_allow_html=True)
+        from_unit = st.selectbox("From", units, label_visibility="collapsed", key="from_unit")
+        st.markdown("</div>", unsafe_allow_html=True)
 
-    else:
+    st.markdown('<div class="field-card"><div class="field-title">📥 TO UNIT</div>', unsafe_allow_html=True)
+    to_unit = st.selectbox("To", units, label_visibility="collapsed", key="to_unit")
+    st.markdown("</div>", unsafe_allow_html=True)
 
-        units = list(UNITS[category].keys())
-
-
-    col1, col2 = st.columns(2)
-
-
-    # -----------------------------------------------------
-    # VALUE
-    # -----------------------------------------------------
-
-    with col1:
-
-        st.markdown("""
-        <div class="field-box">
-
-            <div class="field-title">
-            🔢 ENTER VALUE
-            </div>
-
-        </div>
-        """, unsafe_allow_html=True)
-
-        value = st.number_input(
-            "Value",
-            value=1.0,
-            format="%.10g",
-            label_visibility="collapsed"
-        )
-
-
-    # -----------------------------------------------------
-    # FROM UNIT
-    # -----------------------------------------------------
-
-    with col2:
-
-        st.markdown("""
-        <div class="field-box">
-
-            <div class="field-title">
-            📤 FROM UNIT
-            </div>
-
-        </div>
-        """, unsafe_allow_html=True)
-
-        from_unit = st.selectbox(
-            "From Unit",
-            units,
-            key="from_unit",
-            label_visibility="collapsed"
-        )
-
-
-    # -----------------------------------------------------
-    # TO UNIT
-    # -----------------------------------------------------
-
-    st.markdown("""
-    <div class="field-box">
-
-        <div class="field-title">
-        📥 TO UNIT
-        </div>
-
-    </div>
-    """, unsafe_allow_html=True)
-
-    to_unit = st.selectbox(
-        "To Unit",
-        units,
-        key="to_unit",
-        label_visibility="collapsed"
-    )
-
-
-    # -----------------------------------------------------
-    # CONVERT
-    # -----------------------------------------------------
-
-    st.write("")
-
-    convert_button = st.button(
-        "⚡  CONVERT",
-        key="convert_button",
-        use_container_width=True
-    )
-
-
-    # -----------------------------------------------------
-    # RESULT
-    # -----------------------------------------------------
-
-    if convert_button:
-
+    if st.button("⚡  CONVERT", key="convert", use_container_width=True):
         try:
+            result = convert_value(value, category, from_unit, to_unit)
+            st.markdown(f"""
+            <div class="result-card">
+                <div class="result-label">✨ Conversion Result</div>
+                <div class="result-number">{fmt(result)}</div>
+                <div class="result-unit">{to_unit}</div>
+            </div>
+            """, unsafe_allow_html=True)
+            st.caption(f"{fmt(value)} {from_unit}  →  {fmt(result)} {to_unit}")
+        except Exception as e:
+            st.error(f"Conversion error: {e}")
 
-            result = convert(
-                value,
-                category,
-                from_unit,
-                to_unit
-            )
-
-            st.markdown(
-                f"""
-                <div class="result-box">
-
-                    <div class="result-label">
-                    ✨ Conversion Result
-                    </div>
-
-                    <div class="result-number">
-                    {format_number(result)}
-                    </div>
-
-                    <div class="result-unit">
-                    {to_unit}
-                    </div>
-
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-
-            st.markdown(
-                f"""
-                <div class="info-box">
-
-                <b>Conversion:</b>
-                {format_number(value)} {from_unit}
-                →
-                {format_number(result)} {to_unit}
-
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-
-        except Exception as error:
-
-            st.error(
-                f"Conversion error: {error}"
-            )
-
-
-# =========================================================
-# SCIENTIFIC CALCULATOR
-# =========================================================
-
-with calculator_tab:
-
+# ============================================================
+# CALCULATOR
+# ============================================================
+with calculator:
     st.markdown("""
-    <div class="main-card">
-
+    <div class="panel">
         <h2>🧮 Scientific Calculator</h2>
-
-        <p>
-        Perform mathematical and scientific calculations.
-        </p>
-
+        <p>Use +, −, ×, ÷, powers and common scientific functions.</p>
     </div>
     """, unsafe_allow_html=True)
 
-
-    st.markdown("""
-    <div class="field-box">
-
-        <div class="field-title">
-        🔢 MATHEMATICAL EXPRESSION
-        </div>
-
-    </div>
-    """, unsafe_allow_html=True)
-
-
+    st.markdown('<div class="field-card"><div class="field-title">🔢 EXPRESSION</div>', unsafe_allow_html=True)
     expression = st.text_input(
         "Expression",
-        placeholder="Example: 2*(5+3)",
+        placeholder="Example: 2*(5+3), sqrt(25), sin(pi/2)",
         label_visibility="collapsed"
     )
+    st.markdown("</div>", unsafe_allow_html=True)
 
+    st.info("Functions: sin, cos, tan, asin, acos, atan, sqrt, log, ln, exp, abs • Constants: pi, e")
 
-    st.markdown("""
-    <div class="info-box">
-
-    <b>Available functions:</b>
-
-    sin • cos • tan • sqrt • log • ln • exp • pi • e
-
-    <br><br>
-
-    Examples:
-
-    <br>
-    <b>sqrt(25)</b>
-
-    <br>
-    <b>sin(pi/2)</b>
-
-    <br>
-    <b>2*(5+3)</b>
-
-    </div>
-    """, unsafe_allow_html=True)
-
-
-    st.write("")
-
-
-    calculate_button = st.button(
-        "🧮  CALCULATE",
-        key="calculate_button",
-        use_container_width=True
-    )
-
-
-    if calculate_button:
-
+    if st.button("🧮  CALCULATE", key="calculate", use_container_width=True):
         try:
+            if not expression.strip():
+                raise ValueError("Enter an expression.")
+            answer = safe_eval(expression)
+            st.markdown(f"""
+            <div class="result-card">
+                <div class="result-label">✨ Answer</div>
+                <div class="result-number">{fmt(answer)}</div>
+            </div>
+            """, unsafe_allow_html=True)
+        except Exception as e:
+            st.error(f"Invalid expression: {e}")
 
-            allowed_functions = {
-                "sin": math.sin,
-                "cos": math.cos,
-                "tan": math.tan,
-                "sqrt": math.sqrt,
-                "log": math.log10,
-                "ln": math.log,
-                "exp": math.exp,
-                "pi": math.pi,
-                "e": math.e,
-                "abs": abs
-            }
-
-            result = eval(
-                expression,
-                {"__builtins__": {}},
-                allowed_functions
-            )
-
-            st.markdown(
-                f"""
-                <div class="result-box">
-
-                    <div class="result-label">
-                    ✨ Answer
-                    </div>
-
-                    <div class="result-number">
-                    {format_number(result)}
-                    </div>
-
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-
-        except Exception:
-
-            st.error(
-                "Invalid expression. Please check your input."
-            )
-
-
-# =========================================================
-# PHYSICAL CONSTANTS
-# =========================================================
-
-with constants_tab:
-
+# ============================================================
+# CONSTANTS
+# ============================================================
+with constants:
     st.markdown("""
-    <div class="main-card">
-
+    <div class="panel">
         <h2>📐 Fundamental Physical Constants</h2>
-
-        <p>
-        Important constants frequently used in Physics.
-        </p>
-
+        <p>Frequently used constants for Physics calculations.</p>
     </div>
     """, unsafe_allow_html=True)
 
+    constant_data = [
+        ("Speed of Light (c)", "2.99792458 × 10⁸ m/s"),
+        ("Planck Constant (h)", "6.62607015 × 10⁻³⁴ J·s"),
+        ("Reduced Planck Constant (ℏ)", "1.054571817 × 10⁻³⁴ J·s"),
+        ("Elementary Charge (e)", "1.602176634 × 10⁻¹⁹ C"),
+        ("Electron Mass", "9.1093837 × 10⁻³¹ kg"),
+        ("Proton Mass", "1.6726219 × 10⁻²⁷ kg"),
+        ("Gravitational Constant (G)", "6.67430 × 10⁻¹¹ m³ kg⁻¹ s⁻²"),
+        ("Boltzmann Constant (kB)", "1.380649 × 10⁻²³ J/K"),
+        ("Avogadro Constant (NA)", "6.02214076 × 10²³ mol⁻¹"),
+        ("Vacuum Permittivity (ε₀)", "8.8541878128 × 10⁻¹² F/m"),
+        ("Vacuum Permeability (μ₀)", "1.25663706212 × 10⁻⁶ H/m"),
+    ]
 
-    constants = {
-
-        "Speed of Light (c)":
-            "2.99792458 × 10⁸ m/s",
-
-        "Planck Constant (h)":
-            "6.62607015 × 10⁻³⁴ J·s",
-
-        "Reduced Planck Constant (ℏ)":
-            "1.054571817 × 10⁻³⁴ J·s",
-
-        "Elementary Charge (e)":
-            "1.602176634 × 10⁻¹⁹ C",
-
-        "Electron Mass":
-            "9.1093837 × 10⁻³¹ kg",
-
-        "Proton Mass":
-            "1.6726219 × 10⁻²⁷ kg",
-
-        "Gravitational Constant (G)":
-            "6.67430 × 10⁻¹¹ m³ kg⁻¹ s⁻²",
-
-        "Boltzmann Constant (kB)":
-            "1.380649 × 10⁻²³ J/K",
-
-        "Avogadro Constant (NA)":
-            "6.02214076 × 10²³ mol⁻¹",
-
-        "Vacuum Permittivity (ε₀)":
-            "8.8541878 × 10⁻¹² F/m",
-
-        "Vacuum Permeability (μ₀)":
-            "1.2566371 × 10⁻⁶ H/m"
-    }
-
-
-    for name, value in constants.items():
-
-        st.markdown(
-            f"""
-            <div class="constant-card">
-
-                <div class="constant-name">
-                {name}
-                </div>
-
-                <div class="constant-value">
-                {value}
-                </div>
-
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-
-# =========================================================
-# FOOTER
-# =========================================================
+    for name, value in constant_data:
+        st.markdown(f"""
+        <div class="constant-card">
+            <div class="constant-name">{name}</div>
+            <div class="constant-value">{value}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
 st.markdown("""
-<div style="
-    text-align:center;
-    color:#64748b;
-    margin-top:45px;
-    padding:20px;
-    font-size:13px;
-">
-
-⚛️ <b>Physics Toolkit</b>
-
-<br>
-
-Built with Python + Streamlit
-
+<div style="text-align:center;color:#64748b;margin-top:40px;padding:20px;font-size:13px">
+⚛️ <b>Physics Toolkit</b><br>
+Python + Streamlit
 </div>
 """, unsafe_allow_html=True)
