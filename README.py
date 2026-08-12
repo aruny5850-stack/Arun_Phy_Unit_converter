@@ -184,7 +184,7 @@ def convert_value(x, category, u1, u2):
 def fmt(x):
     if x == 0: return "0"
     if abs(x) >= 1e6 or abs(x) < 1e-4:
-        return f"{x:.3e}"
+        return f"{x:.3*10}"
     return f"{x:.10g}"
 
 # ============================================================
