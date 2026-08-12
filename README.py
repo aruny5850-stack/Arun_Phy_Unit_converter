@@ -18,12 +18,30 @@ st.set_page_config(
 st.markdown("""
 <style>
 
+/* ========================================================
+   GLOBAL
+======================================================== */
+
 .stApp {
     background:
-        radial-gradient(circle at 10% 10%, #172554 0%, transparent 30%),
-        radial-gradient(circle at 90% 10%, #312e81 0%, transparent 30%),
-        linear-gradient(135deg, #020617, #0f172a, #111827);
-    color: white;
+        radial-gradient(
+            circle at 8% 8%,
+            rgba(14, 165, 233, 0.13),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 92% 12%,
+            rgba(124, 58, 237, 0.13),
+            transparent 30%
+        ),
+        linear-gradient(
+            135deg,
+            #020617 0%,
+            #0b1224 50%,
+            #111827 100%
+        );
+
+    color: #f8fafc;
 }
 
 .block-container {
@@ -32,135 +50,452 @@ st.markdown("""
     padding-bottom: 4rem;
 }
 
-/* HEADER */
+
+/* ========================================================
+   HERO
+======================================================== */
 
 .hero {
-    padding: 40px;
-    border-radius: 28px;
+    position: relative;
+    overflow: hidden;
+
+    padding: 42px;
     margin-bottom: 30px;
-    background: linear-gradient(
-        135deg,
-        rgba(14, 165, 233, 0.18),
-        rgba(99, 102, 241, 0.20)
-    );
+
+    border-radius: 28px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(14, 165, 233, 0.18),
+            rgba(37, 99, 235, 0.16),
+            rgba(124, 58, 237, 0.18)
+        );
+
     border: 1px solid rgba(255,255,255,0.12);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.05);
+
+    backdrop-filter: blur(18px);
 }
 
 .hero h1 {
     margin: 0;
+
     font-size: 48px;
     font-weight: 800;
-    color: white;
+
+    background:
+        linear-gradient(
+            90deg,
+            #ffffff,
+            #7dd3fc,
+            #a78bfa
+        );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .hero p {
-    color: #cbd5e1;
+    margin-top: 10px;
+
+    color: #b8c4d6;
+
     font-size: 17px;
 }
 
-/* CARD */
 
-.card {
+/* ========================================================
+   MAIN CARD
+======================================================== */
+
+.main-card {
     padding: 28px;
-    border-radius: 22px;
+
     margin-bottom: 22px;
-    background: rgba(255,255,255,0.055);
+
+    border-radius: 24px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,0.065),
+            rgba(255,255,255,0.025)
+        );
+
     border: 1px solid rgba(255,255,255,0.10);
-    box-shadow: 0 12px 35px rgba(0,0,0,0.25);
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,0.25);
+
+    backdrop-filter: blur(18px);
 }
 
-/* INPUT */
+.main-card h2 {
+    margin-top: 0;
+
+    color: #ffffff;
+
+    font-size: 25px;
+}
+
+.main-card p {
+    color: #9caec4;
+}
+
+
+/* ========================================================
+   FIELD BOX
+======================================================== */
+
+.field-box {
+    padding: 18px;
+
+    margin-bottom: 18px;
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,0.065),
+            rgba(255,255,255,0.025)
+        );
+
+    border: 1px solid rgba(255,255,255,0.09);
+
+    box-shadow:
+        0 8px 25px rgba(0,0,0,0.16);
+
+    transition: all 0.25s ease;
+}
+
+.field-box:hover {
+    border-color: rgba(56,189,248,0.35);
+
+    box-shadow:
+        0 10px 30px rgba(14,165,233,0.10);
+}
+
+.field-title {
+    color: #cbd5e1;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    margin-bottom: 8px;
+
+    letter-spacing: 0.4px;
+}
+
+
+/* ========================================================
+   STREAMLIT INPUTS
+======================================================== */
 
 div[data-baseweb="input"] {
-    background: rgba(255,255,255,0.06) !important;
+    background: rgba(255,255,255,0.055) !important;
+
+    border: 1px solid rgba(255,255,255,0.10) !important;
+
     border-radius: 13px !important;
+
+    min-height: 46px;
+
+    transition: 0.25s ease;
 }
 
-/* SELECTBOX */
+div[data-baseweb="input"]:focus-within {
+    border-color: #38bdf8 !important;
+
+    box-shadow:
+        0 0 0 2px rgba(56,189,248,0.10);
+}
+
+input {
+    color: #ffffff !important;
+}
+
+
+/* ========================================================
+   SELECT BOX
+======================================================== */
 
 div[data-baseweb="select"] > div {
-    background: rgba(255,255,255,0.06) !important;
+    background: rgba(255,255,255,0.055) !important;
+
+    border: 1px solid rgba(255,255,255,0.10) !important;
+
     border-radius: 13px !important;
+
+    min-height: 46px;
+
+    transition: 0.25s ease;
 }
 
-/* BUTTON */
+div[data-baseweb="select"] > div:hover {
+    border-color: #38bdf8 !important;
+}
+
+div[data-baseweb="select"] span {
+    color: #f8fafc !important;
+}
+
+
+/* ========================================================
+   LABEL
+======================================================== */
+
+label {
+    color: #cbd5e1 !important;
+
+    font-weight: 600 !important;
+}
+
+
+/* ========================================================
+   CONVERT BUTTON
+======================================================== */
 
 .stButton > button {
     width: 100%;
-    height: 52px;
+
+    min-height: 52px;
+
     border: none !important;
-    border-radius: 14px !important;
+
+    border-radius: 15px !important;
+
     color: white !important;
+
     font-size: 16px !important;
+
     font-weight: 700 !important;
-    background: linear-gradient(
-        135deg,
-        #06b6d4,
-        #2563eb,
-        #7c3aed
-    ) !important;
-    box-shadow: 0 10px 30px rgba(37,99,235,0.30);
+
+    letter-spacing: 0.5px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #06b6d4,
+            #2563eb,
+            #7c3aed
+        ) !important;
+
+    box-shadow:
+        0 10px 30px rgba(37,99,235,0.28);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
 .stButton > button:hover {
     transform: translateY(-2px);
+
+    box-shadow:
+        0 15px 38px rgba(37,99,235,0.42);
 }
 
-/* RESULT */
+.stButton > button:active {
+    transform: scale(0.98);
+}
 
-.result {
-    padding: 32px;
-    margin-top: 25px;
-    border-radius: 24px;
+
+/* ========================================================
+   RESULT
+======================================================== */
+
+.result-box {
+    position: relative;
+
+    overflow: hidden;
+
+    padding: 35px;
+
+    margin-top: 28px;
+
+    border-radius: 25px;
+
     text-align: center;
-    background: linear-gradient(
-        135deg,
-        rgba(6,182,212,0.15),
-        rgba(37,99,235,0.18),
-        rgba(124,58,237,0.18)
-    );
-    border: 1px solid rgba(96,165,250,0.25);
-    box-shadow: 0 15px 45px rgba(0,0,0,0.30);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(6,182,212,0.16),
+            rgba(37,99,235,0.18),
+            rgba(124,58,237,0.20)
+        );
+
+    border: 1px solid rgba(96,165,250,0.28);
+
+    box-shadow:
+        0 15px 45px rgba(0,0,0,0.30),
+        inset 0 1px 0 rgba(255,255,255,0.06);
 }
 
-.result-title {
+.result-label {
     color: #93c5fd;
-    font-size: 14px;
-    text-transform: uppercase;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
     letter-spacing: 2px;
+
+    text-transform: uppercase;
 }
 
-.result-value {
-    color: white;
-    font-size: 40px;
+.result-number {
+    color: #ffffff;
+
+    font-size: 42px;
+
     font-weight: 800;
-    margin: 12px;
+
+    margin: 10px 0;
+
+    text-shadow:
+        0 0 25px rgba(96,165,250,0.35);
 }
 
-/* TABS */
+.result-unit {
+    color: #cbd5e1;
+
+    font-size: 16px;
+}
+
+
+/* ========================================================
+   INFO BOX
+======================================================== */
+
+.info-box {
+    padding: 18px;
+
+    margin-top: 18px;
+
+    border-radius: 16px;
+
+    background: rgba(59,130,246,0.07);
+
+    border: 1px solid rgba(59,130,246,0.15);
+
+    color: #a9b9cc;
+
+    font-size: 14px;
+}
+
+
+/* ========================================================
+   CONSTANT CARD
+======================================================== */
+
+.constant-card {
+    padding: 20px;
+
+    margin-bottom: 14px;
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,0.055),
+            rgba(255,255,255,0.02)
+        );
+
+    border: 1px solid rgba(255,255,255,0.08);
+
+    transition: 0.25s ease;
+}
+
+.constant-card:hover {
+    transform: translateY(-2px);
+
+    border-color: rgba(96,165,250,0.25);
+}
+
+.constant-name {
+    color: #e2e8f0;
+
+    font-weight: 700;
+
+    font-size: 16px;
+}
+
+.constant-value {
+    color: #93c5fd;
+
+    margin-top: 8px;
+
+    font-size: 15px;
+}
+
+
+/* ========================================================
+   TABS
+======================================================== */
 
 button[data-baseweb="tab"] {
-    font-size: 16px;
-    font-weight: 600;
+    color: #94a3b8 !important;
+
+    font-size: 16px !important;
+
+    font-weight: 700 !important;
 }
 
-/* MOBILE */
+button[data-baseweb="tab"][aria-selected="true"] {
+    color: #38bdf8 !important;
+}
+
+
+/* ========================================================
+   SIDEBAR
+======================================================== */
+
+section[data-testid="stSidebar"] {
+    background:
+        linear-gradient(
+            180deg,
+            #050816,
+            #0b1224
+        );
+
+    border-right: 1px solid rgba(255,255,255,0.08);
+}
+
+
+/* ========================================================
+   MOBILE
+======================================================== */
 
 @media (max-width: 768px) {
 
+    .block-container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
     .hero {
-        padding: 25px;
+        padding: 28px;
     }
 
     .hero h1 {
         font-size: 34px;
     }
 
-    .result-value {
-        font-size: 28px;
+    .main-card {
+        padding: 20px;
     }
 
+    .result-number {
+        font-size: 30px;
+    }
 }
 
 </style>
@@ -302,6 +637,8 @@ def to_kelvin(value, unit):
     if unit == "Fahrenheit (°F)":
         return (value - 32) * 5 / 9 + 273.15
 
+    return value
+
 
 def from_kelvin(value, unit):
 
@@ -314,9 +651,11 @@ def from_kelvin(value, unit):
     if unit == "Fahrenheit (°F)":
         return (value - 273.15) * 9 / 5 + 32
 
+    return value
+
 
 # =========================================================
-# CONVERSION
+# CONVERSION FUNCTION
 # =========================================================
 
 def convert(value, category, from_unit, to_unit):
@@ -329,9 +668,7 @@ def convert(value, category, from_unit, to_unit):
 
     value_in_si = value * UNITS[category][from_unit]
 
-    result = value_in_si / UNITS[category][to_unit]
-
-    return result
+    return value_in_si / UNITS[category][to_unit]
 
 
 # =========================================================
@@ -350,7 +687,7 @@ def format_number(value):
 
 
 # =========================================================
-# HEADER
+# HERO
 # =========================================================
 
 st.markdown("""
@@ -382,20 +719,35 @@ converter_tab, calculator_tab, constants_tab = st.tabs([
 
 
 # =========================================================
-# CONVERTER
+# UNIT CONVERTER
 # =========================================================
 
 with converter_tab:
 
     st.markdown("""
-    <div class="card">
+    <div class="main-card">
 
-    <h2>🔄 Universal Unit Converter</h2>
+        <h2>🔄 Universal Unit Converter</h2>
 
-    <p>
-    Convert physical quantities between MKS, CGS
-    and commonly used scientific units.
-    </p>
+        <p>
+        Convert physical quantities between MKS, CGS
+        and commonly used scientific units.
+        </p>
+
+    </div>
+    """, unsafe_allow_html=True)
+
+
+    # -----------------------------------------------------
+    # PHYSICAL QUANTITY
+    # -----------------------------------------------------
+
+    st.markdown("""
+    <div class="field-box">
+
+        <div class="field-title">
+        📚 PHYSICAL QUANTITY
+        </div>
 
     </div>
     """, unsafe_allow_html=True)
@@ -403,9 +755,15 @@ with converter_tab:
     categories = list(UNITS.keys()) + ["Temperature"]
 
     category = st.selectbox(
-        "📚 Physical Quantity",
-        categories
+        "Select Physical Quantity",
+        categories,
+        label_visibility="collapsed"
     )
+
+
+    # -----------------------------------------------------
+    # UNITS
+    # -----------------------------------------------------
 
     if category == "Temperature":
 
@@ -419,37 +777,96 @@ with converter_tab:
 
         units = list(UNITS[category].keys())
 
+
     col1, col2 = st.columns(2)
+
+
+    # -----------------------------------------------------
+    # VALUE
+    # -----------------------------------------------------
 
     with col1:
 
+        st.markdown("""
+        <div class="field-box">
+
+            <div class="field-title">
+            🔢 ENTER VALUE
+            </div>
+
+        </div>
+        """, unsafe_allow_html=True)
+
         value = st.number_input(
-            "Enter Value",
+            "Value",
             value=1.0,
-            format="%.10g"
+            format="%.10g",
+            label_visibility="collapsed"
         )
+
+
+    # -----------------------------------------------------
+    # FROM UNIT
+    # -----------------------------------------------------
+
+    with col2:
+
+        st.markdown("""
+        <div class="field-box">
+
+            <div class="field-title">
+            📤 FROM UNIT
+            </div>
+
+        </div>
+        """, unsafe_allow_html=True)
 
         from_unit = st.selectbox(
             "From Unit",
             units,
-            key="from_unit"
+            key="from_unit",
+            label_visibility="collapsed"
         )
 
-    with col2:
 
-        to_unit = st.selectbox(
-            "To Unit",
-            units,
-            key="to_unit"
-        )
+    # -----------------------------------------------------
+    # TO UNIT
+    # -----------------------------------------------------
 
-        st.write("")
+    st.markdown("""
+    <div class="field-box">
 
-        convert_button = st.button(
-            "⚡ CONVERT",
-            key="convert_button",
-            use_container_width=True
-        )
+        <div class="field-title">
+        📥 TO UNIT
+        </div>
+
+    </div>
+    """, unsafe_allow_html=True)
+
+    to_unit = st.selectbox(
+        "To Unit",
+        units,
+        key="to_unit",
+        label_visibility="collapsed"
+    )
+
+
+    # -----------------------------------------------------
+    # CONVERT
+    # -----------------------------------------------------
+
+    st.write("")
+
+    convert_button = st.button(
+        "⚡  CONVERT",
+        key="convert_button",
+        use_container_width=True
+    )
+
+
+    # -----------------------------------------------------
+    # RESULT
+    # -----------------------------------------------------
 
     if convert_button:
 
@@ -464,19 +881,33 @@ with converter_tab:
 
             st.markdown(
                 f"""
-                <div class="result">
+                <div class="result-box">
 
-                <div class="result-title">
-                Conversion Result
-                </div>
+                    <div class="result-label">
+                    ✨ Conversion Result
+                    </div>
 
-                <div class="result-value">
-                {format_number(result)}
-                </div>
+                    <div class="result-number">
+                    {format_number(result)}
+                    </div>
 
-                <div>
-                {to_unit}
+                    <div class="result-unit">
+                    {to_unit}
+                    </div>
+
                 </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+            st.markdown(
+                f"""
+                <div class="info-box">
+
+                <b>Conversion:</b>
+                {format_number(value)} {from_unit}
+                →
+                {format_number(result)} {to_unit}
 
                 </div>
                 """,
@@ -485,41 +916,81 @@ with converter_tab:
 
         except Exception as error:
 
-            st.error(f"Conversion error: {error}")
+            st.error(
+                f"Conversion error: {error}"
+            )
 
 
 # =========================================================
-# CALCULATOR
+# SCIENTIFIC CALCULATOR
 # =========================================================
 
 with calculator_tab:
 
     st.markdown("""
-    <div class="card">
+    <div class="main-card">
 
-    <h2>🧮 Scientific Calculator</h2>
+        <h2>🧮 Scientific Calculator</h2>
 
-    <p>
-    Perform basic and scientific calculations.
-    </p>
+        <p>
+        Perform mathematical and scientific calculations.
+        </p>
 
     </div>
     """, unsafe_allow_html=True)
 
+
+    st.markdown("""
+    <div class="field-box">
+
+        <div class="field-title">
+        🔢 MATHEMATICAL EXPRESSION
+        </div>
+
+    </div>
+    """, unsafe_allow_html=True)
+
+
     expression = st.text_input(
-        "Enter Expression",
-        placeholder="Example: 2*(5+3)"
+        "Expression",
+        placeholder="Example: 2*(5+3)",
+        label_visibility="collapsed"
     )
 
-    st.caption(
-        "Available: sin, cos, tan, sqrt, log, ln, exp, pi, e"
-    )
+
+    st.markdown("""
+    <div class="info-box">
+
+    <b>Available functions:</b>
+
+    sin • cos • tan • sqrt • log • ln • exp • pi • e
+
+    <br><br>
+
+    Examples:
+
+    <br>
+    <b>sqrt(25)</b>
+
+    <br>
+    <b>sin(pi/2)</b>
+
+    <br>
+    <b>2*(5+3)</b>
+
+    </div>
+    """, unsafe_allow_html=True)
+
+
+    st.write("")
+
 
     calculate_button = st.button(
-        "🧮 CALCULATE",
+        "🧮  CALCULATE",
         key="calculate_button",
         use_container_width=True
     )
+
 
     if calculate_button:
 
@@ -546,15 +1017,15 @@ with calculator_tab:
 
             st.markdown(
                 f"""
-                <div class="result">
+                <div class="result-box">
 
-                <div class="result-title">
-                Answer
-                </div>
+                    <div class="result-label">
+                    ✨ Answer
+                    </div>
 
-                <div class="result-value">
-                {format_number(result)}
-                </div>
+                    <div class="result-number">
+                    {format_number(result)}
+                    </div>
 
                 </div>
                 """,
@@ -564,53 +1035,79 @@ with calculator_tab:
         except Exception:
 
             st.error(
-                "Invalid expression. Example: 2*(5+3)"
+                "Invalid expression. Please check your input."
             )
 
 
 # =========================================================
-# CONSTANTS
+# PHYSICAL CONSTANTS
 # =========================================================
 
 with constants_tab:
 
     st.markdown("""
-    <div class="card">
+    <div class="main-card">
 
-    <h2>📐 Fundamental Physical Constants</h2>
+        <h2>📐 Fundamental Physical Constants</h2>
 
-    <p>
-    Important constants used in Physics.
-    </p>
+        <p>
+        Important constants frequently used in Physics.
+        </p>
 
     </div>
     """, unsafe_allow_html=True)
 
+
     constants = {
-        "Speed of Light (c)": "2.99792458 × 10⁸ m/s",
-        "Planck Constant (h)": "6.62607015 × 10⁻³⁴ J·s",
-        "Reduced Planck Constant (ℏ)": "1.054571817 × 10⁻³⁴ J·s",
-        "Elementary Charge (e)": "1.602176634 × 10⁻¹⁹ C",
-        "Electron Mass": "9.1093837 × 10⁻³¹ kg",
-        "Proton Mass": "1.6726219 × 10⁻²⁷ kg",
-        "Gravitational Constant (G)": "6.67430 × 10⁻¹¹ m³ kg⁻¹ s⁻²",
-        "Boltzmann Constant (kB)": "1.380649 × 10⁻²³ J/K",
-        "Avogadro Constant (NA)": "6.02214076 × 10²³ mol⁻¹",
-        "Vacuum Permittivity (ε₀)": "8.8541878 × 10⁻¹² F/m",
-        "Vacuum Permeability (μ₀)": "1.2566371 × 10⁻⁶ H/m"
+
+        "Speed of Light (c)":
+            "2.99792458 × 10⁸ m/s",
+
+        "Planck Constant (h)":
+            "6.62607015 × 10⁻³⁴ J·s",
+
+        "Reduced Planck Constant (ℏ)":
+            "1.054571817 × 10⁻³⁴ J·s",
+
+        "Elementary Charge (e)":
+            "1.602176634 × 10⁻¹⁹ C",
+
+        "Electron Mass":
+            "9.1093837 × 10⁻³¹ kg",
+
+        "Proton Mass":
+            "1.6726219 × 10⁻²⁷ kg",
+
+        "Gravitational Constant (G)":
+            "6.67430 × 10⁻¹¹ m³ kg⁻¹ s⁻²",
+
+        "Boltzmann Constant (kB)":
+            "1.380649 × 10⁻²³ J/K",
+
+        "Avogadro Constant (NA)":
+            "6.02214076 × 10²³ mol⁻¹",
+
+        "Vacuum Permittivity (ε₀)":
+            "8.8541878 × 10⁻¹² F/m",
+
+        "Vacuum Permeability (μ₀)":
+            "1.2566371 × 10⁻⁶ H/m"
     }
+
 
     for name, value in constants.items():
 
         st.markdown(
             f"""
-            <div class="card">
+            <div class="constant-card">
 
-            <b>{name}</b>
+                <div class="constant-name">
+                {name}
+                </div>
 
-            <br><br>
-
-            {value}
+                <div class="constant-value">
+                {value}
+                </div>
 
             </div>
             """,
@@ -624,14 +1121,17 @@ with constants_tab:
 
 st.markdown("""
 <div style="
-text-align:center;
-color:#64748b;
-margin-top:40px;
-padding:20px;
+    text-align:center;
+    color:#64748b;
+    margin-top:45px;
+    padding:20px;
+    font-size:13px;
 ">
 
-⚛️ Physics Toolkit
+⚛️ <b>Physics Toolkit</b>
+
 <br>
+
 Built with Python + Streamlit
 
 </div>
