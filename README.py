@@ -26,23 +26,23 @@ st.markdown("""
     color:#f8fafc;
 }
 .block-container {max-width:1150px;padding-top:1.6rem;padding-bottom:3rem;}
-.hero,.panel,.field-card,.result-card,.constant-card {
+.hero,.field-card,.result-card,.constant-card {
     border:1px solid rgba(255,255,255,.10);
     background:linear-gradient(145deg,rgba(255,255,255,.065),rgba(255,255,255,.025));
     box-shadow:0 12px 35px rgba(0,0,0,.22);
     backdrop-filter:blur(16px);
 }
-.hero {padding:34px;border-radius:26px;margin-bottom:22px;}
-.hero h1 {margin:0;font-size:46px;font-weight:800;background:linear-gradient(90deg,#fff,#7dd3fc,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-.hero p {color:#aebbd0;margin:.4rem 0;font-size:16px;}
-.panel {padding:25px;border-radius:22px;margin-bottom:18px;}
-.field-card {padding:16px;border-radius:18px;margin-bottom:14px;}
+.hero {padding:22px 26px;border-radius:18px;margin-bottom:16px;}
+.hero h1 {margin:0;font-size:38px;font-weight:800;background:linear-gradient(90deg,#fff,#7dd3fc,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.hero p {color:#aebbd0;margin:.25rem 0;font-size:14px;}
+.section-heading {margin:4px 0 18px;padding:0 2px;}
+.field-card {padding:12px;border-radius:14px;margin-bottom:10px;}
 .field-title {font-size:12px;font-weight:800;letter-spacing:.8px;color:#93c5fd;margin-bottom:8px;}
-.result-card {padding:30px;border-radius:24px;text-align:center;margin-top:22px;background:linear-gradient(135deg,rgba(6,182,212,.13),rgba(37,99,235,.16),rgba(124,58,237,.16));}
+.result-card {padding:22px;border-radius:18px;text-align:center;margin-top:22px;background:linear-gradient(135deg,rgba(6,182,212,.13),rgba(37,99,235,.16),rgba(124,58,237,.16));}
 .result-label {font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#93c5fd;font-weight:800;}
 .result-number {font-size:38px;font-weight:850;margin:9px 0;color:#fff;}
 .result-unit {font-size:16px;color:#cbd5e1;}
-.constant-card {padding:18px;border-radius:17px;margin-bottom:12px;}
+.constant-card {padding:12px 15px;border-radius:13px;margin-bottom:8px;}
 .constant-name {font-weight:750;color:#e2e8f0;}
 .constant-value {color:#7dd3fc;margin-top:6px;}
 .stButton > button {
@@ -59,8 +59,11 @@ div[data-baseweb="input"] > div, div[data-baseweb="select"] > div {
 }
 input {color:#fff!important;}
 button[data-baseweb="tab"] {font-weight:750!important;}
+
+.stTabs [data-baseweb="tab-list"] {gap:6px;}
+.stTabs [data-baseweb="tab"] {padding:8px 14px;}
 @media(max-width:700px){
-    .hero h1{font-size:32px}.hero{padding:25px}.panel{padding:18px}.result-number{font-size:29px}
+    .hero h1{font-size:32px}.hero{padding:22px}.result-number{font-size:29px}
 }
 </style>
 """, unsafe_allow_html=True)
@@ -317,9 +320,9 @@ converter, calculator, constants = st.tabs([
 # ============================================================
 with converter:
     st.markdown("""
-    <div class="panel">
+    <div class="section-heading">
         <h2>🔄 Universal Unit Converter</h2>
-        <p>Convert common physical quantities between SI/MKS, CGS and practical units.</p>
+        <p>SI/MKS • CGS • Practical Units</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -366,9 +369,9 @@ with converter:
 # ============================================================
 with calculator:
     st.markdown("""
-    <div class="panel">
+    <div class="section-heading">
         <h2>🧮 Scientific Calculator</h2>
-        <p>Use +, −, ×, ÷, powers and common scientific functions.</p>
+        <p>Arithmetic • Powers • Scientific Functions</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -401,9 +404,9 @@ with calculator:
 # ============================================================
 with constants:
     st.markdown("""
-    <div class="panel">
+    <div class="section-heading">
         <h2>📐 Fundamental Physical Constants</h2>
-        <p>Frequently used constants for Physics calculations.</p>
+        <p>Frequently used Physics constants</p>
     </div>
     """, unsafe_allow_html=True)
 
