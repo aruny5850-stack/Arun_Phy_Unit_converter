@@ -406,14 +406,15 @@ converter, calculator, constants = st.tabs([
 
 # ============================================================
 # CONVERTER
-# ============================================================
-with converter:
-    st.markdown("""
-    <div class="panel">
+# ===========================================================
+    with converter:
+        st.markdown("""
+    <div class="section-heading">
         <h2>🔄 Universal Unit Converter</h2>
-        <p>Convert common physical quantities between SI/MKS, CGS and practical units.</p>
+        <p>SI/MKS • CGS • Practical Units</p>
     </div>
-    """ , unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
+
     categories = list(UNITS.keys()) + ["Temperature"]
 
     st.markdown('<div class="field-card"><div class="field-title">📚 PHYSICAL QUANTITY</div>', unsafe_allow_html=True)
@@ -522,7 +523,7 @@ with calculator:
 with constants:
     st.markdown("""
     <div class="panel">
-        <h2>📐 Fundamental Physical Constants</h2>
+        <h2>📐 Fundamental Constants</h2>
         <p>Frequently used constants for Physics calculations.</p>
     </div>
     """, unsafe_allow_html=True)
