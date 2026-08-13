@@ -76,75 +76,6 @@ button[data-baseweb="tab"] {font-weight:750!important;}
 # Factor converts unit -> SI base unit.
 # ============================================================
 UNITS = {
-    "Length": {
-        "meter (m)": 1, "kilometer (km)": 1e3, "centimeter (cm)": 1e-2,
-        "millimeter (mm)": 1e-3, "micrometer (μm)": 1e-6,
-        "nanometer (nm)": 1e-9, "angstrom (Å)": 1e-10,
-        "inch (in)": 0.0254, "foot (ft)": 0.3048, "mile (mi)": 1609.344
-    },
-    "Mass": {
-        "kilogram (kg)": 1, "gram (g)": 1e-3, "milligram (mg)": 1e-6,
-        "microgram (μg)": 1e-9, "tonne (t)": 1e3
-    },
-    "Time": {
-        "second (s)": 1, "millisecond (ms)": 1e-3, "microsecond (μs)": 1e-6,
-        "nanosecond (ns)": 1e-9, "minute (min)": 60, "hour (h)": 3600,
-        "day": 86400
-    },
-    "Area": {
-        "square meter (m²)": 1, "square kilometer (km²)": 1e6,
-        "square centimeter (cm²)": 1e-4, "square millimeter (mm²)": 1e-6,
-        "square inch (in²)": 0.00064516, "square foot (ft²)": 0.09290304
-    },
-    "Volume": {
-        "cubic meter (m³)": 1, "liter (L)": 1e-3, "milliliter (mL)": 1e-6,
-        "cubic centimeter (cm³)": 1e-6, "cubic millimeter (mm³)": 1e-9
-    },
-    "Velocity": {
-        "meter/second (m/s)": 1, "centimeter/second (cm/s)": 1e-2,
-        "kilometer/hour (km/h)": 1000/3600, "mile/hour (mph)": 1609.344/3600
-    },
-    "Acceleration": {
-        "meter/second² (m/s²)": 1, "centimeter/second² (cm/s²)": 1e-2,
-        "standard gravity (g)": 9.80665
-    },
-    "Force": {
-        "newton (N)": 1, "dyne (dyn)": 1e-5, "kilonewton (kN)": 1e3
-    },
-    "Energy": {
-        "joule (J)": 1, "erg": 1e-7, "kilojoule (kJ)": 1e3,
-        "electronvolt (eV)": 1.602176634e-19
-    },
-    "Power": {
-        "watt (W)": 1, "kilowatt (kW)": 1e3,
-        "erg/second (erg/s)": 1e-7, "horsepower (hp)": 745.699872
-    },
-    "Pressure": {
-        "pascal (Pa)": 1, "kilopascal (kPa)": 1e3, "bar": 1e5,
-        "atmosphere (atm)": 101325, "torr": 133.322368, "dyne/cm²": 0.1
-    },
-    "Frequency": {
-        "hertz (Hz)": 1, "kilohertz (kHz)": 1e3,
-        "megahertz (MHz)": 1e6, "gigahertz (GHz)": 1e9
-    },
-    "Electric Charge": {
-        "coulomb (C)": 1, "millicoulomb (mC)": 1e-3,
-        "microcoulomb (μC)": 1e-6, "nanocoulomb (nC)": 1e-9
-    },
-    "Electric Potential": {
-        "volt (V)": 1, "millivolt (mV)": 1e-3, "kilovolt (kV)": 1e3
-    },
-    "Electric Current": {
-        "ampere (A)": 1, "milliampere (mA)": 1e-3, "microampere (μA)": 1e-6
-    },
-    "Resistance": {
-        "ohm (Ω)": 1, "milliohm (mΩ)": 1e-3, "kilohm (kΩ)": 1e3,
-        "megohm (MΩ)": 1e6
-    },
-    "Capacitance": {
-        "farad (F)": 1, "microfarad (μF)": 1e-6,
-        "nanofarad (nF)": 1e-9, "picofarad (pF)": 1e-12
-    },
     "Magnetic induction (B) ": {
         "tesla (T) [SI]": 1,
         "gauss (G) [CGS]": 1e-4
@@ -220,6 +151,75 @@ UNITS = {
     "Energy product (BH)ₘₐₓ": {
         "joule/m³ (J m⁻³)": 1,
         "erg/cm³": 1e-1
+    },
+     "Length": {
+        "meter (m)": 1, "kilometer (km)": 1e3, "centimeter (cm)": 1e-2,
+        "millimeter (mm)": 1e-3, "micrometer (μm)": 1e-6,
+        "nanometer (nm)": 1e-9, "angstrom (Å)": 1e-10,
+        "inch (in)": 0.0254, "foot (ft)": 0.3048, "mile (mi)": 1609.344
+    },
+    "Mass": {
+        "kilogram (kg)": 1, "gram (g)": 1e-3, "milligram (mg)": 1e-6,
+        "microgram (μg)": 1e-9, "tonne (t)": 1e3
+    },
+    "Time": {
+        "second (s)": 1, "millisecond (ms)": 1e-3, "microsecond (μs)": 1e-6,
+        "nanosecond (ns)": 1e-9, "minute (min)": 60, "hour (h)": 3600,
+        "day": 86400
+    },
+    "Area": {
+        "square meter (m²)": 1, "square kilometer (km²)": 1e6,
+        "square centimeter (cm²)": 1e-4, "square millimeter (mm²)": 1e-6,
+        "square inch (in²)": 0.00064516, "square foot (ft²)": 0.09290304
+    },
+    "Volume": {
+        "cubic meter (m³)": 1, "liter (L)": 1e-3, "milliliter (mL)": 1e-6,
+        "cubic centimeter (cm³)": 1e-6, "cubic millimeter (mm³)": 1e-9
+    },
+    "Velocity": {
+        "meter/second (m/s)": 1, "centimeter/second (cm/s)": 1e-2,
+        "kilometer/hour (km/h)": 1000/3600, "mile/hour (mph)": 1609.344/3600
+    },
+    "Acceleration": {
+        "meter/second² (m/s²)": 1, "centimeter/second² (cm/s²)": 1e-2,
+        "standard gravity (g)": 9.80665
+    },
+    "Force": {
+        "newton (N)": 1, "dyne (dyn)": 1e-5, "kilonewton (kN)": 1e3
+    },
+    "Energy": {
+        "joule (J)": 1, "erg": 1e-7, "kilojoule (kJ)": 1e3,
+        "electronvolt (eV)": 1.602176634e-19
+    },
+    "Power": {
+        "watt (W)": 1, "kilowatt (kW)": 1e3,
+        "erg/second (erg/s)": 1e-7, "horsepower (hp)": 745.699872
+    },
+    "Pressure": {
+        "pascal (Pa)": 1, "kilopascal (kPa)": 1e3, "bar": 1e5,
+        "atmosphere (atm)": 101325, "torr": 133.322368, "dyne/cm²": 0.1
+    },
+    "Frequency": {
+        "hertz (Hz)": 1, "kilohertz (kHz)": 1e3,
+        "megahertz (MHz)": 1e6, "gigahertz (GHz)": 1e9
+    },
+    "Electric Charge": {
+        "coulomb (C)": 1, "millicoulomb (mC)": 1e-3,
+        "microcoulomb (μC)": 1e-6, "nanocoulomb (nC)": 1e-9
+    },
+    "Electric Potential": {
+        "volt (V)": 1, "millivolt (mV)": 1e-3, "kilovolt (kV)": 1e3
+    },
+    "Electric Current": {
+        "ampere (A)": 1, "milliampere (mA)": 1e-3, "microampere (μA)": 1e-6
+    },
+    "Resistance": {
+        "ohm (Ω)": 1, "milliohm (mΩ)": 1e-3, "kilohm (kΩ)": 1e3,
+        "megohm (MΩ)": 1e6
+    },
+    "Capacitance": {
+        "farad (F)": 1, "microfarad (μF)": 1e-6,
+        "nanofarad (nF)": 1e-9, "picofarad (pF)": 1e-12
     },
     "Density": {
         "kilogram/m³ (kg/m³)": 1,
