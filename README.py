@@ -800,7 +800,7 @@ with constants:
 
     st.markdown("""
     <div class="panel">
-        <h2>📐 Fundamental Physical Constants</h2>
+        <h2>📐 Fundamental Constants</h2>
         <p>Frequently used constants for Physics calculations.</p>
     </div>
     """, unsafe_allow_html=True)
