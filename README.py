@@ -7,7 +7,7 @@ import operator as op
 # PAGE
 # ============================================================
 st.set_page_config(
-    page_title="Arun Toolkit",
+    page_title="Physics Toolkit",
     page_icon="⚛️",
     layout="wide",
     initial_sidebar_state="collapsed",
@@ -145,6 +145,22 @@ UNITS = {
     "Magnetic Flux": {
         "weber (Wb)": 1, "maxwell (Mx)": 1e-8
     },
+    "Magnetic Field Strength": {
+        "ampere/meter (A/m)": 1,
+        "oersted (Oe)": 1000/(4*math.pi)
+    },
+    "Magnetic Moment": {
+        "ampere·meter² (A·m²)": 1,
+        "emu (erg/gauss)": 1e-3
+    },
+    "Magnetization": {
+        "ampere/meter (A/m)": 1,
+        "emu/cm³": 1000
+    },
+    "Magnetic Susceptibility": {
+        "SI (dimensionless)": 1,
+        "CGS (dimensionless)": 4*math.pi
+    },
     "Density": {
         "kilogram/m³ (kg/m³)": 1,
         "gram/cm³ (g/cm³)": 1000,
@@ -182,148 +198,59 @@ def convert_value(x, category, u1, u2):
     return x * UNITS[category][u1] / UNITS[category][u2]
 
 def fmt(x):
-    if x == 0:
-        return "0"
-
+    if x == 0: return "0"
     if abs(x) >= 1e6 or abs(x) < 1e-4:
-        s = f"{x:.3e}"
-        mantissa, exponent = s.split("e")
-        exponent = int(exponent)
-
-        superscript = str(exponent).translate(
-            str.maketrans(
-                "0123456789-+",
-                "⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺"
-            )
-        )
-
-        return f"{mantissa} × 10{superscript}"
-
-    return f"{x:.3f}"
-
-import math
-import ast
-import operator
+        return f"{x:.6e}"
+    return f"{x:.10g}"
 
 # ============================================================
 # SAFE SCIENTIFIC CALCULATOR
 # ============================================================
-
-ALLOWED_FUNCTIONS = {
-    "sin": math.sin,
-    "cos": math.cos,
-    "tan": math.tan,
-    "asin": math.asin,
-    "acos": math.acos,
-    "atan": math.atan,
-    "sqrt": math.sqrt,
-    "log": math.log10,     # log(100) = 2
-    "ln": math.log,        # ln(e) = 1
-    "exp": math.exp,
-    "abs": abs,
+BIN_OPS = {
+    ast.Add: op.add, ast.Sub: op.sub, ast.Mult: op.mul,
+    ast.Div: op.truediv, ast.Pow: op.pow, ast.Mod: op.mod,
 }
-
-ALLOWED_CONSTANTS = {
-    "pi": math.pi,
-    "e": math.e,
+UNARY_OPS = {ast.UAdd: op.pos, ast.USub: op.neg}
+FUNCS = {
+    "sin": math.sin, "cos": math.cos, "tan": math.tan,
+    "sqrt": math.sqrt, "log": math.log10, "ln": math.log,
+    "exp": math.exp, "abs": abs, "asin": math.asin,
+    "acos": math.acos, "atan": math.atan
 }
+NAMES = {"pi": math.pi, "e": math.e}
 
-ALLOWED_OPERATORS = {
-    ast.Add: operator.add,
-    ast.Sub: operator.sub,
-    ast.Mult: operator.mul,
-    ast.Div: operator.truediv,
-    ast.Pow: operator.pow,
-    ast.Mod: operator.mod,
-    ast.USub: operator.neg,
-    ast.UAdd: operator.pos,
-}
+def safe_eval(expr):
+    tree = ast.parse(expr, mode="eval")
 
-
-def safe_eval(expression):
-    expression = expression.strip()
-
-    # Allow × and ÷ symbols
-    expression = expression.replace("×", "*")
-    expression = expression.replace("÷", "/")
-    expression = expression.replace("^", "**")
-
-    tree = ast.parse(expression, mode="eval")
-
-    def evaluate(node):
-
-        # Numbers
-        if isinstance(node, ast.Constant):
-            if isinstance(node.value, (int, float)):
-                return node.value
-            raise ValueError("Invalid value")
-
-        # Binary operations
-        if isinstance(node, ast.BinOp):
-            op = ALLOWED_OPERATORS.get(type(node.op))
-
-            if op is None:
-                raise ValueError("Operator not allowed")
-
-            left = evaluate(node.left)
-            right = evaluate(node.right)
-
-            return op(left, right)
-
-        # Unary + / -
-        if isinstance(node, ast.UnaryOp):
-            op = ALLOWED_OPERATORS.get(type(node.op))
-
-            if op is None:
-                raise ValueError("Operator not allowed")
-
-            return op(evaluate(node.operand))
-
-        # Variables / constants
-        if isinstance(node, ast.Name):
-
-            if node.id in ALLOWED_CONSTANTS:
-                return ALLOWED_CONSTANTS[node.id]
-
-            if node.id in ALLOWED_FUNCTIONS:
-                return ALLOWED_FUNCTIONS[node.id]
-
-            raise ValueError(f"Unknown function or constant: {node.id}")
-
-        # Function calls
-        if isinstance(node, ast.Call):
-
-            if not isinstance(node.func, ast.Name):
-                raise ValueError("Invalid function")
-
-            function_name = node.func.id
-
-            if function_name not in ALLOWED_FUNCTIONS:
-                raise ValueError(
-                    f"Function '{function_name}' is not allowed"
-                )
-
+    def walk(node):
+        if isinstance(node, ast.Expression):
+            return walk(node.body)
+        if isinstance(node, ast.Constant) and isinstance(node.value, (int, float)):
+            return node.value
+        if isinstance(node, ast.Num):
+            return node.n
+        if isinstance(node, ast.BinOp) and type(node.op) in BIN_OPS:
+            return BIN_OPS[type(node.op)](walk(node.left), walk(node.right))
+        if isinstance(node, ast.UnaryOp) and type(node.op) in UNARY_OPS:
+            return UNARY_OPS[type(node.op)](walk(node.operand))
+        if isinstance(node, ast.Name) and node.id in NAMES:
+            return NAMES[node.id]
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id in FUNCS:
             if len(node.args) != 1:
-                raise ValueError(
-                    f"{function_name}() requires one argument"
-                )
+                raise ValueError("Use one argument in a function.")
+            return FUNCS[node.func.id](walk(node.args[0]))
+        raise ValueError("Unsupported expression.")
 
-            argument = evaluate(node.args[0])
-
-            return ALLOWED_FUNCTIONS[function_name](argument)
-
-        raise ValueError("Invalid expression")
-
-    return evaluate(tree.body)
+    return walk(tree)
 
 # ============================================================
 # HEADER
 # ============================================================
 st.markdown("""
 <div class="hero">
-    <h1>👤Ar_PHYHBTU</h1>
+    <h1>⚛️ Ar_PHYHBTU</h1>
     <p>Calculate • Convert • Explore</p>
-    <p>Physics utility app for students — SI, CGS and scientific calculations.</p>
+    <p>Physics utility app for students — SI, CGS, magnetic quantities and scientific calculations.</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -340,7 +267,8 @@ with converter:
         <h2>🔄 Universal Unit Converter</h2>
         <p>Convert common physical quantities between SI/MKS, CGS and practical units.</p>
     </div>
-    """ , unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
+
     categories = list(UNITS.keys()) + ["Temperature"]
 
     st.markdown('<div class="field-card"><div class="field-title">📚 PHYSICAL QUANTITY</div>', unsafe_allow_html=True)
@@ -379,13 +307,10 @@ with converter:
         except Exception as e:
             st.error(f"Conversion error: {e}")
 
-
 # ============================================================
-# SCIENTIFIC CALCULATOR
+# CALCULATOR
 # ============================================================
-
 with calculator:
-
     st.markdown("""
     <div class="panel">
         <h2>🧮 Scientific Calculator</h2>
@@ -393,56 +318,30 @@ with calculator:
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown(
-        '<div class="field-card">'
-        '<div class="field-title">🔢 EXPRESSION</div>',
-        unsafe_allow_html=True
-    )
-
+    st.markdown('<div class="field-card"><div class="field-title">🔢 EXPRESSION</div>', unsafe_allow_html=True)
     expression = st.text_input(
         "Expression",
         placeholder="Example: 2*(5+3), sqrt(25), sin(pi/2)",
         label_visibility="collapsed"
     )
-
     st.markdown("</div>", unsafe_allow_html=True)
 
-    st.info(
-        "Functions: sin, cos, tan, asin, acos, atan, "
-        "sqrt, log, ln, exp, abs • Constants: pi, e"
-    )
+    st.info("Functions: sin, cos, tan, asin, acos, atan, sqrt, log, ln, exp, abs • Constants: pi, e")
 
-    if st.button(
-        "🧮  CALCULATE",
-        key="calculate",
-        use_container_width=True
-    ):
-
+    if st.button("🧮  CALCULATE", key="calculate", use_container_width=True):
         try:
-
             if not expression.strip():
                 raise ValueError("Enter an expression.")
-
             answer = safe_eval(expression)
-
-            st.markdown(
-                f"""
-                <div class="result-card">
-                    <div class="result-label">✨ Answer</div>
-                    <div class="result-number">{fmt(answer)}</div>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-
-        except ZeroDivisionError:
-            st.error("❌ Cannot divide by zero.")
-
-        except ValueError as e:
-            st.error(f"❌ Invalid expression: {e}")
-
+            st.markdown(f"""
+            <div class="result-card">
+                <div class="result-label">✨ Answer</div>
+                <div class="result-number">{fmt(answer)}</div>
+            </div>
+            """, unsafe_allow_html=True)
         except Exception as e:
-            st.error(f"❌ Calculation error: {e}")
+            st.error(f"Invalid expression: {e}")
+
 # ============================================================
 # CONSTANTS
 # ============================================================
@@ -478,7 +377,7 @@ with constants:
 
 st.markdown("""
 <div style="text-align:center;color:#64748b;margin-top:40px;padding:20px;font-size:13px">
-⚛️<b>Devolped by Arun Kumar Yadav</b><br>
-Harcourt Butler Technical University Kanpur
+⚛️ <b>Physics Toolkit</b><br>
+Python + Streamlit
 </div>
 """, unsafe_allow_html=True)
