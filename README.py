@@ -185,19 +185,19 @@ UNITS = {
         "henry/meter (H m⁻¹)": 1,
         "G Oe⁻¹": 1e7/(4*math.pi)
     },
-    "Magnetic flux": {
+    "Magnetic flux (λ)": {
         "weber (Wb)": 1,
         "maxwell (Mx)": 1e-8
     },
-    "Magnetic scalar potential; Magnetomotive force": {
-        "ampere (A)": 1,
-        "gilbert": 10/(4*math.pi)
+    "Magnetic scalar potential; Magnetomotive force (ϕ)": {
+        "ampere (A) [SI]": 1,
+        "gilbert [CGS]": 10/(4*math.pi)
     },
     "Magnetic vector potential": {
         "weber/meter (Wb m⁻¹)": 1,
         "emu (G cm)": 1e-6
     },
-    "Magnetic pole strength": {
+    "Magnetic pole strength (p)": {
         "ampere·meter (A m)": 1,
         "emu (G cm²)": 1e-1
     },
@@ -205,7 +205,7 @@ UNITS = {
         "dimensionless (SI)": 1,
         "dimensionless (CGS)": 4*math.pi
     },
-    "Magnetostriction constant": {
+    "Magnetostriction constant (λ)": {
         "dimensionless (SI)": 1,
         "dimensionless (CGS)": 1
     },
@@ -213,11 +213,11 @@ UNITS = {
         "joule/m³ (J m⁻³)": 1,
         "erg/cm³": 1e-1
     },
-    "Magnetostatic energy": {
+    "Magnetostatic energy (Eₘ)": {
         "joule/m³ (J m⁻³)": 1,
         "erg/cm³": 1e-1
     },
-    "Energy product (BH)<sub>max</sub>": {
+    "Energy product (BH)ₘₐₓ": {
         "joule/m³ (J m⁻³)": 1,
         "erg/cm³": 1e-1
     },
