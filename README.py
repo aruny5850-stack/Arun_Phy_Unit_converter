@@ -651,7 +651,7 @@ with converter:
                 key="converter_value"
             )
         st.markdown(
-            '<div class="field-title">&nbsp;&nbsp; '
+            '<div class="field-title"> '
             '📤 FROM UNIT</div>',
             unsafe_allow_html=True
         )
