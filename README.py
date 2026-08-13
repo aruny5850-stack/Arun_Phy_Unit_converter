@@ -339,10 +339,7 @@ with converter:
 
     c1, c2 = st.columns(2)
 
-    with c1:
-        st.markdown('<div class="field-card"><div class="field-title">🔢 VALUE</div>', unsafe_allow_html=True)
-        value = st.number_input("Value", value=1.0, format="%.10g", label_visibility="collapsed")
-        st.markdown("</div>", unsafe_allow_html=True)
+   
 
        # ============================================================
 # VALUE + FROM UNIT — COMPACT BOX
