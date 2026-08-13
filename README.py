@@ -7,7 +7,7 @@ import operator as op
 # PAGE
 # ============================================================
 st.set_page_config(
-    page_title="Physics Toolkit",
+    page_title="Arun Toolkit",
     page_icon="⚛️",
     layout="wide",
     initial_sidebar_state="collapsed",
