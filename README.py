@@ -25,6 +25,9 @@ st.markdown("""
         linear-gradient(135deg,#020617,#0b1224 55%,#111827);
     color:#f8fafc;
 }
+.section-heading h2 {
+    font-size: 24px !important;
+}
 .block-container {max-width:1150px;padding-top:1.6rem;padding-bottom:3rem;}
 .hero,.panel,.field-card,.result-card,.constant-card {
     border:1px solid rgba(255,255,255,.10);
