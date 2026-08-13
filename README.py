@@ -654,9 +654,7 @@ with converter:
             '📤 FROM UNIT</div>',
             unsafe_allow_html=True
         )
-        value_col, unit_col = st.columns(
-            [1.35, 1],
-            gap="small"
+        
         )
         with unit_col:
             from_unit = st.selectbox(
