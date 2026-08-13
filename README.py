@@ -1,3 +1,4 @@
+from textwrap import dedent
 import streamlit as st
 import math
 import ast
@@ -641,21 +642,24 @@ with converter:
                 from_unit,
                 to_unit
             )
+st.markdown(
+    dedent(f"""
+    <div class="result-card">
+        <div class="result-label">
+            ✨ Conversion Result
+        </div>
 
-            st.markdown(f"""
-            <div class="result-card">
-                <div class="result-label">
-                    ✨ Conversion Result
-                </div>
+        <div class="result-number">
+            {fmt(result)}
+        </div>
 
-                <div class="result-number">
-                    {fmt(result)}
-                </div>
-
-                <div class="result-unit">
-                    {to_unit}
-                </div>
-            </div>
+        <div class="result-unit">
+            {to_unit}
+        </div>
+    </div>
+    """),
+    unsafe_allow_html=True
+)
             """, unsafe_allow_html=True)
 
             st.caption(
