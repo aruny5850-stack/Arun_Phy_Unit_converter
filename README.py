@@ -636,38 +636,34 @@ with converter:
     ):
         try:
             result = convert_value(
-            value,
-            category,
-            from_unit,
-            to_unit
-        )
+                value,
+                category,
+                from_unit,
+                to_unit
+            )
 
-        st.markdown(
-            f"""
-            <div class="result-card">
-                <div class="result-label">
-                    ✨ Conversion Result
-                </div>
+            st.markdown(
+                f"""<div class="result-card">
+    <div class="result-label">
+        ✨ Conversion Result
+    </div>
+    <div class="result-number">
+        {fmt(result)}
+    </div>
+    <div class="result-unit">
+        {to_unit}
+    </div>
+</div>""",
+                unsafe_allow_html=True
+            )
 
-                <div class="result-number">
-                    {fmt(result)}
-                </div>
+            st.caption(
+                f"{fmt(value)} {from_unit} → "
+                f"{fmt(result)} {to_unit}"
+            )
 
-                <div class="result-unit">
-                    {to_unit}
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-
-        st.caption(
-            f"{fmt(value)} {from_unit} → "
-            f"{fmt(result)} {to_unit}"
-        )
-
-    except Exception as e:
-        st.error(f"Conversion error: {e}")
+        except Exception as e:
+            st.error(f"Conversion error: {e}")
     # Magnetic reference table
     st.markdown("""
     <div class="panel">
