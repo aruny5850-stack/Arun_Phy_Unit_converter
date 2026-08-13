@@ -25,7 +25,7 @@ st.markdown("""
         linear-gradient(135deg,#020617,#0b1224 55%,#111827);
     color:#f8fafc;
 }
-.section-heading h2 {
+.section-heading h1 {
     font-size: 20px !important;
 }
 .block-container {max-width:1150px;padding-top:1.6rem;padding-bottom:3rem;}
