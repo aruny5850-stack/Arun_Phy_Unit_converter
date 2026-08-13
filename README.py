@@ -479,7 +479,7 @@ with constants:
 
 st.markdown("""
 <div style="text-align:center;color:#64748b;margin-top:40px;padding:20px;font-size:13px">
-⚛️ <b>Physics Toolkit</b><br>
+⚛️<b>Ar_PHYHBTU</b><br>
 Python + Streamlit
 </div>
 """, unsafe_allow_html=True)
