@@ -345,9 +345,32 @@ with converter:
         st.markdown("</div>", unsafe_allow_html=True)
 
     with c2:
-        st.markdown('<div class="field-card"><div class="field-title">📤 FROM UNIT</div>', unsafe_allow_html=True)
-        from_unit = st.selectbox("From", units, label_visibility="collapsed", key="from_unit")
-        st.markdown("</div>", unsafe_allow_html=True)
+       # ============================================================
+# VALUE + FROM UNIT — COMPACT BOX
+# ============================================================
+
+st.markdown("""
+<div class="field-card">
+    <div class="field-title">🔢 ENTER VALUE &nbsp;&nbsp;&nbsp;&nbsp; FROM UNIT</div>
+</div>
+""", unsafe_allow_html=True)
+
+col1, col2 = st.columns([1, 1.25])
+
+with col1:
+    value = st.number_input(
+        "Enter Value",
+        value=1.0,
+        format="%.10g",
+        label_visibility="collapsed"
+    )
+
+with col2:
+    from_unit = st.selectbox(
+        "From Unit",
+        units,
+        label_visibility="collapsed"
+    )
 
     st.markdown('<div class="field-card"><div class="field-title">📥 TO UNIT</div>', unsafe_allow_html=True)
     to_unit = st.selectbox("To", units, label_visibility="collapsed", key="to_unit")
