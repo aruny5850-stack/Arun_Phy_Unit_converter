@@ -370,7 +370,7 @@ with converter:
 with calculator:
     st.markdown("""
     <div class="section-heading">
-        <h2>🧮 Scientific Calculator</h2>
+        <h2>🧮 Scientific Calculator</h3>
         <p>Arithmetic • Powers • Scientific Functions</p>
     </div>
     """, unsafe_allow_html=True)
