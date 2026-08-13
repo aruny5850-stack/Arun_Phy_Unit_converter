@@ -26,7 +26,7 @@ st.markdown("""
     color:#f8fafc;
 }
 .section-heading h2 {
-    font-size: 24px !important;
+    font-size: 20px !important;
 }
 .block-container {max-width:1150px;padding-top:1.6rem;padding-bottom:3rem;}
 .hero,.field-card,.result-card,.constant-card {
