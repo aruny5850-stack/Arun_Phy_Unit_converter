@@ -20,13 +20,13 @@ st.markdown("""
 <style>
 .stApp {
     background:
-        radial-gradient(circle at 5% 5%, rgba(14,165,233,.12), transparent 28%),
-        radial-gradient(circle at 95% 5%, rgba(124,58,237,.12), transparent 28%),
+        radial-gradient(circle at 5% 5%, rgba(14,165,233,.12), transparent 25%),
+        radial-gradient(circle at 95% 5%, rgba(124,58,237,.12), transparent 25%),
         linear-gradient(135deg,#020617,#0b1224 55%,#111827);
     color:#f8fafc;
 }
 .section-heading h2 {
-    font-size: 20px !important;
+    font-size: 24px !important;
 }
 .block-container {max-width:1150px;padding-top:1.6rem;padding-bottom:3rem;}
 .hero,.field-card,.result-card,.constant-card {
