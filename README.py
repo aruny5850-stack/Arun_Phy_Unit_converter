@@ -335,7 +335,7 @@ converter, calculator, constants = st.tabs([
 # CONVERTER
 # ============================================================
 
-    categories = list(UNITS.keys()) + ["Temperature"]
+categories = list(UNITS.keys()) + ["Temperature"]
 
     st.markdown('<div class="field-card"><div class="field-title">📚 PHYSICAL QUANTITY</div>', unsafe_allow_html=True)
     category = st.selectbox("Physical quantity", categories, label_visibility="collapsed")
