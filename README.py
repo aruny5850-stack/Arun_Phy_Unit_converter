@@ -429,7 +429,15 @@ def fmt(x):
         s = f"{x:.3e}"
         mantissa, exponent = s.split("e")
         exponent = int(exponent)
-        return f"{mantissa} × 10^{exponent}"
+
+        superscript = str(exponent).translate(
+            str.maketrans(
+                "0123456789-",
+                "⁰¹²³⁴⁵⁶⁷⁸⁹⁻"
+            )
+        )
+
+        return f"{mantissa} × 10{superscript}"
 
     return f"{x:.3f}".rstrip("0").rstrip(".")
 
