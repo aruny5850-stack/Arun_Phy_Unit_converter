@@ -345,28 +345,29 @@ with converter:
 # VALUE + FROM UNIT — COMPACT BOX
 # ============================================================
 
-st.markdown("""
-<div class="field-card">
-    <div class="field-title">🔢 ENTER VALUE &nbsp;&nbsp;&nbsp;&nbsp; FROM UNIT</div>
-</div>
-""", unsafe_allow_html=True)
+/* Enter Value + Unit same row */
+.input-unit-title {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+}
 
-col1, col2 = st.columns([1, 1.25])
+/* Number input */
+div[data-testid="stNumberInput"] input {
+    font-size: 16px !important;
+    font-weight: 600 !important;
+}
 
-with col1:
-    value = st.number_input(
-        "Enter Value",
-        value=1.0,
-        format="%.10g",
-        label_visibility="collapsed"
-    )
+/* Unit dropdown */
+div[data-testid="stSelectbox"] > div {
+    border-radius: 8px !important;
+}
 
-with col2:
-    from_unit = st.selectbox(
-        "From Unit",
-        units,
-        label_visibility="collapsed"
-    )
+/* Remove extra spacing */
+div[data-testid="column"] {
+    padding: 0 4px !important;
+}
 
     st.markdown('<div class="field-card"><div class="field-title">📥 TO UNIT</div>', unsafe_allow_html=True)
     to_unit = st.selectbox("To", units, label_visibility="collapsed", key="to_unit")
