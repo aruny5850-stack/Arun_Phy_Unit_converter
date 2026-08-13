@@ -7,7 +7,7 @@ import operator as op
 # PAGE
 # ============================================================
 st.set_page_config(
-    page_title="Physics Toolkit",
+    page_title="Ar_PHYHBTU",
     page_icon="⚛️",
     layout="wide",
     initial_sidebar_state="collapsed",
@@ -139,27 +139,81 @@ UNITS = {
         "farad (F)": 1, "microfarad (μF)": 1e-6,
         "nanofarad (nF)": 1e-9, "picofarad (pF)": 1e-12
     },
-    "Magnetic Field": {
-        "tesla (T)": 1, "gauss (G)": 1e-4
+    "Magnetic induction": {
+        "tesla (T)": 1,
+        "gauss (G)": 1e-4
     },
-    "Magnetic Flux": {
-        "weber (Wb)": 1, "maxwell (Mx)": 1e-8
-    },
-    "Magnetic Field Strength": {
-        "ampere/meter (A/m)": 1,
+    "Magnetic field": {
+        "ampere/meter (A m⁻¹)": 1,
         "oersted (Oe)": 1000/(4*math.pi)
     },
-    "Magnetic Moment": {
-        "ampere·meter² (A·m²)": 1,
-        "emu (erg/gauss)": 1e-3
-    },
     "Magnetization": {
-        "ampere/meter (A/m)": 1,
-        "emu/cm³": 1000
+        "ampere/meter (A m⁻¹)": 1,
+        "emu cm⁻³": 1000
     },
-    "Magnetic Susceptibility": {
-        "SI (dimensionless)": 1,
-        "CGS (dimensionless)": 4*math.pi
+    "Magnetic polarization": {
+        "tesla (T)": 1,
+        "gauss (G)": 1e-4
+    },
+    "Magnetic moment": {
+        "ampere·meter² (A m²)": 1,
+        "emu (G cm³)": 1e-3
+    },
+    "Magnetic moment per unit mass": {
+        "ampere·meter² kg⁻¹ (A m² kg⁻¹)": 1,
+        "emu g⁻¹": 1
+    },
+    "Volume magnetic susceptibility (κ = M/H)": {
+        "dimensionless (SI)": 1,
+        "dimensionless (CGS)": 1/(4*math.pi)
+    },
+    "Mass magnetic susceptibility (χ = κ/ρ)": {
+        "m³ kg⁻¹": 1,
+        "emu Oe⁻¹ g⁻¹": 4*math.pi/1000
+    },
+    "Molar magnetic susceptibility (χₘ = χM*)": {
+        "m³ mol⁻¹": 1,
+        "emu Oe⁻¹ g⁻¹ mol⁻¹": 4*math.pi/1e6
+    },
+    "Magnetic permeability (μ = B/H)": {
+        "henry/meter (H m⁻¹)": 1,
+        "G Oe⁻¹": 1e7/(4*math.pi)
+    },
+    "Magnetic flux": {
+        "weber (Wb)": 1,
+        "maxwell (Mx)": 1e-8
+    },
+    "Magnetic scalar potential; Magnetomotive force": {
+        "ampere (A)": 1,
+        "gilbert": 10/(4*math.pi)
+    },
+    "Magnetic vector potential": {
+        "weber/meter (Wb m⁻¹)": 1,
+        "emu (G cm)": 1e-6
+    },
+    "Magnetic pole strength": {
+        "ampere·meter (A m)": 1,
+        "emu (G cm²)": 1e-1
+    },
+    "Demagnetizing factor": {
+        "dimensionless (SI)": 1,
+        "dimensionless (CGS)": 4*math.pi
+    },
+    "Magnetostriction constant": {
+        "dimensionless (SI)": 1,
+        "dimensionless (CGS)": 1
+    },
+    "Anisotropy constant (K, K₁, Kᵤ)": {
+        "joule/m³ (J m⁻³)": 1,
+        "erg/cm³": 1e-1
+    },
+    "Magnetostatic energy": {
+        "joule/m³ (J m⁻³)": 1,
+        "erg/cm³": 1e-1
+    },
+    "Energy product": {
+        "joule/m³ (J m⁻³)": 1,
+        "erg/cm³": 1e-1
     },
     "Density": {
         "kilogram/m³ (kg/m³)": 1,
@@ -377,7 +431,7 @@ with constants:
 
 st.markdown("""
 <div style="text-align:center;color:#64748b;margin-top:40px;padding:20px;font-size:13px">
-⚛️ <b>Physics Toolkit</b><br>
+⚛️ <b>Ar_PHYHBTU</b><br>
 Python + Streamlit
 </div>
 """, unsafe_allow_html=True)
