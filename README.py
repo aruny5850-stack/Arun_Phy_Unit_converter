@@ -408,7 +408,7 @@ with calculator:
 with constants:
     st.markdown("""
     <div class="section-heading">
-        <h2>📐 Fundamental Physical Constants</h2>
+        <h2>📐 Fundamental Constants</h2>
         <p>Frequently used Physics constants</p>
     </div>
     """, unsafe_allow_html=True)
