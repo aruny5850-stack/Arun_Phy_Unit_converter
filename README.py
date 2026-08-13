@@ -572,7 +572,7 @@ def safe_eval(expr):
 # ============================================================
 st.markdown("""
 <div class="hero">
-    <h1>⚛️ Ar_PHYHBTU</h1>
+    <h1>🧑🏻‍🎓 Ar_PHYHBTU</h1>
     <p>Calculate • Convert • Explore</p>
     <p>
     </p>
