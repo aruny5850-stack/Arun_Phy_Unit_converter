@@ -408,13 +408,12 @@ converter, calculator, constants = st.tabs([
 # CONVERTER
 # ===========================================================
 with converter:
-        st.markdown("""
-    <div class="section-heading">
+    st.markdown("""
+    <div class="panel">
         <h2>🔄 Universal Unit Converter</h2>
-        <p>SI/MKS • CGS • Practical Units</p>
+        <p>Convert common physical quantities between SI/MKS, CGS and practical units.</p>
     </div>
-    """, unsafe_allow_html=True)
-
+    """ , unsafe_allow_html=True)
     categories = list(UNITS.keys()) + ["Temperature"]
 
     st.markdown('<div class="field-card"><div class="field-title">📚 PHYSICAL QUANTITY</div>', unsafe_allow_html=True)
@@ -425,15 +424,15 @@ with converter:
 
     c1, c2 = st.columns(2)
 
-with c1:
-    st.markdown('<div class="field-card"><div class="field-title">🔢 VALUE</div>', unsafe_allow_html=True)
-    value = st.number_input("Value", value=1.0, format="%.10g", label_visibility="collapsed")
-    st.markdown("</div>", unsafe_allow_html=True)
+    with c1:
+        st.markdown('<div class="field-card"><div class="field-title">🔢 VALUE</div>', unsafe_allow_html=True)
+        value = st.number_input("Value", value=1.0, format="%.10g", label_visibility="collapsed")
+        st.markdown("</div>", unsafe_allow_html=True)
 
-with c2:
-    st.markdown('<div class="field-card"><div class="field-title">📤 FROM UNIT</div>', unsafe_allow_html=True)
-    from_unit = st.selectbox("From", units, label_visibility="collapsed", key="from_unit")
-    st.markdown("</div>", unsafe_allow_html=True)
+    with c2:
+        st.markdown('<div class="field-card"><div class="field-title">📤 FROM UNIT</div>', unsafe_allow_html=True)
+        from_unit = st.selectbox("From", units, label_visibility="collapsed", key="from_unit")
+        st.markdown("</div>", unsafe_allow_html=True)
 
     st.markdown('<div class="field-card"><div class="field-title">📥 TO UNIT</div>', unsafe_allow_html=True)
     to_unit = st.selectbox("To", units, label_visibility="collapsed", key="to_unit")
@@ -452,6 +451,7 @@ with c2:
             st.caption(f"{fmt(value)} {from_unit}  →  {fmt(result)} {to_unit}")
         except Exception as e:
             st.error(f"Conversion error: {e}")
+
 
 
 # ============================================================
