@@ -426,14 +426,14 @@ with converter:
     c1, c2 = st.columns(2)
 
 with c1:
-        st.markdown('<div class="field-card"><div class="field-title">🔢 VALUE</div>', unsafe_allow_html=True)
-        value = st.number_input("Value", value=1.0, format="%.10g", label_visibility="collapsed")
-        st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown('<div class="field-card"><div class="field-title">🔢 VALUE</div>', unsafe_allow_html=True)
+    value = st.number_input("Value", value=1.0, format="%.10g", label_visibility="collapsed")
+    st.markdown("</div>", unsafe_allow_html=True)
 
 with c2:
-        st.markdown('<div class="field-card"><div class="field-title">📤 FROM UNIT</div>', unsafe_allow_html=True)
-        from_unit = st.selectbox("From", units, label_visibility="collapsed", key="from_unit")
-        st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown('<div class="field-card"><div class="field-title">📤 FROM UNIT</div>', unsafe_allow_html=True)
+    from_unit = st.selectbox("From", units, label_visibility="collapsed", key="from_unit")
+    st.markdown("</div>", unsafe_allow_html=True)
 
     st.markdown('<div class="field-card"><div class="field-title">📥 TO UNIT</div>', unsafe_allow_html=True)
     to_unit = st.selectbox("To", units, label_visibility="collapsed", key="to_unit")
