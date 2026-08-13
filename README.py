@@ -572,8 +572,6 @@ st.markdown("""
     <h1>⚛️ Ar_PHYHBTU</h1>
     <p>Calculate • Convert • Explore</p>
     <p>
-        Physics utility app for students —
-        SI, CGS, magnetic quantities and scientific calculations.
     </p>
 </div>
 """, unsafe_allow_html=True)
