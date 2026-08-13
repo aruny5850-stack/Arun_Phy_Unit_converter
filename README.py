@@ -142,10 +142,47 @@ button[data-baseweb="tab"] {
     font-weight:750!important;
 }
 @media(max-width:700px) {
-    .hero h1 {font-size:32px;}
-    .hero {padding:25px;}
-    .panel {padding:18px;}
-    .result-number {font-size:29px;}
+    .hero {
+        padding:18px;
+        border-radius:20px;
+        margin-bottom:12px;
+    }
+
+    .hero h1 {
+        font-size:28px;
+        white-space:nowrap;
+        letter-spacing:-1px;
+    }
+
+    .hero p {
+        font-size:13px;
+        line-height:1.45;
+        margin:.25rem 0;
+    }
+
+    .panel {
+        padding:14px;
+        border-radius:18px;
+        margin-bottom:12px;
+    }
+
+    .panel h2 {
+        font-size:24px;
+        line-height:1.1;
+        white-space:nowrap;
+        letter-spacing:-0.8px;
+        margin:0 0 8px 0;
+    }
+
+    .panel p {
+        font-size:13px;
+        line-height:1.4;
+        margin:0;
+    }
+
+    .result-number {
+        font-size:29px;
+    }
 }
 </style>
 """, unsafe_allow_html=True)
