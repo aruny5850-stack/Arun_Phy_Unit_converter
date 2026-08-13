@@ -344,7 +344,6 @@ with converter:
         value = st.number_input("Value", value=1.0, format="%.10g", label_visibility="collapsed")
         st.markdown("</div>", unsafe_allow_html=True)
 
-    with c2:
        # ============================================================
 # VALUE + FROM UNIT — COMPACT BOX
 # ============================================================
