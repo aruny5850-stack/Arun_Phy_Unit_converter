@@ -653,7 +653,7 @@ with converter:
         )
         value_col, unit_col = st.columns(
             [1.35, 1],
-            gap="small"
+            gap="none"
         )
         with unit_col:
             from_unit = st.selectbox(
