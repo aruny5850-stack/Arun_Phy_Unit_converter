@@ -637,39 +637,38 @@ with converter:
     ):
         try:
             result = convert_value(
-                value,
-                category,
-                from_unit,
-                to_unit
-            )
-st.markdown(
-    dedent(f"""
-    <div class="result-card">
-        <div class="result-label">
-            ✨ Conversion Result
-        </div>
+            value,
+            category,
+            from_unit,
+            to_unit
+        )
 
-        <div class="result-number">
-            {fmt(result)}
-        </div>
+        st.markdown(
+            f"""
+            <div class="result-card">
+                <div class="result-label">
+                    ✨ Conversion Result
+                </div>
 
-        <div class="result-unit">
-            {to_unit}
-        </div>
-    </div>
-    """),
-    unsafe_allow_html=True
-)
-            """, unsafe_allow_html=True)
+                <div class="result-number">
+                    {fmt(result)}
+                </div>
 
-            st.caption(
-                f"{fmt(value)} {from_unit}  →  "
-                f"{fmt(result)} {to_unit}"
-            )
+                <div class="result-unit">
+                    {to_unit}
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
-        except Exception as e:
-            st.error(f"Conversion error: {e}")
+        st.caption(
+            f"{fmt(value)} {from_unit} → "
+            f"{fmt(result)} {to_unit}"
+        )
 
+    except Exception as e:
+        st.error(f"Conversion error: {e}")
     # Magnetic reference table
     st.markdown("""
     <div class="panel">
