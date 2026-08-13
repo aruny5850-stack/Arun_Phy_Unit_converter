@@ -148,11 +148,7 @@ button[data-baseweb="tab"] {
         margin-bottom:12px;
     }
 [data-testid="stHorizontalBlock"] {
-    gap: 0.15rem !important;
-}
-
-[data-testid="stVerticalBlock"] {
-    gap: 0.15rem !important;
+    gap: 0.5rem !important;
 }
 }
     .hero h1 {
