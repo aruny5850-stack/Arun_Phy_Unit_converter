@@ -637,7 +637,16 @@ with converter:
         )
 
         value_col, unit_col = st.columns(
-            [1.00, 1],
+            [1.35, 1],
+            gap="small"
+        )
+        st.markdown(
+            '<div class="field-title"> '
+            '📤 FROM UNIT</div>',
+            unsafe_allow_html=True
+        )
+        value_col, unit_col = st.columns(
+            [1.35, 1],
             gap="small"
         )
 
@@ -649,15 +658,7 @@ with converter:
                 label_visibility="collapsed",
                 key="converter_value"
             )
-        st.markdown(
-            '<div class="field-title"> '
-            '📤 FROM UNIT</div>',
-            unsafe_allow_html=True
-        )
-        value_col, unit_col = st.columns(
-            [1.35, 1],
-            gap="small"
-        )
+ 
         with unit_col:
             from_unit = st.selectbox(
                 "From unit",
