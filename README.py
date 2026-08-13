@@ -147,7 +147,9 @@ button[data-baseweb="tab"] {
         border-radius:20px;
         margin-bottom:12px;
     }
-
+[data-testid="stHorizontalBlock"] {
+    gap: 0.5rem !important;
+}
     .hero h1 {
         font-size:28px;
         white-space:nowrap;
@@ -653,7 +655,7 @@ with converter:
         )
         value_col, unit_col = st.columns(
             [1.35, 1],
-            gap="none"
+            gap="small"
         )
         with unit_col:
             from_unit = st.selectbox(
