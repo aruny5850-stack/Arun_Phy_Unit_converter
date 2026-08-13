@@ -70,7 +70,83 @@ button[data-baseweb="tab"] {font-weight:750!important;}
 # Factor converts unit -> SI base unit.
 # ============================================================
 UNITS = {
-    "Length": {
+    "Magnetic induction (B) ": {
+        "tesla (T) [SI]": 1,
+        "gauss (G) [CGS]": 1e-4
+    },
+    "Magnetic field (H)": {
+        "ampere/meter (A m⁻¹)  [SI]": 1,
+        "oersted (Oe) [CGS]": 1000/(4*math.pi)
+    },
+    "Magnetization (M)": {
+        "ampere/meter (A m⁻¹)": 1,
+        "emu cm⁻³": 1000
+    },
+    "Magnetic polarization (J)": {
+        "tesla (T) [SI]": 1,
+        "gauss (G) [CGS]": 1e-4
+    },
+    "Magnetic moment (m)": {
+        "ampere·meter² (A m²)": 1,
+        "emu (G cm³)": 1e-3
+    },
+    "Magnetic moment per unit mass (σ)": {
+        "ampere·meter² kg⁻¹ (A m² kg⁻¹)": 1,
+        "emu g⁻¹ [CGS]": 1
+    },
+    "Volume magnetic susceptibility (κ = M/H)": {
+        "dimensionless [SI]": 1,
+        "dimensionless [CGS]": 1/(4*math.pi)
+    },
+    "Mass magnetic susceptibility (χ = κ/ρ)": {
+        "m³ kg⁻¹": 1,
+        "emu Oe⁻¹ g⁻¹": 4*math.pi/1000
+    },
+    "Molar magnetic susceptibility (χₘ = χM*)": {
+        "m³ mol⁻¹": 1,
+        "emu Oe⁻¹ g⁻¹ mol⁻¹": 4*math.pi/1e6
+    },
+    "Magnetic permeability (μ = B/H)": {
+        "henry/meter (H m⁻¹)": 1,
+        "G Oe⁻¹": 1e7/(4*math.pi)
+    },
+    "Magnetic flux (λ)": {
+        "weber (Wb)": 1,
+        "maxwell (Mx)": 1e-8
+    },
+    "Magnetic scalar potential; Magnetomotive force (ϕ)": {
+        "ampere (A) [SI]": 1,
+        "gilbert [CGS]": 10/(4*math.pi)
+    },
+    "Magnetic vector potential": {
+        "weber/meter (Wb m⁻¹)": 1,
+        "emu (G cm)": 1e-6
+    },
+    "Magnetic pole strength (p)": {
+        "ampere·meter (A m)": 1,
+        "emu (G cm²)": 1e-1
+    },
+    "Demagnetizing factor": {
+        "dimensionless (SI)": 1,
+        "dimensionless (CGS)": 4*math.pi
+    },
+    "Magnetostriction constant (λ)": {
+        "dimensionless (SI)": 1,
+        "dimensionless (CGS)": 1
+    },
+    "Anisotropy constant (K, K₁, Kᵤ)": {
+        "joule/m³ (J m⁻³)": 1,
+        "erg/cm³": 1e-1
+    },
+    "Magnetostatic energy (Eₘ)": {
+        "joule/m³ (J m⁻³)": 1,
+        "erg/cm³": 1e-1
+    },
+    "Energy product (BH)ₘₐₓ": {
+        "joule/m³ (J m⁻³)": 1,
+        "erg/cm³": 1e-1
+    },
+     "Length": {
         "meter (m)": 1, "kilometer (km)": 1e3, "centimeter (cm)": 1e-2,
         "millimeter (mm)": 1e-3, "micrometer (μm)": 1e-6,
         "nanometer (nm)": 1e-9, "angstrom (Å)": 1e-10,
@@ -138,12 +214,6 @@ UNITS = {
     "Capacitance": {
         "farad (F)": 1, "microfarad (μF)": 1e-6,
         "nanofarad (nF)": 1e-9, "picofarad (pF)": 1e-12
-    },
-    "Magnetic Field": {
-        "tesla (T)": 1, "gauss (G)": 1e-4
-    },
-    "Magnetic Flux": {
-        "weber (Wb)": 1, "maxwell (Mx)": 1e-8
     },
     "Density": {
         "kilogram/m³ (kg/m³)": 1,
