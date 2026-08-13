@@ -407,7 +407,7 @@ converter, calculator, constants = st.tabs([
 # ============================================================
 # CONVERTER
 # ===========================================================
-    with converter:
+with converter:
         st.markdown("""
     <div class="section-heading">
         <h2>🔄 Universal Unit Converter</h2>
@@ -425,12 +425,12 @@ converter, calculator, constants = st.tabs([
 
     c1, c2 = st.columns(2)
 
-    with c1:
+with c1:
         st.markdown('<div class="field-card"><div class="field-title">🔢 VALUE</div>', unsafe_allow_html=True)
         value = st.number_input("Value", value=1.0, format="%.10g", label_visibility="collapsed")
         st.markdown("</div>", unsafe_allow_html=True)
 
-    with c2:
+with c2:
         st.markdown('<div class="field-card"><div class="field-title">📤 FROM UNIT</div>', unsafe_allow_html=True)
         from_unit = st.selectbox("From", units, label_visibility="collapsed", key="from_unit")
         st.markdown("</div>", unsafe_allow_html=True)
