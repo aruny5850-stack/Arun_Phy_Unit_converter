@@ -632,7 +632,7 @@ with converter:
 
         st.markdown(
             '<div class="field-title"> '
-            '📤 Select UNIT</div>',
+            '📤 Enter Value & Select UNIT</div>',
             unsafe_allow_html=True
         )
         value_col, unit_col = st.columns(
