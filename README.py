@@ -632,8 +632,8 @@ with converter:
     with st.container(border=True):
 
         st.markdown(
-            '<div class="field-title">🔢 ENTER VALUE &nbsp;&nbsp; '
-            '📤 FROM UNIT</div>',
+            '<div class="field-title">🔢 ENTER VALUE &nbsp;&nbsp;
+            '</div>',
             unsafe_allow_html=True
         )
 
