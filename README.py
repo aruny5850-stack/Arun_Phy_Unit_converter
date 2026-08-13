@@ -308,7 +308,7 @@ def safe_eval(expr):
 # ============================================================
 st.markdown("""
 <div class="hero">
-    <h1>⚛️ Ar_PHYHBTU</h1>
+    <h1>🧑🏻‍🎓  Ar_PHYHBTU</h1>
     <p>Calculate • Convert • Explore</p>
     <p>Physics utility app for students — SI, CGS, magnetic quantities and scientific calculations.</p>
 </div>
@@ -438,6 +438,7 @@ with constants:
 st.markdown("""
 <div style="text-align:center;color:#64748b;margin-top:40px;padding:20px;font-size:13px">
 ⚛️ <b>Ar_PHYHBTU</b><br>
-Python + Streamlit
+Developed by Arun Kumar Yadav
+H.B.T.U. Kanpur
 </div>
 """, unsafe_allow_html=True)
