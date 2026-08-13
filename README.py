@@ -650,6 +650,16 @@ with converter:
                 label_visibility="collapsed",
                 key="converter_value"
             )
+             st.markdown(
+            '<div class="field-title">🔢 ENTER VALUE &nbsp;&nbsp; '
+            '📤 FROM UNIT</div>',
+            unsafe_allow_html=True
+        )
+
+        value_col, unit_col = st.columns(
+            [1.35, 1],
+            gap="medium"
+        )
 
         with unit_col:
             from_unit = st.selectbox(
