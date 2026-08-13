@@ -334,8 +334,14 @@ converter, calculator, constants = st.tabs([
 # ============================================================
 # CONVERTER
 # ============================================================
-
-categories = list(UNITS.keys()) + ["Temperature"]
+with converter:
+    st.markdown("""
+    <div class="panel">
+        <h2>🔄 Universal Unit Converter</h2>
+        <p>Convert common physical quantities between SI/MKS, CGS and practical units.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    categories = list(UNITS.keys()) + ["Temperature"]
 
     st.markdown('<div class="field-card"><div class="field-title">📚 PHYSICAL QUANTITY</div>', unsafe_allow_html=True)
     category = st.selectbox("Physical quantity", categories, label_visibility="collapsed")
