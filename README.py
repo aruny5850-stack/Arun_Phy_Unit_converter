@@ -1191,6 +1191,6 @@ st.markdown("""
     font-size:13px;
 ">
 ⚛️ <b>Ar_PHYHBTU</b><br>
-Python + Streamlit
+Developed by Arun Yadav
 </div>
 """, unsafe_allow_html=True)
