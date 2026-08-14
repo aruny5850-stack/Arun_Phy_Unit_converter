@@ -951,46 +951,55 @@ with calculator:
         }
 
         function evaluate(s) {
+          // Convert the calculator symbols to JavaScript math syntax.
           let x = s
             .replaceAll("÷", "/")
             .replaceAll("×", "*")
             .replaceAll("−", "-")
             .replaceAll("^", "**")
-            .replaceAll("π", "Math.PI");
+            .replaceAll("π", "Math.PI")
+            .replace(/\be\b/g, "Math.E")
+            .replace(/\blg\(/g, "Math.log10(")
+            .replace(/\bln\(/g, "Math.log(")
+            .replace(/\bsqrt\(/g, "Math.sqrt(");
 
-          x = x.replace(/\be\b/g, "Math.E");
-          x = x.replace(/\blg\(/g, "Math.log10(");
-          x = x.replace(/\bln\(/g, "Math.log(");
-          x = x.replace(/\bsqrt\(/g, "Math.sqrt(");
+          // Use wrapper functions instead of regex-editing trig arguments.
+          // This correctly handles nested expressions such as sin(30+15),
+          // sin(sqrt(900)), and inverse trig in both DEG and RAD modes.
+          const sinFn = degree
+            ? (v) => Math.sin(v * Math.PI / 180)
+            : (v) => Math.sin(v);
+          const cosFn = degree
+            ? (v) => Math.cos(v * Math.PI / 180)
+            : (v) => Math.cos(v);
+          const tanFn = degree
+            ? (v) => Math.tan(v * Math.PI / 180)
+            : (v) => Math.tan(v);
+          const asinFn = degree
+            ? (v) => Math.asin(v) * 180 / Math.PI
+            : (v) => Math.asin(v);
+          const acosFn = degree
+            ? (v) => Math.acos(v) * 180 / Math.PI
+            : (v) => Math.acos(v);
+          const atanFn = degree
+            ? (v) => Math.atan(v) * 180 / Math.PI
+            : (v) => Math.atan(v);
 
-          const angle = degree ? "(Math.PI/180)" : "1";
+          x = x.replace(/\bsin\(/g, "sinFn(")
+               .replace(/\bcos\(/g, "cosFn(")
+               .replace(/\btan\(/g, "tanFn(")
+               .replace(/\basin\(/g, "asinFn(")
+               .replace(/\bacos\(/g, "acosFn(")
+               .replace(/\batan\(/g, "atanFn(");
 
-          x = x.replace(/\bsin\(/g, second ? "Math.asin(" : "Math.sin(");
-          x = x.replace(/\bcos\(/g, second ? "Math.acos(" : "Math.cos(");
-          x = x.replace(/\btan\(/g, second ? "Math.atan(" : "Math.tan(");
-
-          if (degree && second) {
-            x = x.replace(/Math\.asin\(([^()]*)\)/g,
-              "((Math.asin($1))*180/Math.PI)");
-            x = x.replace(/Math\.acos\(([^()]*)\)/g,
-              "((Math.acos($1))*180/Math.PI)");
-            x = x.replace(/Math\.atan\(([^()]*)\)/g,
-              "((Math.atan($1))*180/Math.PI)");
-          } else if (degree) {
-            // Convert trig arguments to degrees.
-            x = x.replace(/Math\.sin\(([^()]*)\)/g,
-              "Math.sin(($1)*" + angle + ")");
-            x = x.replace(/Math\.cos\(([^()]*)\)/g,
-              "Math.cos(($1)*" + angle + ")");
-            x = x.replace(/Math\.tan\(([^()]*)\)/g,
-              "Math.tan(($1)*" + angle + ")");
-          }
-
-          // Only allow calculator-generated mathematical syntax.
-          if (!/^[0-9+\-*/%().,\sA-Za-z_*]+$/.test(x))
+          // Only allow syntax that can be produced by this calculator.
+          if (!/^[0-9+\-*/%().,\sA-Za-z_]+$/.test(x))
             throw new Error("Invalid");
 
-          const result = Function('"use strict"; return (' + x + ')')();
+          const result = Function(
+            "sinFn", "cosFn", "tanFn", "asinFn", "acosFn", "atanFn",
+            '"use strict"; return (' + x + ')'
+          )(sinFn, cosFn, tanFn, asinFn, acosFn, atanFn);
 
           if (!Number.isFinite(result)) throw new Error("Math error");
           return result;
