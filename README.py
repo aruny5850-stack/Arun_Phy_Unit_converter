@@ -734,152 +734,173 @@ with converter:
 
 
 # ============================================================
-# CALCULATOR — SIMPLE & EASY TO USE
+# CALCULATOR — COMPACT PHONE STYLE
 # ============================================================
 with calculator:
 
     st.markdown("""
     <style>
-    .easy-calc {
-        max-width: 560px;
+    .phone-calc {
+        max-width: 620px;
         margin: 0 auto;
     }
 
-    .easy-display {
-        background: #0b0b0b;
-        border: 1px solid rgba(255,255,255,.08);
-        border-radius: 22px;
-        padding: 18px 20px 12px;
-        margin-bottom: 12px;
-        min-height: 125px;
+    .phone-display {
+        background: #050505;
+        border-radius: 20px;
+        padding: 10px 16px 14px;
+        margin-bottom: 10px;
+        min-height: 112px;
+        border: 1px solid rgba(255,255,255,.06);
         box-sizing: border-box;
     }
 
-    .easy-history {
-        color: #777;
-        font-size: 14px;
+    .phone-history {
+        height: 25px;
         text-align: right;
-        min-height: 24px;
+        color: #666;
+        font-size: 14px;
         overflow: hidden;
         white-space: nowrap;
     }
 
-    .easy-number {
-        color: #fff;
-        font-size: 42px;
-        font-weight: 400;
+    .phone-number {
         text-align: right;
+        color: #fff;
+        font-size: 48px;
+        font-weight: 400;
+        line-height: 1.25;
         overflow-x: auto;
         white-space: nowrap;
-        line-height: 1.2;
-        margin-top: 12px;
     }
 
-    .easy-key button {
-        height: 62px !important;
-        border-radius: 18px !important;
-        font-size: 22px !important;
-        font-weight: 500 !important;
+    /* Remove extra vertical spacing around each Streamlit row */
+    .phone-calc [data-testid="stHorizontalBlock"] {
+        gap: 8px !important;
+        margin-bottom: 8px !important;
+    }
+
+    .phone-calc [data-testid="column"] {
+        padding: 0 !important;
+    }
+
+    .phone-key button {
+        width: 100% !important;
+        height: 58px !important;
+        min-height: 58px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        border-radius: 17px !important;
         background: #252525 !important;
-        color: #f5f5f5 !important;
+        color: #f2f2f2 !important;
         border: 1px solid rgba(255,255,255,.035) !important;
         box-shadow: none !important;
+        font-size: 20px !important;
+        font-weight: 500 !important;
     }
 
-    .easy-key button:hover {
-        background: #343434 !important;
+    .phone-key button:hover {
+        background: #333 !important;
         transform: none !important;
     }
 
-    .easy-op button {
-        height: 62px !important;
-        border-radius: 18px !important;
-        font-size: 24px !important;
+    .phone-op button {
+        width: 100% !important;
+        height: 58px !important;
+        min-height: 58px !important;
+        padding: 0 !important;
+        border-radius: 17px !important;
         background: #252525 !important;
         color: #ff7a00 !important;
         border: 1px solid rgba(255,255,255,.035) !important;
         box-shadow: none !important;
+        font-size: 22px !important;
+        font-weight: 500 !important;
     }
 
-    .easy-equals button {
-        height: 62px !important;
-        border-radius: 18px !important;
-        font-size: 25px !important;
+    .phone-equals button {
+        width: 100% !important;
+        height: 58px !important;
+        min-height: 58px !important;
+        padding: 0 !important;
+        border-radius: 17px !important;
         background: #ff7a00 !important;
-        color: #fff !important;
+        color: white !important;
         border: 0 !important;
         box-shadow: none !important;
+        font-size: 24px !important;
     }
 
-    .easy-science {
-        margin: 10px 0 12px;
-    }
-
-    .easy-science button {
-        height: 48px !important;
-        border-radius: 15px !important;
-        font-size: 16px !important;
-        background: #1d1d1d !important;
-        color: #cbd5e1 !important;
-    }
-
-    .calc-help {
+    .phone-mode {
         text-align: center;
-        color: #7c8798;
-        font-size: 12px;
-        margin-top: 14px;
+        color: #7b8490;
+        font-size: 11px;
+        height: 18px;
+        margin-bottom: 6px;
     }
 
     @media(max-width:700px) {
-        .easy-calc {
+        .phone-calc {
             width: 100%;
         }
 
-        .easy-number {
-            font-size: 36px;
+        .phone-calc [data-testid="stHorizontalBlock"] {
+            gap: 6px !important;
+            margin-bottom: 6px !important;
         }
 
-        .easy-key button,
-        .easy-op button,
-        .easy-equals button {
-            height: 56px !important;
-            border-radius: 16px !important;
+        .phone-key button,
+        .phone-op button,
+        .phone-equals button {
+            height: 52px !important;
+            min-height: 52px !important;
+            border-radius: 15px !important;
+            font-size: 18px !important;
+        }
+
+        .phone-op button,
+        .phone-equals button {
+            font-size: 21px !important;
+        }
+
+        .phone-number {
+            font-size: 40px;
         }
     }
     </style>
     """, unsafe_allow_html=True)
 
-    # ---------- state ----------
-    if "simple_expr" not in st.session_state:
-        st.session_state.simple_expr = ""
-    if "simple_display" not in st.session_state:
-        st.session_state.simple_display = "0"
-    if "simple_history" not in st.session_state:
-        st.session_state.simple_history = ""
-    if "simple_deg" not in st.session_state:
-        st.session_state.simple_deg = True
+    # ---------------- STATE ----------------
+    if "phone_expr" not in st.session_state:
+        st.session_state.phone_expr = ""
+    if "phone_display" not in st.session_state:
+        st.session_state.phone_display = "0"
+    if "phone_history" not in st.session_state:
+        st.session_state.phone_history = ""
+    if "phone_deg" not in st.session_state:
+        st.session_state.phone_deg = True
+    if "phone_2nd" not in st.session_state:
+        st.session_state.phone_2nd = False
 
-    def s_add(value):
-        st.session_state.simple_expr += value
-        st.session_state.simple_display = st.session_state.simple_expr or "0"
+    def p_add(value):
+        st.session_state.phone_expr += value
+        st.session_state.phone_display = st.session_state.phone_expr or "0"
 
-    def s_clear():
-        st.session_state.simple_expr = ""
-        st.session_state.simple_display = "0"
-        st.session_state.simple_history = ""
+    def p_clear():
+        st.session_state.phone_expr = ""
+        st.session_state.phone_display = "0"
+        st.session_state.phone_history = ""
 
-    def s_back():
-        st.session_state.simple_expr = st.session_state.simple_expr[:-1]
-        st.session_state.simple_display = st.session_state.simple_expr or "0"
+    def p_back():
+        st.session_state.phone_expr = st.session_state.phone_expr[:-1]
+        st.session_state.phone_display = st.session_state.phone_expr or "0"
 
-    def s_equals():
-        expr = st.session_state.simple_expr.strip()
+    def p_equals():
+        expr = st.session_state.phone_expr.strip()
         if not expr:
             return
-
         try:
-            # Degree mode for direct sin/cos/tan calculations.
-            if st.session_state.simple_deg:
+            if st.session_state.phone_deg:
                 expr_eval = re.sub(
                     r'\b(sin|cos|tan)\(([^()]*)\)',
                     lambda m: f"{m.group(1)}(({m.group(2)})*pi/180)",
@@ -889,201 +910,204 @@ with calculator:
                 expr_eval = expr
 
             answer = safe_eval(expr_eval)
-
-            st.session_state.simple_history = f"{expr} ="
-            st.session_state.simple_display = fmt(answer)
-            st.session_state.simple_expr = str(answer)
+            st.session_state.phone_history = f"{expr} ="
+            st.session_state.phone_display = fmt(answer)
+            st.session_state.phone_expr = str(answer)
 
         except ZeroDivisionError:
-            st.session_state.simple_history = expr
-            st.session_state.simple_display = "Cannot divide by 0"
+            st.session_state.phone_history = expr
+            st.session_state.phone_display = "Cannot divide by 0"
         except Exception:
-            st.session_state.simple_history = expr
-            st.session_state.simple_display = "Error"
+            st.session_state.phone_history = expr
+            st.session_state.phone_display = "Error"
 
-    def s_percent():
-        expr = st.session_state.simple_expr.strip()
-        if not expr:
-            return
+    def p_unary(kind):
         try:
-            value = safe_eval(expr)
-            value /= 100
-            st.session_state.simple_expr = str(value)
-            st.session_state.simple_display = fmt(value)
-        except Exception:
-            st.session_state.simple_display = "Error"
+            value = safe_eval(st.session_state.phone_expr)
+            if kind == "sqrt":
+                value = math.sqrt(value)
+            elif kind == "square":
+                value = value ** 2
+            elif kind == "inverse":
+                if value == 0:
+                    raise ZeroDivisionError
+                value = 1 / value
+            elif kind == "factorial":
+                if value < 0 or int(value) != value:
+                    raise ValueError
+                value = math.factorial(int(value))
+            elif kind == "percent":
+                value = value / 100
 
-    def s_square():
-        expr = st.session_state.simple_expr.strip()
-        if not expr:
-            return
-        try:
-            value = safe_eval(expr)
-            value = value ** 2
-            st.session_state.simple_expr = str(value)
-            st.session_state.simple_display = fmt(value)
-        except Exception:
-            st.session_state.simple_display = "Error"
+            st.session_state.phone_expr = str(value)
+            st.session_state.phone_display = fmt(value)
 
-    def s_sqrt():
-        expr = st.session_state.simple_expr.strip()
-        if not expr:
-            s_add("sqrt(")
-            return
-        try:
-            value = math.sqrt(safe_eval(expr))
-            st.session_state.simple_expr = str(value)
-            st.session_state.simple_display = fmt(value)
-        except Exception:
-            st.session_state.simple_display = "Error"
-
-    def s_reciprocal():
-        try:
-            value = safe_eval(st.session_state.simple_expr)
-            if value == 0:
-                raise ZeroDivisionError
-            value = 1 / value
-            st.session_state.simple_expr = str(value)
-            st.session_state.simple_display = fmt(value)
         except ZeroDivisionError:
-            st.session_state.simple_display = "Cannot divide by 0"
+            st.session_state.phone_display = "Cannot divide by 0"
         except Exception:
-            st.session_state.simple_display = "Error"
+            st.session_state.phone_display = "Error"
 
-    def s_factorial():
-        try:
-            value = safe_eval(st.session_state.simple_expr)
-            if value < 0 or int(value) != value:
-                raise ValueError
-            value = math.factorial(int(value))
-            st.session_state.simple_expr = str(value)
-            st.session_state.simple_display = fmt(value)
-        except Exception:
-            st.session_state.simple_display = "Error"
+    def p_function(name):
+        if name == "sin":
+            p_add("sin(")
+        elif name == "cos":
+            p_add("cos(")
+        elif name == "tan":
+            p_add("tan(")
+        elif name == "asin":
+            p_add("asin(")
+        elif name == "acos":
+            p_add("acos(")
+        elif name == "atan":
+            p_add("atan(")
+        elif name == "log":
+            p_add("log(")
+        elif name == "ln":
+            p_add("ln(")
+        elif name == "sqrt":
+            p_add("sqrt(")
 
-    def s_trig(name):
-        if not st.session_state.simple_expr:
-            s_add(f"{name}(")
-            return
-        s_add(f"{name}(")
+    # ---------------- DISPLAY ----------------
+    st.markdown('<div class="phone-calc">', unsafe_allow_html=True)
 
-    st.markdown('<div class="easy-calc">', unsafe_allow_html=True)
-
-    # ---------- display ----------
     st.markdown(
         f"""
-        <div class="easy-display">
-            <div class="easy-history">{st.session_state.simple_history}</div>
-            <div class="easy-number">{st.session_state.simple_display}</div>
+        <div class="phone-display">
+            <div class="phone-history">{st.session_state.phone_history}</div>
+            <div class="phone-number">{st.session_state.phone_display}</div>
         </div>
         """,
         unsafe_allow_html=True
     )
 
-    # ---------- small scientific toolbar ----------
-    st.markdown('<div class="easy-science">', unsafe_allow_html=True)
-    sc = st.columns(5, gap="small")
-
-    science_buttons = [
-        ("√", "sqrt"),
-        ("x²", "square"),
-        ("1/x", "reciprocal"),
-        ("x!", "factorial"),
-        ("DEG" if st.session_state.simple_deg else "RAD", "mode"),
-    ]
-
-    for col, (label, action) in zip(sc, science_buttons):
-        with col:
-            st.markdown('<div class="easy-key">', unsafe_allow_html=True)
-            if st.button(label, key=f"simple_sc_{action}", use_container_width=True):
-                if action == "sqrt":
-                    s_sqrt()
-                elif action == "square":
-                    s_square()
-                elif action == "reciprocal":
-                    s_reciprocal()
-                elif action == "factorial":
-                    s_factorial()
-                else:
-                    st.session_state.simple_deg = not st.session_state.simple_deg
-                st.rerun()
-            st.markdown('</div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    # ---------- main keypad ----------
-    keypad = [
-        [("AC", "clear"), ("⌫", "back"), ("%", "percent"), ("÷", "÷")],
-        [("7", "7"), ("8", "8"), ("9", "9"), ("×", "×")],
-        [("4", "4"), ("5", "5"), ("6", "6"), ("−", "−")],
-        [("1", "1"), ("2", "2"), ("3", "3"), ("+", "+")],
-        [("π", "pi"), ("0", "0"), (".", "."), ("=", "equals")],
-    ]
-
-    for r, row_data in enumerate(keypad):
-        cols = st.columns(4, gap="small")
-
-        for col, (label, action) in zip(cols, row_data):
-            with col:
-                if label == "=":
-                    css = "easy-equals"
-                elif label in {"÷", "×", "−", "+", "%"}:
-                    css = "easy-op"
-                else:
-                    css = "easy-key"
-
-                st.markdown(f'<div class="{css}">', unsafe_allow_html=True)
-
-                if st.button(label, key=f"simple_key_{r}_{label}",
-                             use_container_width=True):
-
-                    if action == "clear":
-                        s_clear()
-                    elif action == "back":
-                        s_back()
-                    elif action == "percent":
-                        s_percent()
-                    elif action == "equals":
-                        s_equals()
-                    elif action == "pi":
-                        s_add("pi")
-                    else:
-                        s_add(action)
-
-                    st.rerun()
-
-                st.markdown('</div>', unsafe_allow_html=True)
-
-    # ---------- optional advanced functions ----------
-    with st.expander("Scientific functions"):
-        st.caption("Tap a function, then enter its value and press =.")
-
-        fn_cols = st.columns(6, gap="small")
-        functions = [
-            ("sin", "sin"),
-            ("cos", "cos"),
-            ("tan", "tan"),
-            ("log", "log"),
-            ("ln", "ln"),
-            ("e", "e"),
-        ]
-
-        for col, (label, action) in zip(fn_cols, functions):
-            with col:
-                st.markdown('<div class="easy-key">', unsafe_allow_html=True)
-                if st.button(label, key=f"simple_fn_{label}",
-                             use_container_width=True):
-                    s_add(action + "(" if action != "e" else "e")
-                    st.rerun()
-                st.markdown('</div>', unsafe_allow_html=True)
-
+    mode = "DEG" if st.session_state.phone_deg else "RAD"
     st.markdown(
-        '<div class="calc-help">Basic calculations are always visible • '
-        'Scientific functions are kept inside the expandable section</div>',
+        f'<div class="phone-mode">{mode}</div>',
         unsafe_allow_html=True
     )
 
-    st.markdown('</div>', unsafe_allow_html=True)
+    # ---------------- ONE COMPACT 5-COLUMN GRID ----------------
+    # Exactly like the reference: all scientific functions,
+    # operators and numbers are visible together.
+    rows = [
+        [("2nd", "second", "key"),
+         ("deg", "mode", "key"),
+         ("sin", "sin", "key"),
+         ("cos", "cos", "key"),
+         ("tan", "tan", "key")],
 
+        [("xʸ", "power", "key"),
+         ("lg", "log", "key"),
+         ("ln", "ln", "key"),
+         ("(", "(", "key"),
+         (")", ")", "key")],
+
+        [("√x", "sqrt", "key"),
+         ("AC", "clear", "key"),
+         ("⌫", "back", "key"),
+         ("%", "percent", "op"),
+         ("÷", "÷", "op")],
+
+        [("x!", "factorial", "key"),
+         ("7", "7", "key"),
+         ("8", "8", "key"),
+         ("9", "9", "key"),
+         ("×", "×", "op")],
+
+        [("1/x", "inverse", "key"),
+         ("4", "4", "key"),
+         ("5", "5", "key"),
+         ("6", "6", "key"),
+         ("−", "−", "op")],
+
+        [("π", "pi", "key"),
+         ("1", "1", "key"),
+         ("2", "2", "key"),
+         ("3", "3", "key"),
+         ("+", "+", "op")],
+
+        [("±", "sign", "key"),
+         ("e", "e", "key"),
+         ("0", "0", "key"),
+         (".", ".", "key"),
+         ("=", "equals", "equals")],
+    ]
+
+    for r, row_data in enumerate(rows):
+        cols = st.columns(5, gap="small")
+
+        for c, (label, action, kind) in enumerate(row_data):
+            with cols[c]:
+                css = "phone-equals" if kind == "equals" else (
+                    "phone-op" if kind == "op" else "phone-key"
+                )
+                st.markdown(f'<div class="{css}">', unsafe_allow_html=True)
+
+                if st.button(
+                    label,
+                    key=f"phone_{r}_{c}_{label}",
+                    use_container_width=True
+                ):
+                    if action == "second":
+                        st.session_state.phone_2nd = not st.session_state.phone_2nd
+
+                    elif action == "mode":
+                        st.session_state.phone_deg = not st.session_state.phone_deg
+
+                    elif action == "clear":
+                        p_clear()
+
+                    elif action == "back":
+                        p_back()
+
+                    elif action == "equals":
+                        p_equals()
+
+                    elif action in {"sqrt", "factorial", "inverse", "percent"}:
+                        p_unary(action)
+
+                    elif action == "power":
+                        p_add("^")
+
+                    elif action == "log":
+                        p_function("log")
+
+                    elif action == "ln":
+                        p_function("ln")
+
+                    elif action == "sin":
+                        p_function("asin" if st.session_state.phone_2nd else "sin")
+
+                    elif action == "cos":
+                        p_function("acos" if st.session_state.phone_2nd else "cos")
+
+                    elif action == "tan":
+                        p_function("atan" if st.session_state.phone_2nd else "tan")
+
+                    elif action == "pi":
+                        p_add("pi")
+
+                    elif action == "e":
+                        p_add("e")
+
+                    elif action == "sign":
+                        expr = st.session_state.phone_expr
+                        if expr.startswith("-(") and expr.endswith(")"):
+                            st.session_state.phone_expr = expr[2:-1]
+                        elif expr:
+                            st.session_state.phone_expr = f"-({expr})"
+                        else:
+                            st.session_state.phone_expr = "-"
+                        st.session_state.phone_display = st.session_state.phone_expr
+
+                    else:
+                        p_add(action)
+
+                    st.rerun()
+
+                st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
 
 
 # ============================================================
