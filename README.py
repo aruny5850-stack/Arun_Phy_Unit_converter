@@ -199,11 +199,11 @@ UNITS = {
     # ---------- MAGNETIC: assignment order ----------
     "Magnetic induction (B)": {
         "tesla (T) [SI]": 1,
-        "gauss (G) [CGS]": 1e-4
+        "gauss (G) [CGS]": 1e4
     },
     "Magnetic field (H)": {
         "ampere/meter (A m⁻¹) [SI]": 1,
-        "oersted (Oe) [CGS]": 1000/(4*math.pi)
+        "oersted (Oe) [CGS]": (4*math.pi)/1000
     },
     "Magnetization (M)": {
         "ampere/meter (A m⁻¹)": 1,
@@ -211,7 +211,7 @@ UNITS = {
     },
     "Magnetic polarization (J)": {
         "tesla (T) [SI]": 1,
-        "gauss (G) [CGS]": 1e-4
+        "gauss (G) [CGS]": 1/(4*math.pi)
     },
     "Magnetic moment (m)": {
         "ampere·meter² (A m²)": 1,
