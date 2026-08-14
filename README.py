@@ -467,10 +467,13 @@ def fmt(x):
     if x == 0:
         return "0"
 
-    if abs(x) >= 1e6 or abs(x) < 1e-4:
-        s = f"{x:.3e}"
+    # Scientific notation for very small or very large values
+    if abs(x) >= 1e6 or abs(x) <= 1e-4:
+        s = f"{x:.6e}"
         mantissa, exponent = s.split("e")
         exponent = int(exponent)
+
+        mantissa = mantissa.rstrip("0").rstrip(".")
 
         superscript = str(exponent).translate(
             str.maketrans(
@@ -481,8 +484,7 @@ def fmt(x):
 
         return f"{mantissa} × 10{superscript}"
 
-    return f"{x:.3f}".rstrip("0").rstrip(".")
-
+    return f"{x:.6f}".rstrip("0").rstrip(".")
 
 # ============================================================
 # SAFE SCIENTIFIC CALCULATOR
