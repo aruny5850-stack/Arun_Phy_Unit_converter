@@ -579,10 +579,10 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-converter, calculator, constants = st.tabs([
-    "🔄 Unit Converter",
-    "🧮 Calculator",
-    "📐 Constants"
+calculator, converter, constants = st.tabs([
+    "Calculator",
+    "Converter",
+    "Constants"
 ])
 
 
@@ -734,61 +734,373 @@ with converter:
 
 
 # ============================================================
-# SCIENTIFIC CALCULATOR
+# SCIENTIFIC CALCULATOR — PHONE STYLE
 # ============================================================
 with calculator:
 
+    # Calculator-specific CSS
     st.markdown("""
-    <div class="panel">
-        <h2>🧮 Scientific Calculator</h2>
-        <p>
-            Use +, −, ×, ÷, powers and common scientific functions.
-        </p>
-    </div>
+    <style>
+    .calc-shell {
+        max-width: 620px;
+        margin: 0 auto;
+    }
+
+    .calc-history {
+        min-height: 95px;
+        padding: 12px 16px 0;
+        text-align: right;
+        color: #6b7280;
+        font-size: 22px;
+        line-height: 1.65;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .calc-display {
+        min-height: 92px;
+        padding: 8px 14px 18px;
+        text-align: right;
+        color: #f8fafc;
+        font-size: 58px;
+        line-height: 1;
+        font-weight: 400;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .calc-mode {
+        text-align: center;
+        color: #94a3b8;
+        font-size: 12px;
+        margin-bottom: 10px;
+    }
+
+    div[data-testid="stHorizontalBlock"] {
+        align-items: center;
+    }
+
+    .calc-key button {
+        min-height: 64px !important;
+        border-radius: 18px !important;
+        font-size: 22px !important;
+        font-weight: 500 !important;
+        background: #252525 !important;
+        border: 1px solid rgba(255,255,255,.035) !important;
+        box-shadow: none !important;
+    }
+
+    .calc-key button:hover {
+        background: #333333 !important;
+        transform: none !important;
+    }
+
+    .calc-op button {
+        color: #ff7a00 !important;
+    }
+
+    .calc-equals button {
+        background: #ff7a00 !important;
+        color: white !important;
+    }
+
+    .calc-equals button:hover {
+        background: #ff8c1a !important;
+    }
+
+    @media (max-width: 700px) {
+        .calc-shell {
+            width: 100%;
+        }
+
+        .calc-history {
+            min-height: 80px;
+            font-size: 18px;
+        }
+
+        .calc-display {
+            min-height: 82px;
+            font-size: 48px;
+        }
+
+        .calc-key button {
+            min-height: 56px !important;
+            border-radius: 17px !important;
+            font-size: 20px !important;
+        }
+    }
+    </style>
     """, unsafe_allow_html=True)
 
-    with st.container(border=True):
+    # Calculator state
+    if "calc_expr" not in st.session_state:
+        st.session_state.calc_expr = ""
+    if "calc_display" not in st.session_state:
+        st.session_state.calc_display = "0"
+    if "calc_history" not in st.session_state:
+        st.session_state.calc_history = []
+    if "calc_deg" not in st.session_state:
+        st.session_state.calc_deg = True
+    if "calc_2nd" not in st.session_state:
+        st.session_state.calc_2nd = False
 
-        st.markdown(
-            '<div class="field-title">🔢 EXPRESSION</div>',
-            unsafe_allow_html=True
-        )
+    def calc_add(value):
+        st.session_state.calc_expr += value
+        st.session_state.calc_display = st.session_state.calc_expr or "0"
 
-        expression = st.text_input(
-            "Expression",
-            placeholder="Example: 2*(5+3), sqrt(25), sin(pi/2)",
-            label_visibility="collapsed",
-            key="expression"
-        )
+    def calc_clear():
+        st.session_state.calc_expr = ""
+        st.session_state.calc_display = "0"
 
-    st.info(
-        "Functions: sin, cos, tan, asin, acos, atan, "
-        "sqrt, log, ln, exp, abs • Constants: pi, e"
-    )
+    def calc_backspace():
+        st.session_state.calc_expr = st.session_state.calc_expr[:-1]
+        st.session_state.calc_display = st.session_state.calc_expr or "0"
 
-    if st.button(
-        "🧮  CALCULATE",
-        key="calculate",
-        use_container_width=True
-    ):
+    def calc_percent():
+        expr = st.session_state.calc_expr.strip()
+        if expr:
+            # Convert the current complete number/expression to percent.
+            try:
+                value = safe_eval(expr)
+                st.session_state.calc_expr = str(value / 100)
+                st.session_state.calc_display = st.session_state.calc_expr
+            except Exception:
+                st.session_state.calc_expr += "/100"
+                st.session_state.calc_display = st.session_state.calc_expr
+
+    def calc_equals():
+        expr = st.session_state.calc_expr.strip()
+        if not expr:
+            return
+
         try:
-            if not expression.strip():
-                raise ValueError("Enter an expression.")
+            # Degree-mode trigonometry for the phone-style calculator.
+            if st.session_state.calc_deg:
+                expr_eval = re.sub(
+                    r'\b(sin|cos|tan)\(([^()]*)\)',
+                    lambda m: f"{m.group(1)}(({m.group(2)})*pi/180)",
+                    expr
+                )
+            else:
+                expr_eval = expr
 
-            answer = safe_eval(expression)
+            answer = safe_eval(expr_eval)
+            answer_text = fmt(answer)
 
-            st.markdown(f"""
-            <div class="result-card">
-                <div class="result-label">✨ Answer</div>
-                <div class="result-number">{fmt(answer)}</div>
-            </div>
-            """, unsafe_allow_html=True)
+            st.session_state.calc_history.append(
+                f"{expr} = {answer_text}"
+            )
+            st.session_state.calc_history = st.session_state.calc_history[-3:]
+            st.session_state.calc_display = answer_text
+            st.session_state.calc_expr = str(answer)
 
         except ZeroDivisionError:
-            st.error("❌ Cannot divide by zero.")
+            st.session_state.calc_display = "Cannot divide by 0"
+        except Exception:
+            st.session_state.calc_display = "Error"
 
-        except Exception as e:
-            st.error(f"❌ Invalid expression: {e}")
+    def calc_function(name):
+        if name == "sqrt":
+            calc_add("sqrt(")
+        elif name == "log":
+            calc_add("log(")
+        elif name == "ln":
+            calc_add("ln(")
+        elif name == "sin":
+            calc_add("sin(")
+        elif name == "cos":
+            calc_add("cos(")
+        elif name == "tan":
+            calc_add("tan(")
+        elif name == "asin":
+            calc_add("asin(")
+        elif name == "acos":
+            calc_add("acos(")
+        elif name == "atan":
+            calc_add("atan(")
+
+    # Main calculator
+    st.markdown('<div class="calc-shell">', unsafe_allow_html=True)
+
+    history_html = "<br>".join(st.session_state.calc_history)
+    st.markdown(
+        f'<div class="calc-history">{history_html}</div>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        f'<div class="calc-display">{st.session_state.calc_display}</div>',
+        unsafe_allow_html=True
+    )
+
+    mode_text = "DEG" if st.session_state.calc_deg else "RAD"
+    second_text = "2nd" if st.session_state.calc_2nd else "2nd"
+    st.markdown(
+        f'<div class="calc-mode">{mode_text} &nbsp;•&nbsp; {second_text}</div>',
+        unsafe_allow_html=True
+    )
+
+    # Scientific row
+    sci = st.columns(5, gap="small")
+
+    with sci[0]:
+        st.markdown('<div class="calc-key">', unsafe_allow_html=True)
+        if st.button("2nd", key="calc_2nd_btn", use_container_width=True):
+            st.session_state.calc_2nd = not st.session_state.calc_2nd
+            st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    with sci[1]:
+        st.markdown('<div class="calc-key">', unsafe_allow_html=True)
+        if st.button("deg" if st.session_state.calc_deg else "rad",
+                     key="calc_deg_btn", use_container_width=True):
+            st.session_state.calc_deg = not st.session_state.calc_deg
+            st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    with sci[2]:
+        st.markdown('<div class="calc-key">', unsafe_allow_html=True)
+        fn = "asin" if st.session_state.calc_2nd else "sin"
+        if st.button("sin", key="calc_sin_btn", use_container_width=True):
+            calc_function(fn)
+            st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    with sci[3]:
+        st.markdown('<div class="calc-key">', unsafe_allow_html=True)
+        fn = "acos" if st.session_state.calc_2nd else "cos"
+        if st.button("cos", key="calc_cos_btn", use_container_width=True):
+            calc_function(fn)
+            st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    with sci[4]:
+        st.markdown('<div class="calc-key">', unsafe_allow_html=True)
+        fn = "atan" if st.session_state.calc_2nd else "tan"
+        if st.button("tan", key="calc_tan_btn", use_container_width=True):
+            calc_function(fn)
+            st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    # Row 2
+    row = st.columns(5, gap="small")
+
+    buttons = [
+        ("xʸ", "calc_add", "^"),
+        ("lg", "calc_fn", "log"),
+        ("ln", "calc_fn", "ln"),
+        ("(", "calc_add", "("),
+        (")", "calc_add", ")"),
+    ]
+
+    for col, (label, action, value) in zip(row, buttons):
+        with col:
+            st.markdown('<div class="calc-key">', unsafe_allow_html=True)
+            if st.button(label, key=f"calc_{label}", use_container_width=True):
+                if action == "calc_add":
+                    calc_add(value)
+                else:
+                    calc_function(value)
+                st.rerun()
+            st.markdown('</div>', unsafe_allow_html=True)
+
+    # Row 3
+    row = st.columns(5, gap="small")
+    buttons = [
+        ("√x", "calc_fn", "sqrt"),
+        ("AC", "clear", None),
+        ("⌫", "back", None),
+        ("%", "percent", None),
+        ("÷", "calc_add", "÷"),
+    ]
+
+    for col, (label, action, value) in zip(row, buttons):
+        with col:
+            cls = "calc-op" if label in {"÷", "%"} else "calc-key"
+            st.markdown(f'<div class="{cls}">', unsafe_allow_html=True)
+            if st.button(label, key=f"calc_r3_{label}", use_container_width=True):
+                if action == "clear":
+                    calc_clear()
+                elif action == "back":
+                    calc_backspace()
+                elif action == "percent":
+                    calc_percent()
+                elif action == "calc_add":
+                    calc_add(value)
+                else:
+                    calc_function(value)
+                st.rerun()
+            st.markdown('</div>', unsafe_allow_html=True)
+
+    # Number rows
+    number_rows = [
+        [("x!", "factorial"), ("7", "7"), ("8", "8"), ("9", "9"), ("×", "×")],
+        [("1/x", "inverse"), ("4", "4"), ("5", "5"), ("6", "6"), ("−", "−")],
+        [("π", "pi"), ("1", "1"), ("2", "2"), ("3", "3"), ("+", "+")],
+        [("⇄", "sign"), ("e", "e"), ("0", "0"), (".", "."), ("=", "equals")],
+    ]
+
+    for r_idx, row_data in enumerate(number_rows):
+        row = st.columns(5, gap="small")
+
+        for col, (label, value) in zip(row, row_data):
+            with col:
+                if label in {"×", "−", "+", "="}:
+                    cls = "calc-equals" if label == "=" else "calc-op"
+                else:
+                    cls = "calc-key"
+
+                st.markdown(f'<div class="{cls}">', unsafe_allow_html=True)
+
+                if st.button(label, key=f"calc_r{r_idx}_{label}",
+                             use_container_width=True):
+
+                    if value == "equals":
+                        calc_equals()
+                    elif value == "clear":
+                        calc_clear()
+                    elif value == "factorial":
+                        try:
+                            v = safe_eval(st.session_state.calc_expr)
+                            if v < 0 or int(v) != v:
+                                raise ValueError
+                            st.session_state.calc_expr = str(math.factorial(int(v)))
+                            st.session_state.calc_display = st.session_state.calc_expr
+                        except Exception:
+                            st.session_state.calc_display = "Error"
+                    elif value == "inverse":
+                        try:
+                            v = safe_eval(st.session_state.calc_expr)
+                            if v == 0:
+                                raise ZeroDivisionError
+                            st.session_state.calc_expr = str(1 / v)
+                            st.session_state.calc_display = st.session_state.calc_expr
+                        except ZeroDivisionError:
+                            st.session_state.calc_display = "Cannot divide by 0"
+                        except Exception:
+                            st.session_state.calc_display = "Error"
+                    elif value == "pi":
+                        calc_add("pi")
+                    elif value == "e":
+                        calc_add("e")
+                    elif value == "sign":
+                        expr = st.session_state.calc_expr
+                        if expr.startswith("-(") and expr.endswith(")"):
+                            st.session_state.calc_expr = expr[2:-1]
+                        elif expr:
+                            st.session_state.calc_expr = f"-({expr})"
+                        else:
+                            st.session_state.calc_expr = "-"
+                        st.session_state.calc_display = st.session_state.calc_expr
+                    else:
+                        calc_add(value)
+
+                    st.rerun()
+
+                st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
 
 
 # ============================================================
