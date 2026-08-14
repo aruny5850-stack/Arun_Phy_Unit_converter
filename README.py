@@ -197,10 +197,13 @@ button[data-baseweb="tab"] {
 # ============================================================
 UNITS = {
     # ---------- MAGNETIC: assignment order ----------
-    "Magnetic induction (B)": {
-        "tesla (T) [SI]": 1,
-        "gauss (G) [CGS]": 1*1e4
-    },
+def tesla_to_gauss(tesla):
+    """Convert magnetic induction from Tesla (SI) to Gauss (CGS)."""
+    return tesla * 10000.0
+
+def gauss_to_tesla(gauss):
+    """Convert magnetic induction from Gauss (CGS) to Tesla (SI)."""
+    return gauss * 0.0001
     "Magnetic field (H)": {
         "ampere/meter (A m⁻¹) [SI]": 1,
         "oersted (Oe) [CGS]": (4*math.pi)/1000
