@@ -200,7 +200,7 @@ UNITS = {
     "Magnetic induction (B)": {
         "tesla (T) [SI]": 1,
         "gauss (G) [CGS]": 1e4
-        "gauss (G) [CGS]": 1e-4
+
     }, 
     "Magnetic field (H)": {
         "ampere/meter (A m⁻¹) [SI]": 1,
