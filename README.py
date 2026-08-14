@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import math
 import ast
 import operator as op
@@ -734,380 +735,389 @@ with converter:
 
 
 # ============================================================
-# CALCULATOR — COMPACT PHONE STYLE
+# CALCULATOR — COMPACT 5-COLUMN PHONE STYLE
 # ============================================================
 with calculator:
 
-    st.markdown("""
-    <style>
-    .phone-calc {
-        max-width: 620px;
-        margin: 0 auto;
-    }
+    # Use a self-contained HTML/JS keypad so Streamlit's mobile
+    # responsive columns cannot stack the keys vertically.
+    components.html(r"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <style>
+        * { box-sizing: border-box; }
 
-    .phone-display {
-        background: #050505;
-        border-radius: 20px;
-        padding: 10px 16px 14px;
-        margin-bottom: 10px;
-        min-height: 112px;
-        border: 1px solid rgba(255,255,255,.06);
-        box-sizing: border-box;
-    }
-
-    .phone-history {
-        height: 25px;
-        text-align: right;
-        color: #666;
-        font-size: 14px;
-        overflow: hidden;
-        white-space: nowrap;
-    }
-
-    .phone-number {
-        text-align: right;
-        color: #fff;
-        font-size: 48px;
-        font-weight: 400;
-        line-height: 1.25;
-        overflow-x: auto;
-        white-space: nowrap;
-    }
-
-    /* Remove extra vertical spacing around each Streamlit row */
-    .phone-calc [data-testid="stHorizontalBlock"] {
-        gap: 8px !important;
-        margin-bottom: 8px !important;
-    }
-
-    .phone-calc [data-testid="column"] {
-        padding: 0 !important;
-    }
-
-    .phone-key button {
-        width: 100% !important;
-        height: 58px !important;
-        min-height: 58px !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        border-radius: 17px !important;
-        background: #252525 !important;
-        color: #f2f2f2 !important;
-        border: 1px solid rgba(255,255,255,.035) !important;
-        box-shadow: none !important;
-        font-size: 20px !important;
-        font-weight: 500 !important;
-    }
-
-    .phone-key button:hover {
-        background: #333 !important;
-        transform: none !important;
-    }
-
-    .phone-op button {
-        width: 100% !important;
-        height: 58px !important;
-        min-height: 58px !important;
-        padding: 0 !important;
-        border-radius: 17px !important;
-        background: #252525 !important;
-        color: #ff7a00 !important;
-        border: 1px solid rgba(255,255,255,.035) !important;
-        box-shadow: none !important;
-        font-size: 22px !important;
-        font-weight: 500 !important;
-    }
-
-    .phone-equals button {
-        width: 100% !important;
-        height: 58px !important;
-        min-height: 58px !important;
-        padding: 0 !important;
-        border-radius: 17px !important;
-        background: #ff7a00 !important;
-        color: white !important;
-        border: 0 !important;
-        box-shadow: none !important;
-        font-size: 24px !important;
-    }
-
-    .phone-mode {
-        text-align: center;
-        color: #7b8490;
-        font-size: 11px;
-        height: 18px;
-        margin-bottom: 6px;
-    }
-
-    @media(max-width:700px) {
-        .phone-calc {
-            width: 100%;
+        html, body {
+          margin: 0;
+          padding: 0;
+          width: 100%;
+          background: transparent;
+          font-family: Arial, Helvetica, sans-serif;
+          overflow: hidden;
         }
 
-        .phone-calc [data-testid="stHorizontalBlock"] {
-            gap: 6px !important;
-            margin-bottom: 6px !important;
+        .calc {
+          width: min(100%, 620px);
+          margin: 0 auto;
+          padding: 4px 0 8px;
         }
 
-        .phone-key button,
-        .phone-op button,
-        .phone-equals button {
-            height: 52px !important;
-            min-height: 52px !important;
-            border-radius: 15px !important;
-            font-size: 18px !important;
+        .display {
+          background: #050505;
+          border: 1px solid rgba(255,255,255,.08);
+          border-radius: 22px;
+          height: 128px;
+          padding: 13px 18px 12px;
+          margin-bottom: 8px;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
+          overflow: hidden;
         }
 
-        .phone-op button,
-        .phone-equals button {
-            font-size: 21px !important;
+        .history {
+          height: 23px;
+          color: #666;
+          font-size: 14px;
+          text-align: right;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
-        .phone-number {
-            font-size: 40px;
+        .screen {
+          color: #fff;
+          font-size: clamp(38px, 7vw, 54px);
+          line-height: 1.05;
+          font-weight: 400;
+          text-align: right;
+          white-space: nowrap;
+          overflow-x: auto;
+          scrollbar-width: none;
         }
-    }
-    </style>
-    """, unsafe_allow_html=True)
+        .screen::-webkit-scrollbar { display:none; }
 
-    # ---------------- STATE ----------------
-    if "phone_expr" not in st.session_state:
-        st.session_state.phone_expr = ""
-    if "phone_display" not in st.session_state:
-        st.session_state.phone_display = "0"
-    if "phone_history" not in st.session_state:
-        st.session_state.phone_history = ""
-    if "phone_deg" not in st.session_state:
-        st.session_state.phone_deg = True
-    if "phone_2nd" not in st.session_state:
-        st.session_state.phone_2nd = False
+        .mode {
+          height: 19px;
+          text-align: center;
+          color: #737b87;
+          font-size: 11px;
+          letter-spacing: .5px;
+          margin-bottom: 6px;
+        }
 
-    def p_add(value):
-        st.session_state.phone_expr += value
-        st.session_state.phone_display = st.session_state.phone_expr or "0"
+        .keys {
+          display: grid;
+          grid-template-columns: repeat(5, minmax(0, 1fr));
+          gap: 8px;
+        }
 
-    def p_clear():
-        st.session_state.phone_expr = ""
-        st.session_state.phone_display = "0"
-        st.session_state.phone_history = ""
+        button {
+          appearance: none;
+          border: 0;
+          outline: none;
+          height: 58px;
+          width: 100%;
+          border-radius: 17px;
+          background: #252525;
+          color: #f4f4f4;
+          font-size: 20px;
+          font-weight: 500;
+          cursor: pointer;
+          box-shadow: inset 0 0 0 1px rgba(255,255,255,.025);
+          -webkit-tap-highlight-color: transparent;
+          user-select: none;
+        }
 
-    def p_back():
-        st.session_state.phone_expr = st.session_state.phone_expr[:-1]
-        st.session_state.phone_display = st.session_state.phone_expr or "0"
+        button:active {
+          transform: scale(.96);
+          background: #363636;
+        }
 
-    def p_equals():
-        expr = st.session_state.phone_expr.strip()
-        if not expr:
-            return
-        try:
-            if st.session_state.phone_deg:
-                expr_eval = re.sub(
-                    r'\b(sin|cos|tan)\(([^()]*)\)',
-                    lambda m: f"{m.group(1)}(({m.group(2)})*pi/180)",
-                    expr
-                )
-            else:
-                expr_eval = expr
+        button.op {
+          color: #ff7a00;
+          font-size: 23px;
+        }
 
-            answer = safe_eval(expr_eval)
-            st.session_state.phone_history = f"{expr} ="
-            st.session_state.phone_display = fmt(answer)
-            st.session_state.phone_expr = str(answer)
+        button.equal {
+          background: #ff7a00;
+          color: #fff;
+          font-size: 24px;
+        }
 
-        except ZeroDivisionError:
-            st.session_state.phone_history = expr
-            st.session_state.phone_display = "Cannot divide by 0"
-        except Exception:
-            st.session_state.phone_history = expr
-            st.session_state.phone_display = "Error"
+        button.equal:active { background: #e86e00; }
 
-    def p_unary(kind):
-        try:
-            value = safe_eval(st.session_state.phone_expr)
-            if kind == "sqrt":
-                value = math.sqrt(value)
-            elif kind == "square":
-                value = value ** 2
-            elif kind == "inverse":
-                if value == 0:
-                    raise ZeroDivisionError
-                value = 1 / value
-            elif kind == "factorial":
-                if value < 0 or int(value) != value:
-                    raise ValueError
-                value = math.factorial(int(value))
-            elif kind == "percent":
-                value = value / 100
+        @media (max-width: 500px) {
+          .calc { padding-left: 0; padding-right: 0; }
+          .display {
+            height: 116px;
+            border-radius: 20px;
+            padding: 11px 15px;
+          }
+          .keys { gap: 6px; }
+          button {
+            height: 54px;
+            border-radius: 16px;
+            font-size: 18px;
+          }
+          button.op, button.equal { font-size: 21px; }
+        }
+      </style>
+    </head>
 
-            st.session_state.phone_expr = str(value)
-            st.session_state.phone_display = fmt(value)
-
-        except ZeroDivisionError:
-            st.session_state.phone_display = "Cannot divide by 0"
-        except Exception:
-            st.session_state.phone_display = "Error"
-
-    def p_function(name):
-        if name == "sin":
-            p_add("sin(")
-        elif name == "cos":
-            p_add("cos(")
-        elif name == "tan":
-            p_add("tan(")
-        elif name == "asin":
-            p_add("asin(")
-        elif name == "acos":
-            p_add("acos(")
-        elif name == "atan":
-            p_add("atan(")
-        elif name == "log":
-            p_add("log(")
-        elif name == "ln":
-            p_add("ln(")
-        elif name == "sqrt":
-            p_add("sqrt(")
-
-    # ---------------- DISPLAY ----------------
-    st.markdown('<div class="phone-calc">', unsafe_allow_html=True)
-
-    st.markdown(
-        f"""
-        <div class="phone-display">
-            <div class="phone-history">{st.session_state.phone_history}</div>
-            <div class="phone-number">{st.session_state.phone_display}</div>
+    <body>
+      <div class="calc">
+        <div class="display">
+          <div id="history" class="history"></div>
+          <div id="screen" class="screen">0</div>
         </div>
-        """,
-        unsafe_allow_html=True
-    )
 
-    mode = "DEG" if st.session_state.phone_deg else "RAD"
-    st.markdown(
-        f'<div class="phone-mode">{mode}</div>',
-        unsafe_allow_html=True
-    )
+        <div id="mode" class="mode">DEG</div>
 
-    # ---------------- ONE COMPACT 5-COLUMN GRID ----------------
-    # Exactly like the reference: all scientific functions,
-    # operators and numbers are visible together.
-    rows = [
-        [("2nd", "second", "key"),
-         ("deg", "mode", "key"),
-         ("sin", "sin", "key"),
-         ("cos", "cos", "key"),
-         ("tan", "tan", "key")],
+        <div class="keys">
+          <button data-a="second">2nd</button>
+          <button data-a="mode">deg</button>
+          <button data-a="sin">sin</button>
+          <button data-a="cos">cos</button>
+          <button data-a="tan">tan</button>
 
-        [("xʸ", "power", "key"),
-         ("lg", "log", "key"),
-         ("ln", "ln", "key"),
-         ("(", "(", "key"),
-         (")", ")", "key")],
+          <button data-a="power">xʸ</button>
+          <button data-a="log">lg</button>
+          <button data-a="ln">ln</button>
+          <button data-a="(">(</button>
+          <button data-a=")">)</button>
 
-        [("√x", "sqrt", "key"),
-         ("AC", "clear", "key"),
-         ("⌫", "back", "key"),
-         ("%", "percent", "op"),
-         ("÷", "÷", "op")],
+          <button data-a="sqrt">√x</button>
+          <button data-a="clear">AC</button>
+          <button data-a="back">⌫</button>
+          <button data-a="percent" class="op">%</button>
+          <button data-a="divide" class="op">÷</button>
 
-        [("x!", "factorial", "key"),
-         ("7", "7", "key"),
-         ("8", "8", "key"),
-         ("9", "9", "key"),
-         ("×", "×", "op")],
+          <button data-a="factorial">x!</button>
+          <button data-a="7">7</button>
+          <button data-a="8">8</button>
+          <button data-a="9">9</button>
+          <button data-a="multiply" class="op">×</button>
 
-        [("1/x", "inverse", "key"),
-         ("4", "4", "key"),
-         ("5", "5", "key"),
-         ("6", "6", "key"),
-         ("−", "−", "op")],
+          <button data-a="inverse">1/x</button>
+          <button data-a="4">4</button>
+          <button data-a="5">5</button>
+          <button data-a="6">6</button>
+          <button data-a="minus" class="op">−</button>
 
-        [("π", "pi", "key"),
-         ("1", "1", "key"),
-         ("2", "2", "key"),
-         ("3", "3", "key"),
-         ("+", "+", "op")],
+          <button data-a="pi">π</button>
+          <button data-a="1">1</button>
+          <button data-a="2">2</button>
+          <button data-a="3">3</button>
+          <button data-a="plus" class="op">+</button>
 
-        [("±", "sign", "key"),
-         ("e", "e", "key"),
-         ("0", "0", "key"),
-         (".", ".", "key"),
-         ("=", "equals", "equals")],
-    ]
+          <button data-a="sign">±</button>
+          <button data-a="e">e</button>
+          <button data-a="0">0</button>
+          <button data-a="dot">.</button>
+          <button data-a="equals" class="equal">=</button>
+        </div>
+      </div>
 
-    for r, row_data in enumerate(rows):
-        cols = st.columns(5, gap="small")
+      <script>
+        let expr = "";
+        let second = false;
+        let degree = true;
+        let lastAnswer = "";
 
-        for c, (label, action, kind) in enumerate(row_data):
-            with cols[c]:
-                css = "phone-equals" if kind == "equals" else (
-                    "phone-op" if kind == "op" else "phone-key"
-                )
-                st.markdown(f'<div class="{css}">', unsafe_allow_html=True)
+        const screen = document.getElementById("screen");
+        const history = document.getElementById("history");
+        const mode = document.getElementById("mode");
 
-                if st.button(
-                    label,
-                    key=f"phone_{r}_{c}_{label}",
-                    use_container_width=True
-                ):
-                    if action == "second":
-                        st.session_state.phone_2nd = not st.session_state.phone_2nd
+        function show(value) {
+          screen.textContent = value || "0";
+          screen.scrollLeft = screen.scrollWidth;
+        }
 
-                    elif action == "mode":
-                        st.session_state.phone_deg = not st.session_state.phone_deg
+        function cleanNumber(n) {
+          if (!Number.isFinite(n)) throw new Error("Math error");
+          if (Math.abs(n) < 1e-12) n = 0;
+          return Number(n.toPrecision(12)).toString();
+        }
 
-                    elif action == "clear":
-                        p_clear()
+        function factorial(n) {
+          if (!Number.isFinite(n) || n < 0 || Math.floor(n) !== n || n > 170)
+            throw new Error("Invalid factorial");
+          let r = 1;
+          for (let i = 2; i <= n; i++) r *= i;
+          return r;
+        }
 
-                    elif action == "back":
-                        p_back()
+        function evaluate(s) {
+          let x = s
+            .replaceAll("÷", "/")
+            .replaceAll("×", "*")
+            .replaceAll("−", "-")
+            .replaceAll("^", "**")
+            .replaceAll("π", "Math.PI");
 
-                    elif action == "equals":
-                        p_equals()
+          x = x.replace(/\be\b/g, "Math.E");
+          x = x.replace(/\blg\(/g, "Math.log10(");
+          x = x.replace(/\bln\(/g, "Math.log(");
+          x = x.replace(/\bsqrt\(/g, "Math.sqrt(");
 
-                    elif action in {"sqrt", "factorial", "inverse", "percent"}:
-                        p_unary(action)
+          const angle = degree ? "(Math.PI/180)" : "1";
 
-                    elif action == "power":
-                        p_add("^")
+          x = x.replace(/\bsin\(/g, second ? "Math.asin(" : "Math.sin(");
+          x = x.replace(/\bcos\(/g, second ? "Math.acos(" : "Math.cos(");
+          x = x.replace(/\btan\(/g, second ? "Math.atan(" : "Math.tan(");
 
-                    elif action == "log":
-                        p_function("log")
+          if (degree && second) {
+            x = x.replace(/Math\.asin\(([^()]*)\)/g,
+              "((Math.asin($1))*180/Math.PI)");
+            x = x.replace(/Math\.acos\(([^()]*)\)/g,
+              "((Math.acos($1))*180/Math.PI)");
+            x = x.replace(/Math\.atan\(([^()]*)\)/g,
+              "((Math.atan($1))*180/Math.PI)");
+          } else if (degree) {
+            // Convert trig arguments to degrees.
+            x = x.replace(/Math\.sin\(([^()]*)\)/g,
+              "Math.sin(($1)*" + angle + ")");
+            x = x.replace(/Math\.cos\(([^()]*)\)/g,
+              "Math.cos(($1)*" + angle + ")");
+            x = x.replace(/Math\.tan\(([^()]*)\)/g,
+              "Math.tan(($1)*" + angle + ")");
+          }
 
-                    elif action == "ln":
-                        p_function("ln")
+          // Only allow calculator-generated mathematical syntax.
+          if (!/^[0-9+\-*/%().,\sA-Za-z_*]+$/.test(x))
+            throw new Error("Invalid");
 
-                    elif action == "sin":
-                        p_function("asin" if st.session_state.phone_2nd else "sin")
+          const result = Function('"use strict"; return (' + x + ')')();
 
-                    elif action == "cos":
-                        p_function("acos" if st.session_state.phone_2nd else "cos")
+          if (!Number.isFinite(result)) throw new Error("Math error");
+          return result;
+        }
 
-                    elif action == "tan":
-                        p_function("atan" if st.session_state.phone_2nd else "tan")
+        function refresh() {
+          show(expr || "0");
+          mode.textContent = degree ? "DEG" : "RAD";
+          document.querySelector('[data-a="second"]').textContent = "2nd";
+          document.querySelector('[data-a="mode"]').textContent =
+            degree ? "deg" : "rad";
+        }
 
-                    elif action == "pi":
-                        p_add("pi")
+        function add(v) {
+          expr += v;
+          refresh();
+        }
 
-                    elif action == "e":
-                        p_add("e")
+        function unary(kind) {
+          try {
+            if (!expr) return;
 
-                    elif action == "sign":
-                        expr = st.session_state.phone_expr
-                        if expr.startswith("-(") and expr.endswith(")"):
-                            st.session_state.phone_expr = expr[2:-1]
-                        elif expr:
-                            st.session_state.phone_expr = f"-({expr})"
-                        else:
-                            st.session_state.phone_expr = "-"
-                        st.session_state.phone_display = st.session_state.phone_expr
+            let n = evaluate(expr);
 
-                    else:
-                        p_add(action)
+            if (kind === "sqrt") n = Math.sqrt(n);
+            if (kind === "square") n = n * n;
+            if (kind === "inverse") n = 1 / n;
+            if (kind === "percent") n = n / 100;
+            if (kind === "factorial") n = factorial(n);
 
-                    st.rerun()
+            expr = cleanNumber(n);
+            refresh();
+          } catch(e) {
+            history.textContent = expr;
+            show("Error");
+          }
+        }
 
-                st.markdown('</div>', unsafe_allow_html=True)
+        function equals() {
+          if (!expr) return;
 
-    st.markdown('</div>', unsafe_allow_html=True)
+          try {
+            const old = expr;
+            const result = evaluate(expr);
+            const ans = cleanNumber(result);
+
+            history.textContent = old + " =";
+            expr = ans;
+            lastAnswer = ans;
+            show(ans);
+          } catch(e) {
+            history.textContent = expr;
+            show("Error");
+          }
+        }
+
+        function press(a) {
+          if (/^[0-9]$/.test(a)) return add(a);
+
+          if (a === "dot") return add(".");
+          if (a === "plus") return add("+");
+          if (a === "minus") return add("−");
+          if (a === "multiply") return add("×");
+          if (a === "divide") return add("÷");
+          if (a === "power") return add("^");
+          if (a === "(" || a === ")") return add(a);
+          if (a === "pi") return add("π");
+          if (a === "e") return add("e");
+
+          if (a === "clear") {
+            expr = "";
+            history.textContent = "";
+            show("0");
+            return;
+          }
+
+          if (a === "back") {
+            expr = expr.slice(0, -1);
+            refresh();
+            return;
+          }
+
+          if (a === "mode") {
+            degree = !degree;
+            refresh();
+            return;
+          }
+
+          if (a === "second") {
+            second = !second;
+            const b = document.querySelector('[data-a="second"]');
+            b.style.color = second ? "#ff7a00" : "#f4f4f4";
+            return;
+          }
+
+          if (a === "sin") return add((second ? "asin(" : "sin("));
+          if (a === "cos") return add((second ? "acos(" : "cos("));
+          if (a === "tan") return add((second ? "atan(" : "tan("));
+          if (a === "log") return add("lg(");
+          if (a === "ln") return add("ln(");
+          if (a === "sqrt") return unary("sqrt");
+          if (a === "factorial") return unary("factorial");
+          if (a === "inverse") return unary("inverse");
+          if (a === "percent") return unary("percent");
+
+          if (a === "sign") {
+            if (!expr) return;
+            if (expr.startsWith("-(") && expr.endsWith(")"))
+              expr = expr.slice(2, -1);
+            else
+              expr = "-(" + expr + ")";
+            refresh();
+            return;
+          }
+
+          if (a === "equals") return equals();
+        }
+
+        document.querySelectorAll("button").forEach(btn => {
+          btn.addEventListener("click", () => press(btn.dataset.a));
+        });
+
+        refresh();
+      </script>
+    </body>
+    </html>
+    """, height=570, scrolling=False)
 
 
 # ============================================================
