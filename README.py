@@ -199,7 +199,7 @@ UNITS = {
     # ---------- MAGNETIC: assignment order ----------
     "Magnetic induction (B)": {
         "tesla (T) [SI]": 1,
-        "gauss (G) [CGS]": 1e4
+        "gauss (G) [CGS]": 1e4/1
 
     }, 
     "Magnetic field (H)": {
