@@ -708,30 +708,6 @@ with converter:
 
         except Exception as e:
             st.error(f"Conversion error: {e}")
-    # Magnetic reference table
-    st.markdown("""
-    <div class="panel">
-        <h3>🧲 Magnetic Quantities — SI / CGS</h3>
-        <p>Assignment reference table in serial order.</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-    magnetic_df = pd.DataFrame(
-        MAGNETIC_TABLE,
-        columns=[
-            "Magnetic Term",
-            "Symbol",
-            "SI Unit",
-            "CGS Unit",
-            "Conversion"
-        ]
-    )
-
-    st.dataframe(
-        magnetic_df,
-        use_container_width=True,
-        hide_index=True
-    )
 
 
 # ============================================================
@@ -1141,6 +1117,16 @@ with constants:
     </div>
     """, unsafe_allow_html=True)
 
+    st.markdown("""
+    <style>
+    /* Keep the magnetic reference table compact and scrollable on mobile */
+    [data-testid="stDataFrame"] {
+        border-radius: 14px;
+        overflow: hidden;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
     constant_data = [
         ("Speed of Light (c)", "2.99792458 × 10⁸ m/s"),
         ("Planck Constant (h)", "6.62607015 × 10⁻³⁴ J·s"),
@@ -1162,6 +1148,35 @@ with constants:
             <div class="constant-value">{value}</div>
         </div>
         """, unsafe_allow_html=True)
+
+
+    # ========================================================
+    # MAGNETIC QUANTITIES — SI / CGS
+    # ========================================================
+    st.markdown("""
+    <div class="panel">
+        <h3>🧲 Magnetic Quantities — SI / CGS</h3>
+        <p>Assignment reference table in serial order.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    magnetic_df = pd.DataFrame(
+        MAGNETIC_TABLE,
+        columns=[
+            "Magnetic Term",
+            "Symbol",
+            "SI Unit",
+            "CGS Unit",
+            "Conversion"
+        ]
+    )
+
+    st.dataframe(
+        magnetic_df,
+        use_container_width=True,
+        hide_index=True,
+        height=520
+    )
 
 
 # ============================================================
