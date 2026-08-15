@@ -1630,8 +1630,7 @@ with constants:
     <p>Important magnetic formulas and relations.</p>
     </div>
     """, unsafe_allow_html=True)
-    for term, symbol, formula, description in MAGNETISM_FORMULA_TABLE:
-
+for term, symbol, formula, description in MAGNETISM_FORMULA_TABLE:
     st.markdown(
         f"""
         <div style="
