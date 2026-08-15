@@ -212,7 +212,7 @@ UNITS = {
     },
     "Magnetic polarization (J)": {
         "tesla (T) [SI]": 1,
-        "gauss (G) [CGS]": 1/(4*math.pi)
+        "gauss (G) [CGS]": (4*math.pi)*e-4
     },
     "Magnetic moment (m)": {
         "ampere·meter² (A m²)": 1,
