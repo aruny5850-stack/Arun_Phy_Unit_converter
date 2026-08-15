@@ -1705,11 +1705,11 @@ for term, symbol, formula, description in MAGNETISM_FORMULA_TABLE:
     </div>
 
     <div class="magnetism-formula-symbol">
-        $${symbol}$$
+        {symbol}
     </div>
 
     <div class="magnetism-formula-equation">
-        $${formula}$$
+        {formula}
     </div>
 
     <div class="magnetism-formula-description">
@@ -1719,7 +1719,10 @@ for term, symbol, formula, description in MAGNETISM_FORMULA_TABLE:
 </div>
 """,
         unsafe_allow_html=True
-)
+    )
+
+    # Render the formula separately using Streamlit's LaTeX renderer
+    st.latex(formula)
 # ============================================================
 # FOOTER
 # ============================================================
