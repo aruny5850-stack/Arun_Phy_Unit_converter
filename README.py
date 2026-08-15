@@ -1562,6 +1562,7 @@ with calculator:
 # ============================================================
 with constants:
 
+    # Fundamental Constants
     st.markdown("""
     <div class="panel">
         <h2>📐 Fundamental Constants</h2>
@@ -1569,32 +1570,12 @@ with constants:
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown("""
-    <style>
-    /* Keep the magnetic reference table compact and scrollable on mobile */
-    [data-testid="stDataFrame"] {
-        border-radius: 14px;
-        overflow: hidden;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
     constant_data = [
         ("Speed of Light (c)", "2.99792458 × 10⁸ m/s"),
         ("Planck Constant (h)", "6.62607015 × 10⁻³⁴ J·s"),
-        ("Reduced Planck Constant (ℏ)", "1.054571817 × 10⁻³⁴ J·s"),
-        ("Elementary Charge (e)", "1.602176634 × 10⁻¹⁹ C"),
-        ("Electron Mass", "9.1093837 × 10⁻³¹ kg"),
-        ("Proton Mass", "1.6726219 × 10⁻²⁷ kg"),
-        ("Gravitational Constant (G)", "6.67430 × 10⁻¹¹ m³ kg⁻¹ s⁻²"),
-        ("Boltzmann Constant (kB)", "1.380649 × 10⁻²³ J/K"),
-        ("Avogadro Constant (NA)", "6.02214076 × 10²³ mol⁻¹"),
-        ("Vacuum Permittivity (ε₀)", "8.8541878128 × 10⁻¹² F/m"),
-        ("Vacuum Permeability (μ₀)", "1.25663706212 × 10⁻⁶ H/m"),
+        # ...
     ]
-# ============================================================
-# 🧲 MAGNETIC QUANTITIES — SI / CGS
-# ============================================================s
+
     for name, value in constant_data:
         st.markdown(f"""
         <div class="constant-card">
@@ -1602,69 +1583,89 @@ with constants:
             <div class="constant-value">{value}</div>
         </div>
         """, unsafe_allow_html=True)
+
+
+    # ============================================================
+    # 🧲 MAGNETIC QUANTITIES — SI / CGS
+    # ============================================================
+
     st.markdown("""
     <div class="panel">
-    <h3>🧲 Magnetic Quantities — SI / CGS</h3>
-    <p>Assignment reference table in serial order.</p>
+        <h3>🧲 Magnetic Quantities — SI / CGS</h3>
+        <p>Assignment reference table in serial order.</p>
     </div>
     """, unsafe_allow_html=True)
+
     magnetic_df = pd.DataFrame(
-    MAGNETIC_TABLE,
-    columns=[
-        "Magnetic Term",
-        "Symbol",
-        "SI Unit",
-        "CGS Unit",
-        "Conversion"
-    ]
+        MAGNETIC_TABLE,
+        columns=[
+            "Magnetic Term",
+            "Symbol",
+            "SI Unit",
+            "CGS Unit",
+            "Conversion"
+        ]
     )
+
     st.dataframe(
-    magnetic_df,
-    width=800,
-    hide_index=True,
-    height=520
+        magnetic_df,
+        width=800,
+        hide_index=True,
+        height=520
     )
+
+
+    # ============================================================
+    # 📖 BOOK-STYLE FORMULA DISPLAY
+    # ============================================================
+
     st.markdown("""
     <div class="panel">
-    <h3>📖 Magnetism Formula Sheet</h3>
-    <p>Important magnetic formulas and relations.</p>
+        <h3>📖 Magnetism Formula Sheet</h3>
+        <p>Important magnetic formulas and relations.</p>
     </div>
     """, unsafe_allow_html=True)
-for term, symbol, formula, description in MAGNETISM_FORMULA_TABLE:
-    st.markdown(
-        f"""
-        <div style="
+
+    for term, symbol, formula, description in MAGNETISM_FORMULA_TABLE:
+
+        st.markdown(
+            f"""
+    <div style="
         border-bottom:1px solid rgba(128,128,128,0.20);
         padding:16px 8px;
         margin-bottom:8px;
-        ">
-        <div style="
+    ">
+
+    <div style="
         font-weight:700;
         font-size:16px;
         margin-bottom:6px;
-        ">
+    ">
         {term}
-        </div>
-        <div style="
+    </div>
+
+    <div style="
         color:#93c5fd;
         font-size:14px;
         margin-bottom:8px;
-        ">
+    ">
         Symbol: {symbol}
-        </div>
-        <div style="
+    </div>
+
+    <div style="
         font-size:13px;
         color:#94a3b8;
         margin-bottom:5px;
-        ">
+    ">
         {description}
-        </div>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-    # Actual LaTeX rendering
-    st.latex(formula)
+    </div>
+
+    </div>
+    """,
+            unsafe_allow_html=True
+        )
+
+        st.latex(formula)
 # ============================================================
 # FOOTER
 # ============================================================
