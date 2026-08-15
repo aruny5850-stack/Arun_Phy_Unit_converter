@@ -1570,11 +1570,20 @@ with constants:
     </div>
     """, unsafe_allow_html=True)
 
-    constant_data = [
+        constant_data = [
         ("Speed of Light (c)", "2.99792458 × 10⁸ m/s"),
         ("Planck Constant (h)", "6.62607015 × 10⁻³⁴ J·s"),
-        # ...
+        ("Reduced Planck Constant (ℏ)", "1.054571817 × 10⁻³⁴ J·s"),
+        ("Elementary Charge (e)", "1.602176634 × 10⁻¹⁹ C"),
+        ("Electron Mass", "9.1093837 × 10⁻³¹ kg"),
+        ("Proton Mass", "1.6726219 × 10⁻²⁷ kg"),
+        ("Gravitational Constant (G)", "6.67430 × 10⁻¹¹ m³ kg⁻¹ s⁻²"),
+        ("Boltzmann Constant (kB)", "1.380649 × 10⁻²³ J/K"),
+        ("Avogadro Constant (NA)", "6.02214076 × 10²³ mol⁻¹"),
+        ("Vacuum Permittivity (ε₀)", "8.8541878128 × 10⁻¹² F/m"),
+        ("Vacuum Permeability (μ₀)", "1.25663706212 × 10⁻⁶ H/m"),
     ]
+
 
     for name, value in constant_data:
         st.markdown(f"""
