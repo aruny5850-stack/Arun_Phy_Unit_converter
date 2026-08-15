@@ -1623,59 +1623,47 @@ with constants:
     width=800,
     hide_index=True,
     height=520
-    ) 
-
-
-# ============================================================
-# 📖 BOOK-STYLE FORMULA DISPLAY
-# ============================================================
-
-st.markdown("""
-<div class="panel">
+    )
+    st.markdown("""
+    <div class="panel">
     <h3>📖 Magnetism Formula Sheet</h3>
     <p>Important magnetic formulas and relations.</p>
-</div>
-""", unsafe_allow_html=True)
-
-for term, symbol, formula, description in MAGNETISM_FORMULA_TABLE:
+    </div>
+    """, unsafe_allow_html=True)
+    for term, symbol, formula, description in MAGNETISM_FORMULA_TABLE:
 
     st.markdown(
         f"""
-<div style="
-    border-bottom:1px solid rgba(128,128,128,0.20);
-    padding:16px 8px;
-    margin-bottom:8px;
-">
-
-<div style="
-    font-weight:700;
-    font-size:16px;
-    margin-bottom:6px;
-">
-    {term}
-</div>
-
-<div style="
-    color:#93c5fd;
-    font-size:14px;
-    margin-bottom:8px;
-">
-    Symbol: {symbol}
-</div>
-
-<div style="
-    font-size:13px;
-    color:#94a3b8;
-    margin-bottom:5px;
-">
-    {description}
-</div>
-
-</div>
-""",
+        <div style="
+        border-bottom:1px solid rgba(128,128,128,0.20);
+        padding:16px 8px;
+        margin-bottom:8px;
+        ">
+        <div style="
+        font-weight:700;
+        font-size:16px;
+        margin-bottom:6px;
+        ">
+        {term}
+        </div>
+        <div style="
+        color:#93c5fd;
+        font-size:14px;
+        margin-bottom:8px;
+        ">
+        Symbol: {symbol}
+        </div>
+        <div style="
+        font-size:13px;
+        color:#94a3b8;
+        margin-bottom:5px;
+        ">
+        {description}
+        </div>
+        </div>
+        """,
         unsafe_allow_html=True
     )
-
     # Actual LaTeX rendering
     st.latex(formula)
 # ============================================================
