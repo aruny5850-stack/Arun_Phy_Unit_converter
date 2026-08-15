@@ -1035,7 +1035,7 @@ st.markdown("""
 converter, calculator, constants = st.tabs([
     "Converter",
     "Calculator",
-    "Constants"
+    "Physics Toolkit"
 ])
 
 
