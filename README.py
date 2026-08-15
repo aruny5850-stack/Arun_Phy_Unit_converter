@@ -453,6 +453,673 @@ MAGNETIC_TABLE = [
     ("Magnetostatic energy density", "Eₘ", "J m⁻³", "erg cm⁻³", "1 J m⁻³ = 10 erg cm⁻³"),
     ("Energy product", "(BH)ₘₐₓ", "J m⁻³", "erg cm⁻³", "1 J m⁻³ = 10 erg cm⁻³"),
 ]
+MAGNETISM_FORMULA_TABLE = [
+    # ============================================================
+    # BASIC MAGNETIC QUANTITIES
+    # ============================================================
+
+    ("Magnetic induction / Magnetic flux density",
+     "B",
+     "B = μ₀(H + M)",
+     "Unit: tesla (T)"),
+
+    ("Magnetic field strength",
+     "H",
+     "H = B/μ₀ − M",
+     "Unit: A m⁻¹"),
+
+    ("Magnetization",
+     "M",
+     "M = magnetic moment / volume = m/V",
+     "Unit: A m⁻¹"),
+
+    ("Magnetic polarization",
+     "J",
+     "J = μ₀M",
+     "Unit: tesla (T)"),
+
+    ("Magnetic susceptibility",
+     "χ",
+     "χ = M/H",
+     "Dimensionless"),
+
+    ("Relative permeability",
+     "μᵣ",
+     "μᵣ = μ/μ₀",
+     "Dimensionless"),
+
+    ("Absolute permeability",
+     "μ",
+     "μ = B/H",
+     "Unit: H m⁻¹"),
+
+    ("Vacuum permeability",
+     "μ₀",
+     "μ₀ = 4π × 10⁻⁷ H m⁻¹",
+     "Exact SI value"),
+
+    # ============================================================
+    # MAGNETIC MOMENT
+    # ============================================================
+
+    ("Magnetic dipole moment",
+     "m",
+     "m = I A",
+     "Unit: A m²"),
+
+    ("Magnetic moment of current loop",
+     "m",
+     "m = I × A",
+     "I = current, A = loop area"),
+
+    ("Torque on magnetic dipole",
+     "τ",
+     "τ = m × B",
+     "|τ| = mB sinθ"),
+
+    ("Potential energy of magnetic dipole",
+     "U",
+     "U = −m · B",
+     "U = −mB cosθ"),
+
+    ("Force on magnetic dipole",
+     "F",
+     "F = ∇(m · B)",
+     "For non-uniform magnetic field"),
+
+    # ============================================================
+    # BIOT-SAVART LAW
+    # ============================================================
+
+    ("Biot–Savart law",
+     "dB",
+     "dB = (μ₀/4π) I (dℓ × r̂)/r²",
+     "Magnetic field due to current element"),
+
+    ("Biot–Savart magnitude",
+     "dB",
+     "dB = (μ₀/4π) I dℓ sinθ/r²",
+     "Magnitude"),
+
+    ("Long straight current-carrying wire",
+     "B",
+     "B = μ₀I/(2πr)",
+     "Infinite straight wire"),
+
+    ("Circular current loop at center",
+     "B",
+     "B = μ₀I/(2R)",
+     "Single circular loop"),
+
+    ("N-turn circular coil at center",
+     "B",
+     "B = μ₀NI/(2R)",
+     "N = number of turns"),
+
+    ("Circular loop on axis",
+     "B",
+     "B = μ₀IR²/[2(R²+x²)^(3/2)]",
+     "Single loop"),
+
+    ("N-turn circular loop on axis",
+     "B",
+     "B = μ₀NIR²/[2(R²+x²)^(3/2)]",
+     "N turns"),
+
+    # ============================================================
+    # AMPERE'S LAW
+    # ============================================================
+
+    ("Ampere's circuital law",
+     "∮B·dl",
+     "∮B·dl = μ₀ I_enclosed",
+     "Steady current"),
+
+    ("Ampere's law in H form",
+     "∮H·dl",
+     "∮H·dl = I_enclosed",
+     "SI form in vacuum/material formulation"),
+
+    ("Long solenoid",
+     "B",
+     "B = μ₀nI",
+     "Ideal long solenoid"),
+
+    ("Solenoid field strength",
+     "H",
+     "H = nI",
+     "n = N/L"),
+
+    ("Toroid magnetic field",
+     "B",
+     "B = μ₀NI/(2πr)",
+     "Ideal toroid"),
+
+    ("Toroid field strength",
+     "H",
+     "H = NI/(2πr)",
+     "Inside toroid"),
+
+    # ============================================================
+    # MAGNETIC FORCE
+    # ============================================================
+
+    ("Lorentz magnetic force",
+     "F",
+     "F = q(v × B)",
+     "|F| = qvB sinθ"),
+
+    ("Total Lorentz force",
+     "F",
+     "F = q(E + v × B)",
+     "Electric + magnetic force"),
+
+    ("Force on current-carrying conductor",
+     "F",
+     "F = I(L × B)",
+     "|F| = ILB sinθ"),
+
+    ("Force between parallel currents",
+     "F/L",
+     "F/L = μ₀I₁I₂/(2πr)",
+     "Long parallel conductors"),
+
+    # ============================================================
+    # CHARGED PARTICLE MOTION
+    # ============================================================
+
+    ("Cyclotron angular frequency",
+     "ωc",
+     "ωc = qB/m",
+     "Non-relativistic"),
+
+    ("Cyclotron frequency",
+     "fc",
+     "fc = qB/(2πm)",
+     "Non-relativistic"),
+
+    ("Cyclotron radius",
+     "r",
+     "r = mv/(qB)",
+     "v ⟂ B"),
+
+    ("Particle velocity in circular motion",
+     "v",
+     "v = qBr/m",
+     "v ⟂ B"),
+
+    ("Magnetic force as centripetal force",
+     "qvB",
+     "qvB = mv²/r",
+     "v ⟂ B"),
+
+    ("Helical pitch",
+     "p",
+     "p = v_parallel × T",
+     "T = cyclotron period"),
+
+    # ============================================================
+    # MAGNETIC FLUX
+    # ============================================================
+
+    ("Magnetic flux",
+     "ΦB",
+     "ΦB = ∫B·dA",
+
+     "Unit: weber (Wb)"),
+
+    ("Uniform magnetic flux",
+     "ΦB",
+     "ΦB = BA cosθ",
+     "Uniform B"),
+
+    ("Flux through N-turn coil",
+     "NΦB",
+     "NΦB = NBA cosθ",
+     "Flux linkage"),
+
+    # ============================================================
+    # FARADAY & LENZ LAW
+    # ============================================================
+
+    ("Faraday's law",
+     "ε",
+     "ε = −dΦB/dt",
+     "Induced emf"),
+
+    ("N-turn Faraday law",
+     "ε",
+     "ε = −N dΦB/dt",
+     "N turns"),
+
+    ("Lenz's law",
+     "ε",
+     "Induced current opposes the change in magnetic flux",
+     "Direction of induced current"),
+
+    ("Motional emf",
+     "ε",
+     "ε = Blv",
+     "For perpendicular motion"),
+
+    ("General motional emf",
+     "ε",
+     "ε = ∫(v × B)·dl",
+     "General form"),
+
+    # ============================================================
+    # SELF & MUTUAL INDUCTANCE
+    # ============================================================
+
+    ("Self inductance",
+     "L",
+     "L = NΦ/I",
+     "Linear system"),
+
+    ("Induced emf in inductor",
+     "εL",
+     "εL = −L dI/dt",
+     "Self induction"),
+
+    ("Solenoid inductance",
+     "L",
+     "L = μ₀N²A/l",
+     "Air-core long solenoid"),
+
+    ("Solenoid inductance with material",
+     "L",
+     "L = μN²A/l",
+     "μ = μ₀μᵣ"),
+
+    ("Mutual inductance",
+     "M",
+     "M = N₂Φ₂₁/I₁",
+     "Linear system"),
+
+    ("Mutual induced emf",
+     "ε₂",
+     "ε₂ = −M dI₁/dt",
+     "Mutual induction"),
+
+    ("Coefficient of coupling",
+     "k",
+     "k = M/√(L₁L₂)",
+     "0 ≤ k ≤ 1"),
+
+    # ============================================================
+    # MAGNETIC ENERGY
+    # ============================================================
+
+    ("Energy stored in inductor",
+     "U",
+     "U = ½LI²",
+     "Magnetic energy"),
+
+    ("Magnetic energy density",
+     "u",
+     "u = B²/(2μ₀)",
+     "Linear vacuum"),
+
+    ("Magnetic energy density in material",
+     "u",
+     "u = B²/(2μ)",
+     "Linear isotropic material"),
+
+    ("Energy density",
+     "u",
+     "u = ½BH",
+     "Linear magnetic medium"),
+
+    # ============================================================
+    # MAXWELL EQUATIONS — MAGNETIC PART
+    # ============================================================
+
+    ("Gauss's law for magnetism",
+     "∇·B",
+     "∇·B = 0",
+     "No magnetic monopoles"),
+
+    ("Integral Gauss law for magnetism",
+     "∮B·dA",
+     "∮B·dA = 0",
+     "Closed surface"),
+
+    ("Faraday-Maxwell equation",
+     "∇×E",
+     "∇×E = −∂B/∂t",
+     "Differential form"),
+
+    ("Ampere-Maxwell law",
+     "∇×B",
+     "∇×B = μ₀J + μ₀ε₀ ∂E/∂t",
+     "Vacuum"),
+
+    # ============================================================
+    # MAGNETIC MATERIALS
+    # ============================================================
+
+    ("Magnetization",
+     "M",
+     "M = χH",
+     "Linear magnetic material"),
+
+    ("Magnetic induction in material",
+     "B",
+     "B = μ₀(H + M)",
+     "SI"),
+
+    ("Using susceptibility",
+     "B",
+     "B = μ₀(1 + χ)H",
+     "Linear isotropic material"),
+
+    ("Relative permeability",
+     "μᵣ",
+     "μᵣ = 1 + χ",
+     "Linear isotropic material"),
+
+    ("Permeability",
+     "μ",
+     "μ = μ₀μᵣ",
+     "Absolute permeability"),
+
+    ("Magnetic polarization",
+     "J",
+     "J = μ₀M",
+     "SI"),
+
+    # ============================================================
+    # MAGNETIC MATERIAL CLASSIFICATION
+    # ============================================================
+
+    ("Diamagnetic susceptibility",
+     "χ",
+     "χ < 0",
+     "Small negative susceptibility"),
+
+    ("Paramagnetic susceptibility",
+     "χ",
+     "χ > 0",
+     "Small positive susceptibility"),
+
+    ("Ferromagnetic susceptibility",
+     "χ",
+     "χ ≫ 1",
+     "Strong magnetic response"),
+
+    # ============================================================
+    # CURIE LAW
+    # ============================================================
+
+    ("Curie's law",
+     "χ",
+     "χ = C/T",
+     "Paramagnetic material"),
+
+    ("Curie constant",
+     "C",
+     "C = μ₀Nμ_eff²/(3kBT-independent form)",
+     "SI convention"),
+
+    ("Curie-Weiss law",
+     "χ",
+     "χ = C/(T − θ)",
+     "Above ordering temperature"),
+
+    ("Inverse susceptibility",
+     "1/χ",
+     "1/χ = (T − θ)/C",
+     "Curie-Weiss form"),
+
+    # ============================================================
+    # LANGEVIN / PARAMAGNETISM
+    # ============================================================
+
+    ("Langevin function",
+     "L(x)",
+     "L(x) = coth(x) − 1/x",
+     "Classical paramagnetism"),
+
+    ("Langevin parameter",
+     "x",
+     "x = μB/(kBT)",
+     "Dimensionless"),
+
+    ("Magnetization",
+     "M",
+     "M = NM_s L(x)",
+     "Classical paramagnet"),
+
+    ("Low-field Langevin approximation",
+     "L(x)",
+     "L(x) ≈ x/3",
+     "|x| ≪ 1"),
+
+    ("High-field Langevin approximation",
+     "L(x)",
+     "L(x) ≈ 1 − 1/x",
+     "x ≫ 1"),
+
+    # ============================================================
+    # QUANTUM PARAMAGNETISM
+    # ============================================================
+
+    ("Effective magnetic moment",
+     "μeff",
+     "μeff = g√[J(J+1)] μB",
+     "General angular momentum"),
+
+    ("Spin-only effective moment",
+     "μeff",
+     "μeff = √[n(n+2)] μB",
+     "n = unpaired electrons"),
+
+    ("Bohr magneton",
+     "μB",
+     "μB = eℏ/(2me)",
+     "≈ 9.274 × 10⁻²⁴ A m²"),
+
+    ("Electron magnetic moment",
+     "μ",
+     "μ = g μB J/ℏ",
+     "Quantum form"),
+
+    # ============================================================
+    # FERROMAGNETISM
+    # ============================================================
+
+    ("Spontaneous magnetization",
+     "Ms",
+     "M = Ms at H = 0 below Tc",
+     "Ferromagnetic state"),
+
+    ("Exchange interaction",
+     "Eex",
+     "Eex = −2J Sᵢ·Sⱼ",
+     "Heisenberg form"),
+
+    ("Mean-field Curie temperature",
+     "Tc",
+     "Tc ∝ zJS(S+1)/kB",
+     "Mean-field dependence"),
+
+    ("Saturation magnetization",
+     "Ms",
+     "Ms = n μ",
+     "Simple magnetic-moment model"),
+
+    # ============================================================
+    # HYSTERESIS
+    # ============================================================
+
+    ("Magnetic hysteresis",
+     "B-H / M-H",
+     "Magnetization depends on magnetic history",
+     "Ferromagnets"),
+
+    ("Remanence / Retentivity",
+     "Br",
+     "Br = B at H = 0 after saturation",
+     "Residual flux density"),
+
+    ("Coercive field",
+     "Hc",
+     "H = Hc when B or M returns to zero",
+     "Depends on hysteresis convention"),
+
+    ("Saturation",
+     "Ms",
+     "M → Ms",
+     "High applied field"),
+
+    ("Hysteresis loss per unit volume per cycle",
+     "Wh",
+     "Wh = ∮H dB",
+     "Area of B-H loop"),
+
+    # ============================================================
+    # DOMAIN THEORY
+    # ============================================================
+
+    ("Domain wall energy",
+     "γ",
+     "γ ≈ 4√(AK)",
+     "Simple 180° wall model"),
+
+    ("Domain wall width",
+     "δ",
+     "δ ≈ π√(A/K)",
+     "Simple 180° Bloch wall"),
+
+    ("Exchange length",
+     "lex",
+     "lex = √(A/Kd)",
+     "Definition depends on convention"),
+
+    # ============================================================
+    # MAGNETOCRYSTALLINE ANISOTROPY
+    # ============================================================
+
+    ("Uniaxial anisotropy energy",
+     "Ea",
+     "Ea = Kᵤ sin²θ",
+     "First-order uniaxial anisotropy"),
+
+    ("Cubic anisotropy energy",
+     "Ea",
+     "Ea = K₁(α₁²α₂² + α₂²α₃² + α₃²α₁²) + K₂α₁²α₂²α₃²",
+     "Cubic crystal"),
+
+    ("Anisotropy field",
+     "Hk",
+     "Hk = 2Kᵤ/(μ₀Ms)",
+     "Uniaxial approximation"),
+
+    # ============================================================
+    # DEMAGNETIZATION
+    # ============================================================
+
+    ("Demagnetizing field",
+     "Hd",
+     "Hd = −NM",
+     "Ellipsoidal sample / SI convention"),
+
+    ("Internal magnetic field",
+     "Hint",
+     "Hint = Happ − NM",
+     "Simple demagnetizing-field relation"),
+
+    # ============================================================
+    # MAGNETOSTRICTION
+    # ============================================================
+
+    ("Magnetostriction",
+     "λ",
+     "λ = ΔL/L",
+     "Relative length change"),
+
+    ("Magnetostrictive strain",
+     "ε",
+     "ε = ΔL/L",
+     "Dimensionless"),
+
+    # ============================================================
+    # MAGNETIC FORCE / FIELD GRADIENT
+    # ============================================================
+
+    ("Force on magnetic dipole",
+     "F",
+     "F = ∇(m·B)",
+     "General expression"),
+
+    ("Force in one-dimensional field",
+     "Fx",
+     "Fx = mx dBx/dx",
+     "Dipole aligned with field"),
+
+    # ============================================================
+    # ELECTROMAGNETIC RELATIONS
+    # ============================================================
+
+    ("Magnetic flux density relation",
+     "B",
+     "B = μ₀(H + M)",
+     "SI"),
+
+    ("Magnetic field relation",
+     "H",
+     "H = B/μ₀ − M",
+     "SI"),
+
+    ("Magnetic susceptibility relation",
+     "χ",
+     "χ = M/H",
+     "Linear response"),
+
+    ("Relative permeability relation",
+     "μᵣ",
+     "μᵣ = B/(μ₀H)",
+     "Linear medium"),
+
+    # ============================================================
+    # MAGNETIC UNIT CONVERSIONS
+    # ============================================================
+
+    ("Magnetic induction",
+     "B",
+     "1 T = 10⁴ G",
+     "SI ↔ CGS"),
+
+    ("Magnetic field strength",
+     "H",
+     "1 Oe = 10³/(4π) A m⁻¹",
+     "CGS → SI"),
+
+    ("Magnetization",
+     "M",
+     "1 emu cm⁻³ = 10³ A m⁻¹",
+     "CGS → SI"),
+
+    ("Magnetic polarization",
+     "J",
+     "1 emu cm⁻³ = 4π × 10⁻⁴ T",
+     "CGS → SI"),
+
+    ("Magnetic moment",
+     "m",
+     "1 emu = 10⁻³ A m²",
+     "CGS → SI"),
+
+    ("Magnetic flux",
+     "Φ",
+     "1 Mx = 10⁻⁸ Wb",
+     "CGS → SI"),
+
+    ("Energy density",
+     "u",
+     "1 erg cm⁻³ = 0.1 J m⁻³",
+     "CGS → SI"),
+]
 # ============================================================
 # CONVERSIONS
 # ============================================================
@@ -1195,7 +1862,33 @@ with constants:
         hide_index=True,
         height=520
     )
+# ============================================================
+# 📚 COMPLETE MAGNETISM FORMULA SHEET
+# ============================================================
 
+st.markdown("""
+<div class="panel">
+    <h3>📚 Magnetism — Complete Formula Sheet</h3>
+    <p>Important definitions, laws, equations and material-magnetism relations.</p>
+</div>
+""", unsafe_allow_html=True)
+
+magnetism_formula_df = pd.DataFrame(
+    MAGNETISM_FORMULA_TABLE,
+    columns=[
+        "Magnetic Term",
+        "Symbol",
+        "Formula / Relation",
+        "Description / Unit"
+    ]
+)
+
+st.dataframe(
+    magnetism_formula_df,
+    use_container_width=True,
+    hide_index=True,
+    height=700
+)
 
 # ============================================================
 # FOOTER
