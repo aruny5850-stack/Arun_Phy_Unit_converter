@@ -1103,7 +1103,7 @@ with constants:
 
     st.markdown("""
     <div class="panel">
-        <h3>📖 Magnetism Formula Sheet</h3>
+        <h3>📖 Magnetism Formumla Sheet</h3>
         <p>Important magnetic formulas and relations.</p>
     </div>
     """, unsafe_allow_html=True)
