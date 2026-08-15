@@ -1042,125 +1042,112 @@ converter, calculator, constants = st.tabs([
 # ============================================================
 # CONVERTER
 # ============================================================
-with converter:
+with constants:
 
+    # Fundamental Constants
     st.markdown("""
     <div class="panel">
-        <h2>🔄 Universal Unit Converter</h2>
-        <p>
-        </p>
+        <h2>📐 Fundamental Constants</h2>
+        <p>Frequently used constants for Physics calculations.</p>
     </div>
     """, unsafe_allow_html=True)
 
-    categories = list(UNITS.keys()) + ["Temperature"]
+    constant_data = [
+        ("Speed of Light (c)", "2.99792458 × 10⁸ m/s"),
+        ("Planck Constant (h)", "6.62607015 × 10⁻³⁴ J·s"),
+        # ...
+    ]
 
-    # Physical quantity
-    with st.container(border=True):
-        st.markdown(
-            '<div class="field-title">📚 PHYSICAL QUANTITY</div>',
-            unsafe_allow_html=True
-        )
+    for name, value in constant_data:
+        st.markdown(f"""
+        <div class="constant-card">
+            <div class="constant-name">{name}</div>
+            <div class="constant-value">{value}</div>
+        </div>
+        """, unsafe_allow_html=True)
 
-        category = st.selectbox(
-            "Physical quantity",
-            categories,
-            label_visibility="collapsed",
-            key="category"
-        )
 
-    if category == "Temperature":
-        units = [
-            "Kelvin (K)",
-            "Celsius (°C)",
-            "Fahrenheit (°F)"
+    # ============================================================
+    # 🧲 MAGNETIC QUANTITIES — SI / CGS
+    # ============================================================
+
+    st.markdown("""
+    <div class="panel">
+        <h3>🧲 Magnetic Quantities — SI / CGS</h3>
+        <p>Assignment reference table in serial order.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    magnetic_df = pd.DataFrame(
+        MAGNETIC_TABLE,
+        columns=[
+            "Magnetic Term",
+            "Symbol",
+            "SI Unit",
+            "CGS Unit",
+            "Conversion"
         ]
-    else:
-        units = list(UNITS[category].keys())
+    )
 
-    # ========================================================
-    # IMPORTANT:
-    # VALUE + FROM UNIT ARE NOW INSIDE ONE REAL STREAMLIT BOX
-    # ========================================================
-    with st.container(border=True):
+    st.dataframe(
+        magnetic_df,
+        width=800,
+        hide_index=True,
+        height=520
+    )
+
+
+    # ============================================================
+    # 📖 BOOK-STYLE FORMULA DISPLAY
+    # ============================================================
+
+    st.markdown("""
+    <div class="panel">
+        <h3>📖 Magnetism Formula Sheet</h3>
+        <p>Important magnetic formulas and relations.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    for term, symbol, formula, description in MAGNETISM_FORMULA_TABLE:
 
         st.markdown(
-            '<div class="field-title"> '
-            '📤 Enter Value & Select UNIT</div>',
+            f"""
+    <div style="
+        border-bottom:1px solid rgba(128,128,128,0.20);
+        padding:16px 8px;
+        margin-bottom:8px;
+    ">
+
+    <div style="
+        font-weight:700;
+        font-size:16px;
+        margin-bottom:6px;
+    ">
+        {term}
+    </div>
+
+    <div style="
+        color:#93c5fd;
+        font-size:14px;
+        margin-bottom:8px;
+    ">
+        Symbol: {symbol}
+    </div>
+
+    <div style="
+        font-size:13px;
+        color:#94a3b8;
+        margin-bottom:5px;
+    ">
+        {description}
+    </div>
+
+    </div>
+    """,
             unsafe_allow_html=True
         )
-        value_col, unit_col = st.columns(
-            [1.35, 1],
-            gap="small"
-        )
 
-        with value_col:
-            value = st.number_input(
-                "Enter value",
-                value=1.0,
-                format="%.12g",
-                label_visibility="collapsed",
-                key="converter_value"
-            )
- 
-        with unit_col:
-            from_unit = st.selectbox(
-                "From unit",
-                units,
-                label_visibility="collapsed",
-                key="from_unit"
-            )
-
-    # TO UNIT remains separate
-    with st.container(border=True):
-
-        st.markdown(
-            '<div class="field-title">📥 TO UNIT</div>',
-            unsafe_allow_html=True
-        )
-
-        to_unit = st.selectbox(
-            "To unit",
-            units,
-            label_visibility="collapsed",
-            key="to_unit"
-        )
-
-    if st.button(
-        "⚡  CONVERT",
-        key="convert",
-        use_container_width=True
-    ):
-        try:
-            result = convert_value(
-                value,
-                category,
-                from_unit,
-                to_unit
-            )
-
-            st.markdown(
-                f"""<div class="result-card">
-    <div class="result-label">
-        ✨ Conversion Result
-    </div>
-    <div class="result-number">
-        {fmt(result)}
-    </div>
-    <div class="result-unit">
-        {to_unit}
-    </div>
-</div>""",
-                unsafe_allow_html=True
-            )
-
-            st.caption(
-                f"{fmt(value)} {from_unit} → "
-                f"{fmt(result)} {to_unit}"
-            )
-
-        except Exception as e:
-            st.error(f"Conversion error: {e}")
-
+        st.latex(formula)
 
 # ============================================================
 # CALCULATOR — COMPACT 5-COLUMN PHONE STYLE
