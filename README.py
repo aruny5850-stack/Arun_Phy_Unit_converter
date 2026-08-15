@@ -1630,98 +1630,58 @@ st.dataframe(
     height=520
 ) 
 
+
 # ============================================================
 # 📖 BOOK-STYLE FORMULA DISPLAY
 # ============================================================
 
 st.markdown("""
-<style>
-.magnetism-formula-header {
-    display: grid;
-    grid-template-columns: 1.5fr 0.6fr 2.7fr 1.4fr;
-    gap: 12px;
-    padding: 12px 10px;
-    border-bottom: 2px solid rgba(128,128,128,0.4);
-    font-weight: 700;
-}
-
-.magnetism-formula-row {
-    display: grid;
-    grid-template-columns: 1.5fr 0.6fr 2.7fr 1.4fr;
-    gap: 12px;
-    align-items: center;
-    padding: 13px 10px;
-    border-bottom: 1px solid rgba(128,128,128,0.20);
-}
-
-.magnetism-formula-term {
-    font-weight: 600;
-    line-height: 1.35;
-}
-
-.magnetism-formula-symbol {
-    font-size: 18px;
-}
-
-.magnetism-formula-equation {
-    font-size: 18px;
-    overflow-x: auto;
-}
-
-.magnetism-formula-description {
-    font-size: 13px;
-    line-height: 1.35;
-}
-
-@media (max-width: 700px) {
-
-    .magnetism-formula-header,
-    .magnetism-formula-row {
-        min-width: 720px;
-    }
-}
-</style>
-""", unsafe_allow_html=True)
-
-
-st.markdown("""
-<div class="magnetism-formula-header">
-    <div>Magnetic Term</div>
-    <div>Symbol</div>
-    <div>Formula / Relation</div>
-    <div>Description / Unit</div>
+<div class="panel">
+    <h3>📖 Magnetism Formula Sheet</h3>
+    <p>Important magnetic formulas and relations.</p>
 </div>
 """, unsafe_allow_html=True)
-
 
 for term, symbol, formula, description in MAGNETISM_FORMULA_TABLE:
 
     st.markdown(
         f"""
-<div class="magnetism-formula-row">
+<div style="
+    border-bottom:1px solid rgba(128,128,128,0.20);
+    padding:16px 8px;
+    margin-bottom:8px;
+">
 
-    <div class="magnetism-formula-term">
-        {term}
-    </div>
+<div style="
+    font-weight:700;
+    font-size:16px;
+    margin-bottom:6px;
+">
+    {term}
+</div>
 
-    <div class="magnetism-formula-symbol">
-        {symbol}
-    </div>
+<div style="
+    color:#93c5fd;
+    font-size:14px;
+    margin-bottom:8px;
+">
+    Symbol: {symbol}
+</div>
 
-    <div class="magnetism-formula-equation">
-        {formula}
-    </div>
-
-    <div class="magnetism-formula-description">
-        {description}
-    </div>
+<div style="
+    font-size:13px;
+    color:#94a3b8;
+    margin-bottom:5px;
+">
+    {description}
+</div>
 
 </div>
 """,
         unsafe_allow_html=True
     )
 
-    # Render the formula separately using Streamlit's LaTeX renderer
+    # Actual LaTeX rendering
     st.latex(formula)
 # ============================================================
 # FOOTER
