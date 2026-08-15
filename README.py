@@ -1042,48 +1042,94 @@ converter, calculator, constants = st.tabs([
 # ============================================================
 # CONVERTER
 # ============================================================
-# ============================================================
-# CONVERTER
-# ============================================================
 with converter:
 
     st.markdown("""
     <div class="panel">
-        <h2>🔄 Unit Converter</h2>
-        <p>Convert physical quantities between different units.</p>
+        <h2>🔄 Universal Unit Converter</h2>
+        <p>
+        </p>
     </div>
     """, unsafe_allow_html=True)
 
-    category = st.selectbox(
-        "Physical Quantity",
-        list(UNITS.keys()),
-        key="converter_category"
-    )
+    categories = list(UNITS.keys()) + ["Temperature"]
 
-    col1, col2 = st.columns(2)
-
-    with col1:
-        from_unit = st.selectbox(
-            "From",
-            list(UNITS[category].keys()),
-            key="converter_from"
+    # Physical quantity
+    with st.container(border=True):
+        st.markdown(
+            '<div class="field-title">📚 PHYSICAL QUANTITY</div>',
+            unsafe_allow_html=True
         )
 
-        value = st.number_input(
-            "Value",
-            value=1.0,
-            format="%.12g",
-            key="converter_value"
+        category = st.selectbox(
+            "Physical quantity",
+            categories,
+            label_visibility="collapsed",
+            key="category"
         )
 
-    with col2:
+    if category == "Temperature":
+        units = [
+            "Kelvin (K)",
+            "Celsius (°C)",
+            "Fahrenheit (°F)"
+        ]
+    else:
+        units = list(UNITS[category].keys())
+
+    # ========================================================
+    # IMPORTANT:
+    # VALUE + FROM UNIT ARE NOW INSIDE ONE REAL STREAMLIT BOX
+    # ========================================================
+    with st.container(border=True):
+
+        st.markdown(
+            '<div class="field-title"> '
+            '📤 Enter Value & Select UNIT</div>',
+            unsafe_allow_html=True
+        )
+        value_col, unit_col = st.columns(
+            [1.35, 1],
+            gap="small"
+        )
+
+        with value_col:
+            value = st.number_input(
+                "Enter value",
+                value=1.0,
+                format="%.12g",
+                label_visibility="collapsed",
+                key="converter_value"
+            )
+ 
+        with unit_col:
+            from_unit = st.selectbox(
+                "From unit",
+                units,
+                label_visibility="collapsed",
+                key="from_unit"
+            )
+
+    # TO UNIT remains separate
+    with st.container(border=True):
+
+        st.markdown(
+            '<div class="field-title">📥 TO UNIT</div>',
+            unsafe_allow_html=True
+        )
+
         to_unit = st.selectbox(
-            "To",
-            list(UNITS[category].keys()),
-            key="converter_to"
+            "To unit",
+            units,
+            label_visibility="collapsed",
+            key="to_unit"
         )
 
-    if st.button("Convert", key="convert_button"):
+    if st.button(
+        "⚡  CONVERT",
+        key="convert",
+        use_container_width=True
+    ):
         try:
             result = convert_value(
                 value,
@@ -1092,16 +1138,29 @@ with converter:
                 to_unit
             )
 
-            st.markdown(f"""
-            <div class="result-card">
-                <div class="result-label">CONVERTED RESULT</div>
-                <div class="result-number">{fmt(result)}</div>
-                <div class="result-unit">{to_unit}</div>
-            </div>
-            """, unsafe_allow_html=True)
+            st.markdown(
+                f"""<div class="result-card">
+    <div class="result-label">
+        ✨ Conversion Result
+    </div>
+    <div class="result-number">
+        {fmt(result)}
+    </div>
+    <div class="result-unit">
+        {to_unit}
+    </div>
+</div>""",
+                unsafe_allow_html=True
+            )
+
+            st.caption(
+                f"{fmt(value)} {from_unit} → "
+                f"{fmt(result)} {to_unit}"
+            )
 
         except Exception as e:
             st.error(f"Conversion error: {e}")
+
 
 # ============================================================
 # CALCULATOR — COMPACT 5-COLUMN PHONE STYLE
