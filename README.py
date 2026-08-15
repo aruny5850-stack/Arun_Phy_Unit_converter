@@ -1569,8 +1569,8 @@ with constants:
         <p>Frequently used constants for Physics calculations.</p>
     </div>
     """, unsafe_allow_html=True)
-
-        constant_data = [
+    
+    constant_data = [
         ("Speed of Light (c)", "2.99792458 × 10⁸ m/s"),
         ("Planck Constant (h)", "6.62607015 × 10⁻³⁴ J·s"),
         ("Reduced Planck Constant (ℏ)", "1.054571817 × 10⁻³⁴ J·s"),
