@@ -198,83 +198,99 @@ button[data-baseweb="tab"] {
 UNITS = {
     # ---------- MAGNETIC: assignment order ----------
     "Magnetic induction (B)": {
-        "tesla (T) [SI]": 1,
-        "gauss (G) [CGS]": 1/1e4
-
-    }, 
-    "Magnetic field (H)": {
-        "ampere/meter (A m⁻¹) [SI]": 1,
-        "oersted (Oe) [CGS]": (4*math.pi)/1000
-    },
-    "Magnetization (M)": {
-        "ampere/meter (A m⁻¹)": 1,
-        "emu cm⁻³ [CGS]": 1000
-    },
-    "Magnetic polarization (J)": {
     "tesla (T) [SI]": 1,
-    "emu/cm³ [CGS]": (4 * math.pi) / 10000
-    },
-    "Magnetic moment (m)": {
-        "ampere·meter² (A m²)": 1,
-        "emu (G cm³)": 1e-3
-    },
-    "Magnetic moment per unit mass (σ)": {
-        "ampere·meter² kg⁻¹ (A m² kg⁻¹)": 1,
-        "emu g⁻¹ [CGS]": 1
-    },
-    "Volume magnetic susceptibility (κ = M/H)": {
-        "dimensionless [SI]": 1,
-        "dimensionless [CGS]": 1/(4*math.pi)
-    },
-    "Mass magnetic susceptibility (χ = κ/ρ)": {
-        "m³ kg⁻¹": 1,
-        "emu Oe⁻¹ g⁻¹": 4*math.pi/1000
-    },
-    "Molar magnetic susceptibility (χₘ = χM*)": {
-        "m³ mol⁻¹": 1,
-        "emu Oe⁻¹ g⁻¹ mol⁻¹": 4*math.pi/1e6
-    },
-    "Magnetic permeability (μ = B/H)": {
-        "henry/meter (H m⁻¹)": 1,
-        "G Oe⁻¹": 1e7/(4*math.pi)
-    },
-    "Magnetic flux (Φ)": {
-        "weber (Wb)": 1,
-        "maxwell (Mx)": 1e-8
-    },
-    "Magnetic scalar potential; Magnetomotive force (φ)": {
-        "ampere (A) [SI]": 1,
-        "gilbert [CGS]": 10/(4*math.pi)
-    },
-    "Magnetic vector potential": {
-        "weber/meter (Wb m⁻¹)": 1,
-        "emu (G cm)": 1e-6
-    },
-    "Magnetic pole strength (p)": {
-        "ampere·meter (A m)": 1,
-        "emu (G cm²)": 1e-1
-    },
-    "Demagnetizing factor (N)": {
-        "dimensionless [SI]": 1,
-        "dimensionless [CGS]": 4*math.pi
-    },
-    "Magnetostriction constant (λ)": {
-        "dimensionless [SI]": 1,
-        "dimensionless [CGS]": 1
-    },
-    "Anisotropy constant (K, K₁, Kᵤ)": {
-        "joule/m³ (J m⁻³)": 1,
-        "erg/cm³": 1e-1
-    },
-    "Magnetostatic energy (Eₘ)": {
-        "joule/m³ (J m⁻³)": 1,
-        "erg/cm³": 1e-1
-    },
-    "Energy product (BH)ₘₐₓ": {
-        "joule/m³ (J m⁻³)": 1,
-        "erg/cm³": 1e-1
-    },
+    "gauss (G) [CGS]": 1e-4
+},
 
+"Magnetic field (H)": {
+    "ampere/meter (A m⁻¹) [SI]": 1,
+    "oersted (Oe) [CGS]": 1000 / (4 * math.pi)
+},
+
+"Magnetization (M)": {
+    "ampere/meter (A m⁻¹)": 1,
+    "emu cm⁻³ [CGS]": 1000
+},
+
+"Magnetic polarization (J)": {
+    "tesla (T) [SI]": 1,
+    "emu/cm³ [CGS]": 4 * math.pi * 1e-4
+},
+
+"Magnetic moment (m)": {
+    "ampere·meter² (A m²)": 1,
+    "emu (G cm³)": 1e-3
+},
+
+"Magnetic moment per unit mass (σ)": {
+    "ampere·meter² kg⁻¹ (A m² kg⁻¹)": 1,
+    "emu g⁻¹ [CGS]": 1
+},
+
+"Volume magnetic susceptibility (κ = M/H)": {
+    "dimensionless [SI]": 1,
+    "dimensionless [CGS]": 1 / (4 * math.pi)
+},
+
+"Mass magnetic susceptibility (χ = κ/ρ)": {
+    "m³ kg⁻¹": 1,
+    "emu Oe⁻¹ g⁻¹": 4 * math.pi / 1000
+},
+
+"Molar magnetic susceptibility (χₘ = χM*)": {
+    "m³ mol⁻¹": 1,
+    "emu Oe⁻¹ g⁻¹ mol⁻¹": 4 * math.pi / 1e6
+},
+
+"Magnetic permeability (μ = B/H)": {
+    "henry/meter (H m⁻¹)": 1,
+    "G Oe⁻¹": 1e7 / (4 * math.pi)
+},
+
+"Magnetic flux (Φ)": {
+    "weber (Wb)": 1,
+    "maxwell (Mx)": 1e-8
+},
+
+"Magnetic scalar potential; Magnetomotive force (φ)": {
+    "ampere (A) [SI]": 1,
+    "gilbert [CGS]": 10 / (4 * math.pi)
+},
+
+"Magnetic vector potential": {
+    "weber/meter (Wb m⁻¹)": 1,
+    "emu (G cm)": 1e-6
+},
+
+"Magnetic pole strength (p)": {
+    "ampere·meter (A m)": 1,
+    "emu (G cm²)": 1e-1
+},
+
+"Demagnetizing factor (N)": {
+    "dimensionless [SI]": 1,
+    "dimensionless [CGS]": 4 * math.pi
+},
+
+"Magnetostriction constant (λ)": {
+    "dimensionless [SI]": 1,
+    "dimensionless [CGS]": 1
+},
+
+"Anisotropy constant (K, K₁, Kᵤ)": {
+    "joule/m³ (J m⁻³)": 1,
+    "erg/cm³": 1e-1
+},
+
+"Magnetostatic energy (Eₘ)": {
+    "joule/m³ (J m⁻³)": 1,
+    "erg/cm³": 1e-1
+},
+
+"Energy product (BH)ₘₐₓ": {
+    "joule/m³ (J m⁻³)": 1,
+    "erg/cm³": 1e-1
+},
     # ---------- GENERAL PHYSICAL QUANTITIES ----------
     "Length": {
         "meter (m)": 1,
