@@ -1592,7 +1592,9 @@ with constants:
         ("Vacuum Permittivity (ε₀)", "8.8541878128 × 10⁻¹² F/m"),
         ("Vacuum Permeability (μ₀)", "1.25663706212 × 10⁻⁶ H/m"),
     ]
-
+# ============================================================
+# 🧲 MAGNETIC QUANTITIES — SI / CGS
+# ============================================================s
     for name, value in constant_data:
         st.markdown(f"""
         <div class="constant-card">
@@ -1600,19 +1602,13 @@ with constants:
             <div class="constant-value">{value}</div>
         </div>
         """, unsafe_allow_html=True)
-
-# ============================================================
-# 🧲 MAGNETIC QUANTITIES — SI / CGS
-# ============================================================
-
-st.markdown("""
-<div class="panel">
+    st.markdown("""
+    <div class="panel">
     <h3>🧲 Magnetic Quantities — SI / CGS</h3>
     <p>Assignment reference table in serial order.</p>
-</div>
-""", unsafe_allow_html=True)
-
-magnetic_df = pd.DataFrame(
+    </div>
+    """, unsafe_allow_html=True)
+    magnetic_df = pd.DataFrame(
     MAGNETIC_TABLE,
     columns=[
         "Magnetic Term",
@@ -1621,14 +1617,13 @@ magnetic_df = pd.DataFrame(
         "CGS Unit",
         "Conversion"
     ]
-)
-
-st.dataframe(
+    )
+    st.dataframe(
     magnetic_df,
     width=800,
     hide_index=True,
     height=520
-) 
+    ) 
 
 
 # ============================================================
