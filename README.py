@@ -1629,7 +1629,7 @@ with constants:
     # ============================================================
 
     st.markdown("""
-    <div class="hero">
+    <div class="panel">
         <h3>📖 Magnetism Formula Sheet</h3>
         <p>Important magnetic formulas and relations.</p>
     </div>
