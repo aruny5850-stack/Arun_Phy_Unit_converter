@@ -434,26 +434,25 @@ UNITS = {
 # ============================================================
 MAGNETIC_TABLE = [
     ("Magnetic induction", "B", "tesla (T)", "gauss (G)", "1 T = 10⁴ G"),
-    ("Magnetic field", "H", "A m⁻¹", "oersted (Oe)", "1 A m⁻¹ = 4π × 10⁻³ Oe"),
+    ("Magnetic field strength", "H", "A m⁻¹", "oersted (Oe)", "1 A m⁻¹ = 4π × 10⁻³ Oe"),
     ("Magnetization", "M", "A m⁻¹", "emu cm⁻³", "1 A m⁻¹ = 10⁻³ emu cm⁻³"),
-    ("Magnetic polarization", "J", "T", "G", "1 T = 10⁴/4π"),
-    ("Magnetic moment", "m", "A m²", "emu = G cm³", "1 A m² = 10³ emu"),
+    ("Magnetic polarization", "J", "T", "emu cm⁻³", "1 T = 10⁴/(4π) emu cm⁻³"),
+    ("Magnetic moment", "m", "A m²", "emu", "1 A m² = 10³ emu"),
     ("Magnetic moment per unit mass", "σ", "A m² kg⁻¹", "emu g⁻¹", "1 A m² kg⁻¹ = 1 emu g⁻¹"),
-    ("Volume magnetic susceptibility", "κ", "dimensionless", "dimensionless", "SI = 1/4π CGS"),
-    ("Mass magnetic susceptibility", "χ", "m³ kg⁻¹", "emu Oe⁻¹ g⁻¹", "1 m³ kg⁻¹ = 10³/4π"),
-    ("Molar magnetic susceptibility", "χₘ", "m³ mol⁻¹", "emu Oe⁻¹ g⁻¹ mol⁻¹", "1 m³ mol⁻¹ = 10⁶/4π"),
-    ("Magnetic permeability", "μ", "H m⁻¹", "G Oe⁻¹", "1 H m⁻¹ = 10⁷/4π"),
+    ("Volume magnetic susceptibility", "κ", "dimensionless", "dimensionless", "χSI = χCGS/(4π)"),
+    ("Mass magnetic susceptibility", "χ", "m³ kg⁻¹", "emu Oe⁻¹ g⁻¹", "1 m³ kg⁻¹ = 10³/(4π) emu Oe⁻¹ g⁻¹"),
+    ("Molar magnetic susceptibility", "χₘ", "m³ mol⁻¹", "emu Oe⁻¹ g⁻¹ mol⁻¹", "1 m³ mol⁻¹ = 10⁶/(4π) emu Oe⁻¹ g⁻¹ mol⁻¹"),
+    ("Magnetic permeability", "μ", "H m⁻¹", "G Oe⁻¹", "1 H m⁻¹ = 10⁷/(4π) G Oe⁻¹"),
     ("Magnetic flux", "Φ", "weber (Wb)", "maxwell (Mx)", "1 Wb = 10⁸ Mx"),
-    ("Magnetic scalar potential; Magnetomotive force", "φ", "A", "gilbert", "1 A = 4π/10 gilbert"),
-    ("Magnetic vector potential", "A", "Wb m⁻¹", "emu = G cm", "1 Wb m⁻¹ = 10⁶ emu"),
-    ("Magnetic pole strength", "p", "A m", "emu = G cm²", "1 A m = 10 emu"),
-    ("Demagnetizing factor", "N", "dimensionless", "dimensionless", "SI = 4π CGS"),
+    ("Magnetic scalar potential / Magnetomotive force", "φ", "A", "gilbert (Gi)", "1 A = 4π/10 gilbert"),
+    ("Magnetic vector potential", "A", "Wb m⁻¹", "G cm", "1 Wb m⁻¹ = 10⁶ G cm"),
+    ("Magnetic pole strength", "p", "A m", "G cm²", "1 A m = 10 G cm²"),
+    ("Demagnetizing factor", "N", "dimensionless", "dimensionless", "NSI = NCGS/(4π)"),
     ("Magnetostriction constant", "λ", "dimensionless", "dimensionless", "SI = CGS"),
     ("Anisotropy constant", "K, K₁, Kᵤ", "J m⁻³", "erg cm⁻³", "1 J m⁻³ = 10 erg cm⁻³"),
-    ("Magnetostatic energy", "Eₘ", "J m⁻³", "erg cm⁻³", "1 J m⁻³ = 10 erg cm⁻³"),
+    ("Magnetostatic energy density", "Eₘ", "J m⁻³", "erg cm⁻³", "1 J m⁻³ = 10 erg cm⁻³"),
     ("Energy product", "(BH)ₘₐₓ", "J m⁻³", "erg cm⁻³", "1 J m⁻³ = 10 erg cm⁻³"),
 ]
-
 # ============================================================
 # CONVERSIONS
 # ============================================================
