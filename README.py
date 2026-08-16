@@ -1110,26 +1110,10 @@ with converter:
                 key="from_unit"
             )
 
-    # TO UNIT remains separate
-    with st.container(border=True):
-
-        st.markdown(
-            '<div class="field-title">📥 TO UNIT</div>',
-            unsafe_allow_html=True
-        )
-
-        to_unit = st.selectbox(
-            "To unit",
-            units,
-            label_visibility="collapsed",
-            key="to_unit"
-        )
-
     # ========================================================
     # CGS / SI QUICK CONVERSION
-    # Keep the From Unit and To Unit dropdowns unchanged.
-    # CGS/SI buttons only select the matching target unit and
-    # then run the same existing conversion function.
+    # The separate To Unit selector is intentionally removed.
+    # CGS/SI buttons directly choose the target system unit.
     # ========================================================
     def _find_system_unit(unit_list, system, category_name):
         """Find the canonical SI/CGS target unit for the selected quantity.
@@ -1693,6 +1677,947 @@ with constants:
     )
 
 
+
+    # ============================================================
+    # 📖 CLICKABLE MAGNETISM FORMULA CHAPTERS
+    # ============================================================
+    # Every formula is a real Streamlit button. On mobile/desktop it
+    # opens a modal chapter window (st.dialog) instead of navigating
+    # away from the Formula Sheet.
+    #
+    # Core chapters are written at MSc Physics / Materials /
+    # Nanotechnology / Spintronics level. Other entries use the same
+    # structured chapter layout and can be expanded later without
+    # changing the UI.
+    # ============================================================
+
+    CORE_FORMULA_DETAILS = {
+        "Magnetic induction / Magnetic flux density": {
+            "overview": (
+                "Magnetic induction B is the magnetic flux density inside a "
+                "medium. It is the field quantity that directly enters the "
+                "Lorentz force and magnetic flux. In SI, B is measured in tesla."
+            ),
+            "meaning": (
+                "For a material, B is not determined by the externally applied "
+                "field alone because the material develops magnetization M. "
+                "The SI constitutive relation is B = μ₀(H + M)."
+            ),
+            "derivation": (
+                "Starting from magnetization M as magnetic dipole moment per "
+                "unit volume, the total magnetic response is represented by "
+                "H + M. Multiplication by μ₀ converts this field-like quantity "
+                "to magnetic induction B."
+            ),
+            "msc": (
+                "In magnetic materials, B-H curves, permeability, saturation "
+                "and hysteresis are central characterization tools. In thin "
+                "films and spintronic devices, B determines the Zeeman energy "
+                "and the magnetic torque acting on a magnetic moment."
+            ),
+            "spin": (
+                "B couples directly to a magnetic moment through U = −m·B and "
+                "τ = m×B. This makes B fundamental for magnetization switching, "
+                "FMR, spin dynamics and magnetic sensing."
+            ),
+        },
+        "Magnetic field strength": {
+            "overview": (
+                "Magnetic field strength H describes the externally supplied "
+                "magnetizing field, separated from the material magnetization. "
+                "Its SI unit is A m⁻¹."
+            ),
+            "meaning": (
+                "In matter, B and H are distinct: B = μ₀(H + M). Therefore "
+                "H represents the applied/current-generated part while M "
+                "describes the material response."
+            ),
+            "derivation": (
+                "Rearranging B = μ₀(H + M) gives H = B/μ₀ − M. For a vacuum, "
+                "M = 0, so B = μ₀H."
+            ),
+            "msc": (
+                "H is used in hysteresis loops, permeability measurements, "
+                "demagnetizing-field calculations and magnetic material "
+                "characterization. In ferromagnets, internal H must be "
+                "distinguished from the applied H because of demagnetization."
+            ),
+            "spin": (
+                "H is the natural control variable in many magnetization "
+                "switching and FMR experiments. It sets the effective field "
+                "that enters the Landau–Lifshitz–Gilbert equation."
+            ),
+        },
+        "Magnetization": {
+            "overview": (
+                "Magnetization M is magnetic dipole moment per unit volume. "
+                "It describes how strongly a material is magnetized."
+            ),
+            "meaning": (
+                "M is a vector quantity. Its direction gives the net magnetic "
+                "moment direction and its magnitude gives magnetic moment "
+                "density."
+            ),
+            "derivation": (
+                "For a sample with total magnetic moment m and volume V, "
+                "M = m/V. For a uniformly magnetized sample this relation "
+                "directly gives the macroscopic magnetization."
+            ),
+            "msc": (
+                "M is used to describe diamagnetism, paramagnetism and "
+                "ferromagnetism, including saturation magnetization, remanence, "
+                "coercivity and hysteresis."
+            ),
+            "spin": (
+                "Spintronic devices use magnetization as an information-bearing "
+                "state. Mₛ, magnetic anisotropy and damping strongly influence "
+                "STT/SOT switching, MRAM, spin valves and magnetic tunnel junctions."
+            ),
+        },
+        "Magnetic polarization": {
+            "overview": (
+                "Magnetic polarization J is related to the magnetization by "
+                "J = μ₀M in SI. It has the same dimensions as magnetic induction."
+            ),
+            "meaning": (
+                "J isolates the material contribution to B. Using "
+                "B = μ₀H + J, the total induction can be viewed as the sum of "
+                "the applied-field contribution and material polarization."
+            ),
+            "derivation": (
+                "Starting from B = μ₀(H + M), distribute μ₀: "
+                "B = μ₀H + μ₀M. Defining J = μ₀M gives B = μ₀H + J."
+            ),
+            "msc": (
+                "J is useful when comparing material magnetic response with "
+                "the applied field, especially in magnetic characterization."
+            ),
+            "spin": (
+                "Although spintronic literature commonly uses M and B, the "
+                "J representation is useful for separating material response "
+                "from the applied-field contribution."
+            ),
+        },
+        "Magnetic susceptibility": {
+            "overview": (
+                "Magnetic susceptibility χ measures the linear response of "
+                "magnetization to an applied magnetic field."
+            ),
+            "meaning": (
+                "For a linear isotropic material, M = χH. The sign and magnitude "
+                "of χ help distinguish diamagnetic, paramagnetic and strongly "
+                "magnetic responses."
+            ),
+            "derivation": (
+                "For small fields in the linear regime, the ratio M/H is "
+                "approximately constant. Hence χ = M/H. Outside the linear "
+                "regime, χ can depend on field and history."
+            ),
+            "msc": (
+                "χ is central to magnetic characterization, Curie and "
+                "Curie–Weiss analysis, magnetic phase transitions and "
+                "magnetometry."
+            ),
+            "spin": (
+                "Magnetic susceptibility is important for understanding "
+                "paramagnetic moments, exchange interactions, magnetic ordering "
+                "and dynamic magnetic response in spintronic materials."
+            ),
+        },
+        "Relative permeability": {
+            "overview": (
+                "Relative permeability μᵣ compares a material's permeability "
+                "with vacuum permeability."
+            ),
+            "meaning": (
+                "μᵣ = μ/μ₀. For a linear isotropic SI medium, μ = μ₀(1 + χ), "
+                "so μᵣ = 1 + χ."
+            ),
+            "derivation": (
+                "Using B = μ₀(H + M) and M = χH gives "
+                "B = μ₀(1 + χ)H. Comparing this with B = μH gives "
+                "μᵣ = μ/μ₀ = 1 + χ."
+            ),
+            "msc": (
+                "Permeability describes how readily a material supports magnetic "
+                "flux and is useful in magnetic cores, shielding and material "
+                "characterization."
+            ),
+            "spin": (
+                "In spin dynamics, the effective magnetic response influences "
+                "resonance conditions and the field distribution around magnetic "
+                "layers."
+            ),
+        },
+        "Absolute permeability": {
+            "overview": (
+                "Absolute permeability μ connects magnetic induction B with "
+                "magnetic field H in a linear medium."
+            ),
+            "meaning": (
+                "For a linear isotropic medium, B = μH. The value depends on "
+                "the material and, in nonlinear magnetic materials, can depend "
+                "on field and magnetic history."
+            ),
+            "derivation": (
+                "From B = μ₀(H + M), if M = χH then B = μ₀(1 + χ)H. "
+                "Therefore μ = μ₀(1 + χ) = μ₀μᵣ."
+            ),
+            "msc": (
+                "μ is used in magnetic material characterization, inductors, "
+                "transformers and electromagnetic boundary problems."
+            ),
+            "spin": (
+                "Magnetic permeability enters microwave magnetic response and "
+                "can influence FMR and spin-wave propagation in magnetic media."
+            ),
+        },
+        "Vacuum permeability": {
+            "overview": (
+                "μ₀ is the vacuum permeability and is the proportionality "
+                "constant connecting B and H in vacuum."
+            ),
+            "meaning": (
+                "In vacuum M = 0, so B = μ₀H. It also appears throughout "
+                "magnetostatics, inductance, magnetic energy and spin dynamics."
+            ),
+            "derivation": (
+                "For vacuum, the constitutive relation reduces to B = μ₀H. "
+                "The numerical SI value is approximately 1.25663706 × 10⁻⁶ H m⁻¹."
+            ),
+            "msc": (
+                "μ₀ is required in Biot–Savart law, Ampere's law, dipole energy, "
+                "inductance, magnetic energy density and anisotropy-field formulas."
+            ),
+            "spin": (
+                "Spintronic quantities such as Hₖ = 2Kᵤ/(μ₀Mₛ) explicitly "
+                "contain μ₀, linking material anisotropy to switching fields."
+            ),
+        },
+        "Magnetic dipole moment": {
+            "overview": (
+                "The magnetic dipole moment m characterizes the strength and "
+                "direction of a magnetic dipole. For a current loop, m = IA."
+            ),
+            "meaning": (
+                "m is a vector normal to the loop according to the right-hand "
+                "rule. Its interaction with B produces torque and potential energy."
+            ),
+            "derivation": (
+                "For a planar current loop of area A carrying current I, the "
+                "magnetic dipole moment is defined as m = IA."
+            ),
+            "msc": (
+                "Atomic and molecular magnetic moments arise from orbital and "
+                "spin angular momentum. Macroscopic magnetization is the moment "
+                "density M = m/V."
+            ),
+            "spin": (
+                "Spin angular momentum produces magnetic moments that form the "
+                "basis of ferromagnetism, spin polarization, spin transfer and "
+                "magnetic memory."
+            ),
+        },
+        "Torque on magnetic dipole": {
+            "overview": (
+                "A magnetic dipole in a magnetic field experiences a torque "
+                "that tends to align its magnetic moment with the field."
+            ),
+            "meaning": (
+                "The vector relation is τ = m × B, with magnitude "
+                "|τ| = mB sinθ."
+            ),
+            "derivation": (
+                "Opposite forces on the two sides of a small current loop form "
+                "a couple. Their net force is zero in a uniform field, but their "
+                "moments produce τ = m × B."
+            ),
+            "msc": (
+                "This torque explains alignment, magnetic resonance and the "
+                "precessional motion of magnetic moments."
+            ),
+            "spin": (
+                "The field torque is one of the central terms in the "
+                "Landau–Lifshitz–Gilbert equation. It drives precession of "
+                "magnetization and underlies FMR and switching physics."
+            ),
+        },
+        "Potential energy of magnetic dipole": {
+            "overview": (
+                "The potential energy of a magnetic dipole in a field is "
+                "U = −m·B = −mB cosθ."
+            ),
+            "meaning": (
+                "The lowest-energy orientation is parallel alignment of m and B."
+            ),
+            "derivation": (
+                "Because torque tends to rotate the dipole toward the field, "
+                "integrating the rotational work gives U = −mB cosθ, with the "
+                "chosen zero of energy at perpendicular orientation."
+            ),
+            "msc": (
+                "This relation is used to understand magnetic alignment and "
+                "Zeeman-type energy scales."
+            ),
+            "spin": (
+                "The Zeeman interaction is fundamental to spin manipulation, "
+                "magnetic resonance and the energetics of spin-polarized states."
+            ),
+        },
+        "Force on magnetic dipole": {
+            "overview": (
+                "A magnetic dipole experiences a net translational force when "
+                "the magnetic field is spatially non-uniform."
+            ),
+            "meaning": (
+                "For a localized dipole, F = ∇(m·B). In a uniform field the "
+                "net force is zero, although torque can still be present."
+            ),
+            "derivation": (
+                "The two poles/current elements experience slightly different "
+                "forces when B varies in space. The imbalance gives the gradient "
+                "of the dipole-field interaction energy."
+            ),
+            "msc": (
+                "This principle is used in magnetic trapping, sorting, "
+                "magnetic-force microscopy and gradient-field measurements."
+            ),
+            "spin": (
+                "Magnetic-field gradients can influence domain walls, textures "
+                "and nanoscale magnetic elements."
+            ),
+        },
+        "Ampere's circuital law": {
+            "overview": (
+                "Ampere's circuital law relates the circulation of magnetic field "
+                "around a closed path to the enclosed current."
+            ),
+            "meaning": (
+                "For steady currents, ∮B·dl = μ₀I_enclosed."
+            ),
+            "derivation": (
+                "For a long straight current, the cylindrical symmetry makes B "
+                "constant on a circular Amperian path, giving B(2πr)=μ₀I."
+            ),
+            "msc": (
+                "It is especially powerful for wires, solenoids and toroids where "
+                "symmetry makes the field calculation simple."
+            ),
+            "spin": (
+                "Current-generated magnetic fields are used to control magnetic "
+                "layers and generate Oersted fields in spintronic structures."
+            ),
+        },
+        "Lorentz magnetic force": {
+            "overview": (
+                "The magnetic part of the Lorentz force on a charge is "
+                "F = q(v × B)."
+            ),
+            "meaning": (
+                "The force is perpendicular to both velocity and magnetic field, "
+                "so a uniform magnetic field changes the direction of motion "
+                "without doing work on an isolated charge."
+            ),
+            "derivation": (
+                "For v perpendicular to B, the magnitude is F=qvB and circular "
+                "motion follows from qvB = mv²/r."
+            ),
+            "msc": (
+                "The Lorentz force is fundamental to charged-particle motion, "
+                "Hall effects, magnetotransport and electromagnetic devices."
+            ),
+            "spin": (
+                "Spintronic transport is often discussed together with ordinary "
+                "charge transport, Hall effects and spin-dependent forces."
+            ),
+        },
+        "Faraday's law": {
+            "overview": (
+                "Faraday's law states that changing magnetic flux induces an "
+                "electromotive force."
+            ),
+            "meaning": (
+                "ε = −dΦ/dt. The negative sign expresses Lenz's law: the induced "
+                "response opposes the change in flux."
+            ),
+            "derivation": (
+                "For N turns, ε = −N dΦ/dt. The result follows from the "
+                "electromagnetic induction law and is one of Maxwell's equations."
+            ),
+            "msc": (
+                "It is essential for transformers, inductors, generators and "
+                "electromagnetic coupling."
+            ),
+            "spin": (
+                "Time-dependent magnetic fields can induce electric signals in "
+                "magnetic/spintronic structures and are important in spin pumping "
+                "and dynamic magnetic measurements."
+            ),
+        },
+        "Self inductance": {
+            "overview": (
+                "Self-inductance L measures the magnetic flux linkage produced "
+                "by a circuit's own current."
+            ),
+            "meaning": (
+                "For a linear inductor, λ = LI and the induced emf is "
+                "ε = −L dI/dt."
+            ),
+            "derivation": (
+                "Flux linkage is proportional to current in the linear regime. "
+                "The proportionality constant is L."
+            ),
+            "msc": (
+                "Inductance stores magnetic energy and is important in circuits, "
+                "filters and electromagnetic devices."
+            ),
+            "spin": (
+                "Inductive coupling and dynamic magnetic fields are relevant to "
+                "microwave magnetic measurements and spin-dynamics experiments."
+            ),
+        },
+        "Magnetic energy density": {
+            "overview": (
+                "Magnetic energy density gives the energy stored per unit volume "
+                "in a magnetic field."
+            ),
+            "meaning": (
+                "For vacuum, u = B²/(2μ₀). In a linear material, the corresponding "
+                "expression is u = B²/(2μ)."
+            ),
+            "derivation": (
+                "The energy supplied to build the field is integrated from the "
+                "field-current relation, producing the quadratic dependence on B "
+                "for a linear medium."
+            ),
+            "msc": (
+                "Energy density is essential for comparing magnetic states, "
+                "actuator performance and field-storage capability."
+            ),
+            "spin": (
+                "Spintronic switching competes between Zeeman, anisotropy, "
+                "exchange and demagnetizing energies. Energy density therefore "
+                "helps determine stable magnetic states."
+            ),
+        },
+        "Gauss's law for magnetism": {
+            "overview": (
+                "Gauss's law for magnetism states ∇·B = 0."
+            ),
+            "meaning": (
+                "Magnetic field lines form closed loops; in classical "
+                "electromagnetism there are no isolated magnetic monopoles."
+            ),
+            "derivation": (
+                "The differential form corresponds to the integral relation "
+                "∮B·dA = 0 over any closed surface."
+            ),
+            "msc": (
+                "It is one of Maxwell's equations and constrains magnetic-field "
+                "boundary conditions."
+            ),
+            "spin": (
+                "Magnetic textures such as domains and skyrmions must satisfy "
+                "the divergence-free condition for B even though their M texture "
+                "can be highly non-uniform."
+            ),
+        },
+        "Magnetization relation": {
+            "overview": (
+                "In a linear magnetic material, magnetization is proportional "
+                "to magnetic field: M = χH."
+            ),
+            "meaning": (
+                "χ is the magnetic susceptibility. The relation is valid in the "
+                "linear-response regime."
+            ),
+            "derivation": (
+                "Substitute M = χH into B = μ₀(H+M) to obtain "
+                "B = μ₀(1+χ)H."
+            ),
+            "msc": (
+                "This is the starting point for susceptibility measurements and "
+                "the classification of magnetic materials."
+            ),
+            "spin": (
+                "Linear response provides the basic framework for magnetic "
+                "resonance, dynamic susceptibility and spin-wave response."
+            ),
+        },
+        "Using susceptibility": {
+            "overview": (
+                "For a linear isotropic material, susceptibility converts the "
+                "magnetic field H into magnetization M."
+            ),
+            "meaning": (
+                "With M=χH, the induction becomes B=μ₀(1+χ)H."
+            ),
+            "derivation": (
+                "Insert the linear constitutive relation M=χH into the material "
+                "relation B=μ₀(H+M)."
+            ),
+            "msc": (
+                "This relation connects measurable susceptibility with "
+                "permeability and magnetic induction."
+            ),
+            "spin": (
+                "It provides the static limit from which more advanced dynamic "
+                "magnetic-response models are developed."
+            ),
+        },
+        "Curie's law": {
+            "overview": (
+                "Curie's law describes ideal paramagnetic susceptibility as "
+                "χ = C/T."
+            ),
+            "meaning": (
+                "As temperature rises, thermal agitation makes magnetic moments "
+                "harder to align, reducing susceptibility."
+            ),
+            "derivation": (
+                "In the weak-field limit of the classical paramagnetic model, "
+                "the leading response is inversely proportional to temperature."
+            ),
+            "msc": (
+                "Curie's law is used to analyze paramagnets and estimate magnetic "
+                "moment information from susceptibility measurements."
+            ),
+            "spin": (
+                "It provides a simple starting point for understanding local "
+                "moments before exchange interactions and collective ordering "
+                "are included."
+            ),
+        },
+        "Curie–Weiss law": {
+            "overview": (
+                "The Curie–Weiss law is χ = C/(T−θ), extending Curie's law by "
+                "including an effective molecular-field interaction."
+            ),
+            "meaning": (
+                "The Weiss temperature θ provides information about the tendency "
+                "toward ferromagnetic or antiferromagnetic correlations."
+            ),
+            "derivation": (
+                "A molecular field proportional to M is added to the applied "
+                "field. Solving the resulting linear-response relation gives "
+                "the Curie–Weiss form."
+            ),
+            "msc": (
+                "It is widely used to estimate ordering scales and effective "
+                "magnetic moments from experimental susceptibility."
+            ),
+            "spin": (
+                "Exchange-driven collective ordering is the microscopic basis "
+                "for many ferromagnetic, antiferromagnetic and spintronic materials."
+            ),
+        },
+        "Effective magnetic moment": {
+            "overview": (
+                "The effective magnetic moment summarizes the magnetic moment "
+                "deduced from susceptibility data."
+            ),
+            "meaning": (
+                "It is especially useful for paramagnetic ions where spin and "
+                "orbital contributions determine the observed response."
+            ),
+            "derivation": (
+                "The exact expression depends on the unit convention and the "
+                "model used for Curie or Curie–Weiss susceptibility."
+            ),
+            "msc": (
+                "Comparing measured and theoretical effective moments helps "
+                "identify oxidation states, spin states and magnetic interactions."
+            ),
+            "spin": (
+                "Effective moments provide a bridge between microscopic spin "
+                "states and macroscopic magnetic susceptibility."
+            ),
+        },
+        "Bohr magneton": {
+            "overview": (
+                "The Bohr magneton μB is the natural magnetic-moment scale "
+                "associated with an electron."
+            ),
+            "meaning": (
+                "It sets the scale for electron orbital and spin magnetic moments."
+            ),
+            "derivation": (
+                "The scale follows from the electron charge, reduced Planck "
+                "constant and electron mass."
+            ),
+            "msc": (
+                "Magnetic moments are commonly reported in units of μB when "
+                "discussing atoms, ions and magnetic materials."
+            ),
+            "spin": (
+                "Spin-polarized electrons, local magnetic moments and exchange "
+                "interactions in spintronic materials are naturally expressed "
+                "using μB."
+            ),
+        },
+        "Spontaneous magnetization": {
+            "overview": (
+                "Spontaneous magnetization is the non-zero magnetization that "
+                "can exist below a magnetic ordering temperature even without "
+                "an externally applied field."
+            ),
+            "meaning": (
+                "It arises from collective interactions between microscopic "
+                "magnetic moments."
+            ),
+            "derivation": (
+                "Mean-field and microscopic exchange models can produce a stable "
+                "ordered state below the Curie temperature."
+            ),
+            "msc": (
+                "It is a defining feature of ferromagnetism and is observed "
+                "through magnetization curves and hysteresis."
+            ),
+            "spin": (
+                "Stable spontaneous magnetization provides the two-state or "
+                "multi-state magnetic basis used in spin valves, MRAM and other "
+                "spintronic elements."
+            ),
+        },
+        "Exchange interaction": {
+            "overview": (
+                "Exchange interaction is a quantum-mechanical interaction between "
+                "spins arising from the combination of Coulomb interaction and "
+                "wavefunction antisymmetry."
+            ),
+            "meaning": (
+                "A simplified Heisenberg form is H_ex = −J Σ S_i·S_j, with the "
+                "sign of J determining the preferred relative spin orientation "
+                "under the chosen convention."
+            ),
+            "derivation": (
+                "Exchange is not simply a classical magnetic dipole interaction; "
+                "it originates from quantum statistics and electronic overlap."
+            ),
+            "msc": (
+                "Exchange determines ferromagnetism, antiferromagnetism, "
+                "ferrimagnetism and many magnetic phase transitions."
+            ),
+            "spin": (
+                "Exchange is one of the most important spintronic energy scales. "
+                "It controls spin stiffness, domain walls, spin waves and magnetic "
+                "ordering in ultrathin films and multilayers."
+            ),
+        },
+        "Saturation magnetization": {
+            "overview": (
+                "Saturation magnetization Mₛ is the maximum magnetization reached "
+                "when the magnetic moments are essentially aligned with the field."
+            ),
+            "meaning": (
+                "It reflects the density and magnitude of magnetic moments in the "
+                "material."
+            ),
+            "derivation": (
+                "In a simple moment model, Mₛ = nμ, where n is the number density "
+                "of magnetic moments and μ is the moment per magnetic unit."
+            ),
+            "msc": (
+                "Mₛ is extracted from hysteresis loops and enters the definitions "
+                "of anisotropy field, exchange length and magnetic energy scales."
+            ),
+            "spin": (
+                "Mₛ directly affects spin-wave frequency, damping dynamics, "
+                "switching current and the torque efficiency in spintronic devices."
+            ),
+        },
+        "Remanence / Retentivity": {
+            "overview": (
+                "Remanence is the residual magnetization or induction remaining "
+                "after the external magnetizing field is removed."
+            ),
+            "meaning": (
+                "It measures how strongly a material retains a magnetic state."
+            ),
+            "derivation": (
+                "On a hysteresis loop, the value at H=0 after prior magnetization "
+                "defines the remanent state."
+            ),
+            "msc": (
+                "High remanence is useful in permanent magnets, while controlled "
+                "remanence is important in magnetic memory."
+            ),
+            "spin": (
+                "Non-volatile spintronic memory requires stable magnetic states, "
+                "so remanence is closely connected to retention."
+            ),
+        },
+        "Coercive field": {
+            "overview": (
+                "The coercive field Hc is the reverse magnetic field required "
+                "to bring the magnetization or induction to a specified zero "
+                "condition on a hysteresis loop."
+            ),
+            "meaning": (
+                "It is a measure of magnetic resistance to reversal."
+            ),
+            "derivation": (
+                "Read H at the point where the hysteresis curve crosses the "
+                "chosen zero-magnetization or zero-induction reference."
+            ),
+            "msc": (
+                "Coercivity depends on anisotropy, defects, domain-wall pinning, "
+                "grain size and microstructure."
+            ),
+            "spin": (
+                "Device switching must overcome magnetic energy barriers related "
+                "to anisotropy and coercivity while maintaining adequate retention."
+            ),
+        },
+        "Hysteresis loss per unit volume": {
+            "overview": (
+                "The hysteresis-loss density is the energy dissipated per cycle "
+                "of magnetization reversal."
+            ),
+            "meaning": (
+                "For a B-H loop, the enclosed area represents energy loss per "
+                "unit volume: W_h = ∮H dB."
+            ),
+            "derivation": (
+                "Magnetic work per unit volume is H dB. Integrating around a "
+                "complete cycle gives the net dissipated energy."
+            ),
+            "msc": (
+                "Hysteresis loss is important in magnetic cores and also provides "
+                "a quantitative measure of dissipation during magnetic cycling."
+            ),
+            "spin": (
+                "In nanoscale magnetic devices, energy dissipation during "
+                "switching is a key design constraint for low-power spintronics."
+            ),
+        },
+        "Domain wall energy": {
+            "overview": (
+                "Domain-wall energy is the energy per unit area associated with "
+                "the transition region between differently magnetized domains."
+            ),
+            "meaning": (
+                "Exchange favors smooth magnetization while anisotropy favors "
+                "alignment along easy axes; their competition creates a finite "
+                "wall width and energy."
+            ),
+            "derivation": (
+                "For a simple 180° wall, a common approximation is "
+                "γ ≈ 4√(AK), where A is exchange stiffness and K is anisotropy."
+            ),
+            "msc": (
+                "Domain-wall energy determines domain size, wall stability and "
+                "pinning behavior."
+            ),
+            "spin": (
+                "Domain walls are information carriers in racetrack memory and "
+                "their energy controls current-driven wall motion."
+            ),
+        },
+        "Domain wall width": {
+            "overview": (
+                "Domain-wall width is the characteristic distance over which "
+                "magnetization rotates between domains."
+            ),
+            "meaning": (
+                "A simple 180° Bloch-wall model gives δ ≈ π√(A/K)."
+            ),
+            "derivation": (
+                "Exchange stiffness A penalizes rapid spatial rotation, while "
+                "anisotropy K favors the easy axis. Minimizing the total energy "
+                "gives the square-root scaling."
+            ),
+            "msc": (
+                "Wall width depends on material parameters and is strongly "
+                "affected by geometry, interfaces and competing anisotropies."
+            ),
+            "spin": (
+                "Narrow domain walls are important for high-density magnetic "
+                "textures, racetrack devices and current-driven switching."
+            ),
+        },
+        "Uniaxial anisotropy energy": {
+            "overview": (
+                "Uniaxial anisotropy describes the energy preference for "
+                "magnetization to align with a particular easy axis."
+            ),
+            "meaning": (
+                "For first-order uniaxial anisotropy, E_a = K_u sin²θ."
+            ),
+            "derivation": (
+                "The angular dependence follows from symmetry: the lowest-order "
+                "term invariant under reversal of the easy axis is proportional "
+                "to sin²θ."
+            ),
+            "msc": (
+                "Anisotropy controls easy-axis direction, coercivity, domain "
+                "structure and thermal stability."
+            ),
+            "spin": (
+                "Magnetic anisotropy is central to STT/SOT switching, MRAM "
+                "retention and perpendicular magnetic anisotropy in thin films."
+            ),
+        },
+        "Anisotropy field": {
+            "overview": (
+                "The anisotropy field is the characteristic field scale needed "
+                "to overcome uniaxial anisotropy."
+            ),
+            "meaning": (
+                "For the simple uniaxial approximation, H_k = 2K_u/(μ₀Mₛ)."
+            ),
+            "derivation": (
+                "Equate the field torque/energy scale associated with MₛH "
+                "to the anisotropy energy scale K_u, yielding the characteristic "
+                "factor 2 in the simple model."
+            ),
+            "msc": (
+                "H_k is obtained from magnetic characterization and is closely "
+                "related to the stability and switching field of a magnetic layer."
+            ),
+            "spin": (
+                "H_k is one of the key parameters in LLG simulations and "
+                "spin-torque switching calculations."
+            ),
+        },
+        "Demagnetizing field": {
+            "overview": (
+                "The demagnetizing field is the internal field produced by "
+                "magnetic poles associated with a finite magnetized body."
+            ),
+            "meaning": (
+                "For a simple uniformly magnetized geometry, H_d = −NM in SI "
+                "with a geometry-dependent demagnetizing factor N."
+            ),
+            "derivation": (
+                "Surface magnetic charges create a field opposing the component "
+                "of magnetization that produces them."
+            ),
+            "msc": (
+                "Demagnetization strongly affects hysteresis, shape anisotropy, "
+                "thin-film magnetism and magnetic-domain formation."
+            ),
+            "spin": (
+                "Shape anisotropy and demagnetizing fields determine preferred "
+                "magnetization directions in nanomagnets and spintronic layers."
+            ),
+        },
+        "Internal magnetic field": {
+            "overview": (
+                "The internal magnetic field is the effective field experienced "
+                "inside a finite magnetic body after accounting for demagnetization."
+            ),
+            "meaning": (
+                "A simple relation is H_int = H_appl − NM."
+            ),
+            "derivation": (
+                "The demagnetizing field opposes magnetization, so it is subtracted "
+                "from the externally applied field."
+            ),
+            "msc": (
+                "Using internal rather than applied field is essential for "
+                "interpreting magnetic measurements of finite samples."
+            ),
+            "spin": (
+                "The effective internal field enters magnetization dynamics and "
+                "changes resonance and switching conditions in nanomagnets."
+            ),
+        },
+        "Magnetostriction": {
+            "overview": (
+                "Magnetostriction is the relative change in a material's length "
+                "caused by magnetization."
+            ),
+            "meaning": (
+                "The simplest definition is λ = ΔL/L."
+            ),
+            "derivation": (
+                "Magnetization changes the equilibrium lattice strain through "
+                "magnetoelastic coupling."
+            ),
+            "msc": (
+                "Magnetostriction links magnetic and mechanical degrees of "
+                "freedom and is important in sensors and actuators."
+            ),
+            "spin": (
+                "Magnetoelastic coupling can modify anisotropy, damping and "
+                "spin-wave behavior in thin films and heterostructures."
+            ),
+        },
+    }
+
+    def _generic_formula_chapter(term, symbol, formula, description):
+        """Structured chapter for formula entries without a custom note."""
+        return {
+            "overview": (
+                f"{term} is an important relation in magnetism. The displayed "
+                f"formula is {formula}. It gives a compact mathematical link "
+                f"between the physical quantities represented by the symbols."
+            ),
+            "meaning": (
+                f"The symbol used for this relation is {symbol}. "
+                f"{description}. Always keep the vector/scalar nature and unit "
+                f"convention of each quantity consistent."
+            ),
+            "derivation": (
+                "Use the defining relation of the physical quantity and the "
+                "appropriate Maxwell, constitutive, energy, force or material "
+                "model relation. The exact derivation depends on the assumptions "
+                "stated with the formula, such as uniform fields, linear response, "
+                "steady current or a simple material model."
+            ),
+            "msc": (
+                "At MSc Physics / Materials Science level, this relation should "
+                "be connected to the assumptions behind it, its limiting cases, "
+                "units, measurable quantities and experimental interpretation."
+            ),
+            "spin": (
+                "For spintronics, the relation can be connected to magnetic "
+                "moments, magnetization dynamics, transport, magnetic energy, "
+                "anisotropy, spin waves or device operation depending on the "
+                "physical system."
+            ),
+        }
+
+    @st.dialog("📖 Formula Chapter", width="large")
+    def _open_formula_chapter(term, symbol, formula, description):
+        detail = CORE_FORMULA_DETAILS.get(
+            term,
+            _generic_formula_chapter(term, symbol, formula, description)
+        )
+
+        st.markdown(
+            f'<div style="font-size:25px;font-weight:800;margin-bottom:4px;">'
+            f'{term}</div>',
+            unsafe_allow_html=True
+        )
+        st.caption(f"Symbol: {symbol}  •  {description}")
+
+        st.latex(formula)
+
+        sections = [
+            ("1. Concept & overview", detail["overview"]),
+            ("2. Physical meaning", detail["meaning"]),
+            ("3. Derivation / reasoning", detail["derivation"]),
+            ("4. MSc Physics / Materials Science", detail["msc"]),
+            ("5. Spintronics connection", detail["spin"]),
+        ]
+
+        for heading, body in sections:
+            st.markdown(f"### {heading}")
+            st.write(body)
+
+        st.markdown("---")
+        st.markdown("### Quick study points")
+        st.markdown(
+            "- Identify every symbol and its SI unit.\n"
+            "- Check the assumptions before applying the relation.\n"
+            "- Distinguish applied, internal and material-response fields where relevant.\n"
+            "- For magnetic materials, connect the formula with M, B, H, χ, μ, anisotropy and energy.\n"
+            "- For spintronics, look for its role in magnetization dynamics, switching, transport or magnetic stability."
+        )
+
+
     # ============================================================
     # 📖 BOOK-STYLE FORMULA DISPLAY
     # ============================================================
@@ -1704,45 +2629,40 @@ with constants:
     </div>
     """, unsafe_allow_html=True)
 
-    for term, symbol, formula, description in MAGNETISM_FORMULA_TABLE:
+    for idx, (term, symbol, formula, description) in enumerate(MAGNETISM_FORMULA_TABLE):
+
+        # Click the chapter title/card to open the detailed formula window.
+        if st.button(
+            f"📖  {term}",
+            key=f"formula_chapter_{idx}",
+            use_container_width=True
+        ):
+            _open_formula_chapter(term, symbol, formula, description)
 
         st.markdown(
             f"""
-    <div style="
-        border-bottom:1px solid rgba(128,128,128,0.20);
-        padding:16px 8px;
-        margin-bottom:8px;
-    ">
-
-    <div style="
-        font-weight:700;
-        font-size:16px;
-        margin-bottom:6px;
-    ">
-        {term}
-    </div>
-
-    <div style="
-        color:#93c5fd;
-        font-size:14px;
-        margin-bottom:8px;
-    ">
-        Symbol: {symbol}
-    </div>
-
-    <div style="
-        font-size:13px;
-        color:#94a3b8;
-        margin-bottom:5px;
-    ">
-        {description}
-    </div>
-
-    </div>
-    """,
+            <div style="
+                margin:-7px 0 16px 0;
+                padding:10px 16px 14px 16px;
+                border-bottom:1px solid rgba(128,128,128,0.20);
+            ">
+                <div style="
+                    color:#93c5fd;
+                    font-size:14px;
+                    margin-bottom:6px;
+                ">
+                    Symbol: {symbol}
+                </div>
+                <div style="
+                    color:#94a3b8;
+                    font-size:13px;
+                ">
+                    {description}
+                </div>
+            </div>
+            """,
             unsafe_allow_html=True
         )
-
         st.latex(formula)
 # ============================================================
 # FOOTER
