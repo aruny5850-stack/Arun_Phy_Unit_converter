@@ -229,7 +229,7 @@ UNITS = {
 
 "Volume magnetic susceptibility (κ = M/H)": {
     "dimensionless [SI]": 1,
-    "dimensionless [CGS]": 1 / (4 * math.pi)
+    "dimensionless [CGS]": 4 * math.pi
 },
 
 "Mass magnetic susceptibility (χ = κ/ρ)": {
@@ -244,7 +244,7 @@ UNITS = {
 
 "Magnetic permeability (μ = B/H)": {
     "henry/meter (H m⁻¹)": 1,
-    "G Oe⁻¹": 1e7 / (4 * math.pi)
+    "G Oe⁻¹": 4 * math.pi / 1e7
 },
 
 "Magnetic flux (Φ)": {
