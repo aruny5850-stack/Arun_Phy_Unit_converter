@@ -1125,41 +1125,72 @@ with converter:
             key="to_unit"
         )
 
-    if st.button(
-        "⚡  CONVERT",
-        key="convert",
-        use_container_width=True
-    ):
+    # ========================================================
+    # CGS / SI QUICK CONVERSION
+    # Keep the From Unit and To Unit dropdowns unchanged.
+    # CGS/SI buttons only select the matching target unit and
+    # then run the same existing conversion function.
+    # ========================================================
+    def _find_system_unit(unit_list, system):
+        system = system.upper()
+        for u in unit_list:
+            text = u.upper()
+            if system == "SI" and ("[SI]" in text or "SI" in text):
+                return u
+            if system == "CGS" and ("[CGS]" in text or "CGS" in text):
+                return u
+        # Some entries use conventional CGS names without [CGS].
+        if system == "CGS":
+            hints = ("GAUSS", "OERSTED", "EMU", "MAXWELL", "GILBERT", "ERG", "POISE")
+            for u in unit_list:
+                if any(h in u.upper() for h in hints):
+                    return u
+        if system == "SI":
+            hints = ("TESLA", "AMPERE", "HENRY", "WEBER", "JOULE", "METER", "KILOGRAM")
+            for u in unit_list:
+                if any(h in u.upper() for h in hints):
+                    return u
+        return None
+
+    def _show_conversion(target_system):
+        target_unit = _find_system_unit(units, target_system)
+        if target_unit is None:
+            st.warning(f"{target_system} unit is not available for this quantity.")
+            return
         try:
-            result = convert_value(
-                value,
-                category,
-                from_unit,
-                to_unit
-            )
-
-            st.markdown(
-                f"""<div class="result-card">
-    <div class="result-label">
-        ✨ Conversion Result
-    </div>
-    <div class="result-number">
-        {fmt(result)}
-    </div>
-    <div class="result-unit">
-        {to_unit}
-    </div>
-</div>""",
-                unsafe_allow_html=True
-            )
-
-            st.caption(
-                f"{fmt(value)} {from_unit} → "
-                f"{fmt(result)} {to_unit}"
-            )
-
+            result = convert_value(value, category, from_unit, target_unit)
+            st.session_state["last_conversion"] = {
+                "value": value,
+                "from_unit": from_unit,
+                "result": result,
+                "to_unit": target_unit,
+            }
         except Exception as e:
             st.error(f"Conversion error: {e}")
+
+    cgs_col, si_col = st.columns(2, gap="small")
+    with cgs_col:
+        if st.button("CGS", key="convert_cgs", use_container_width=True):
+            _show_conversion("CGS")
+    with si_col:
+        if st.button("SI", key="convert_si", use_container_width=True):
+            _show_conversion("SI")
+
+    last = st.session_state.get("last_conversion")
+    if last:
+        st.markdown(
+            f"""<div class=\"result-card\">
+                <div class=\"result-label\">✨ Conversion Result</div>
+                <div class=\"result-number\">{fmt(last['result'])}</div>
+                <div class=\"result-unit\">{last['to_unit']}</div>
+            </div>""",
+            unsafe_allow_html=True
+        )
+        st.caption(
+            f"{fmt(last['value'])} {last['from_unit']} → "
+            f"{fmt(last['result'])} {last['to_unit']}"
+        )
+
 
 
 # ============================================================
