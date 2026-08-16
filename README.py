@@ -1131,29 +1131,67 @@ with converter:
     # CGS/SI buttons only select the matching target unit and
     # then run the same existing conversion function.
     # ========================================================
-    def _find_system_unit(unit_list, system):
+    def _find_system_unit(unit_list, system, category_name):
+        """Find the canonical SI/CGS target unit for the selected quantity.
+
+        Many general units in the database are intentionally not tagged
+        [SI]/[CGS], so the quick buttons use an explicit category map first.
+        This prevents cases such as Force -> dyne/N from incorrectly showing
+        "unit not available".
+        """
         system = system.upper()
+
+        # Exact canonical SI/CGS pairs for quantities where both systems exist.
+        canonical_pairs = {
+            "Magnetic induction (B)": {"SI": ("tesla (T) [SI]",), "CGS": ("gauss (G) [CGS]",)},
+            "Magnetic field (H)": {"SI": ("ampere/meter (A m⁻¹) [SI]",), "CGS": ("oersted (Oe) [CGS]",)},
+            "Magnetization (M)": {"SI": ("ampere/meter (A m⁻¹)",), "CGS": ("emu cm⁻³ [CGS]",)},
+            "Magnetic polarization (J)": {"SI": ("tesla (T) [SI]",), "CGS": ("emu/cm³ [CGS]",)},
+            "Magnetic moment (m)": {"SI": ("ampere·meter² (A m²)",), "CGS": ("emu (G cm³)",)},
+            "Magnetic moment per unit mass (σ)": {"SI": ("ampere·meter² kg⁻¹ (A m² kg⁻¹)",), "CGS": ("emu g⁻¹ [CGS]",)},
+            "Volume magnetic susceptibility (κ = M/H)": {"SI": ("dimensionless [SI]",), "CGS": ("dimensionless [CGS]",)},
+            "Mass magnetic susceptibility (χ = κ/ρ)": {"SI": ("m³ kg⁻¹",), "CGS": ("emu Oe⁻¹ g⁻¹",)},
+            "Molar magnetic susceptibility (χₘ = χM*)": {"SI": ("m³ mol⁻¹",), "CGS": ("emu Oe⁻¹ g⁻¹ mol⁻¹",)},
+            "Magnetic permeability (μ = B/H)": {"SI": ("henry/meter (H m⁻¹)",), "CGS": ("G Oe⁻¹",)},
+            "Magnetic flux (Φ)": {"SI": ("weber (Wb)",), "CGS": ("maxwell (Mx)",)},
+            "Magnetic scalar potential; Magnetomotive force (φ)": {"SI": ("ampere (A) [SI]",), "CGS": ("gilbert [CGS]",)},
+            "Magnetic vector potential": {"SI": ("weber/meter (Wb m⁻¹)",), "CGS": ("emu (G cm)",)},
+            "Magnetic pole strength (p)": {"SI": ("ampere·meter (A m)",), "CGS": ("emu (G cm²)",)},
+            "Demagnetizing factor (N)": {"SI": ("dimensionless [SI]",), "CGS": ("dimensionless [CGS]",)},
+            "Magnetostriction constant (λ)": {"SI": ("dimensionless [SI]",), "CGS": ("dimensionless [CGS]",)},
+            "Anisotropy constant (K, K₁, Kᵤ)": {"SI": ("joule/m³ (J m⁻³)",), "CGS": ("erg/cm³",)},
+            "Magnetostatic energy (Eₘ)": {"SI": ("joule/m³ (J m⁻³)",), "CGS": ("erg/cm³",)},
+            "Energy product (BH)ₘₐₓ": {"SI": ("joule/m³ (J m⁻³)",), "CGS": ("erg/cm³",)},
+            "Length": {"SI": ("meter (m)",), "CGS": ("centimeter (cm)",)},
+            "Mass": {"SI": ("kilogram (kg)",), "CGS": ("gram (g)",)},
+            "Time": {"SI": ("second (s)",), "CGS": ("second (s)",)},
+            "Area": {"SI": ("square meter (m²)",), "CGS": ("square centimeter (cm²)",)},
+            "Volume": {"SI": ("cubic meter (m³)",), "CGS": ("cubic centimeter (cm³)",)},
+            "Velocity": {"SI": ("meter/second (m/s)",), "CGS": ("centimeter/second (cm/s)",)},
+            "Acceleration": {"SI": ("meter/second² (m/s²)",), "CGS": ("centimeter/second² (cm/s²)",)},
+            "Force": {"SI": ("newton (N)",), "CGS": ("dyne (dyn)",)},
+            "Energy": {"SI": ("joule (J)",), "CGS": ("erg",)},
+            "Power": {"SI": ("watt (W)",), "CGS": ("erg/second (erg/s)",)},
+            "Pressure": {"SI": ("pascal (Pa)",), "CGS": ("dyne/cm²",)},
+            "Density": {"SI": ("kilogram/m³ (kg/m³)",), "CGS": ("gram/cm³ (g/cm³)",)},
+            "Dynamic Viscosity": {"SI": ("pascal-second (Pa·s)",), "CGS": ("poise (P)",)},
+        }
+
+        choices = canonical_pairs.get(category_name, {}).get(system, ())
+        for choice in choices:
+            if choice in unit_list:
+                return choice
+
+        # Fallback for explicitly tagged units in any future/additional category.
+        tag = f"[{system}]"
         for u in unit_list:
-            text = u.upper()
-            if system == "SI" and ("[SI]" in text or "SI" in text):
+            if tag in u.upper():
                 return u
-            if system == "CGS" and ("[CGS]" in text or "CGS" in text):
-                return u
-        # Some entries use conventional CGS names without [CGS].
-        if system == "CGS":
-            hints = ("GAUSS", "OERSTED", "EMU", "MAXWELL", "GILBERT", "ERG", "POISE")
-            for u in unit_list:
-                if any(h in u.upper() for h in hints):
-                    return u
-        if system == "SI":
-            hints = ("TESLA", "AMPERE", "HENRY", "WEBER", "JOULE", "METER", "KILOGRAM")
-            for u in unit_list:
-                if any(h in u.upper() for h in hints):
-                    return u
+
         return None
 
     def _show_conversion(target_system):
-        target_unit = _find_system_unit(units, target_system)
+        target_unit = _find_system_unit(units, target_system, category)
         if target_unit is None:
             st.warning(f"{target_system} unit is not available for this quantity.")
             return
